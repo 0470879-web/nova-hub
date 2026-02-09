@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html>
+<head><base href="./"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Tall Man Runner</title>
+<meta charset="utf-8">
+<!-- this link to the preview online version of BJS -->
+<script src="js/v4/lagged.js" type="text/javascript"></script>
+<script src="games/play2/tallmanrunner9/js/babylon.js"></script>
+<script src="games/play2/tallmanrunner9/js/babylon.gui.js"></script>
+<script src="games/play2/tallmanrunner9/js/ammo.wasm.js"></script>
+<script src="games/play2/tallmanrunner9/js/main.js"></script>
+<script src="games/play2/tallmanrunner9/js/dev_func.js"></script>
+<style>
+        html,
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            color: black;
+            touch-action: none;
+
+        }
+
+        #canvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+
+        #canvas:focus-within {
+            outline: none;
+        }
+
+        @font-face {
+            font-family: Questrial-Regular;
+            src: url(fonts/questrial/Questrial-Regular.ttf);
+        }
+
+
+
+        .lock{
+            padding: 0;
+            margin: 0;
+            width: 150px;
+            height:150px;
+            background: white;
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-50%, -50%)
+
+            }
+            img{
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+
+            }
+
+
+    </style>
+</meta></head>
+<body oncontextmenu="event.preventDefault()">
+<canvas id="canvas"></canvas>
+<script type="text/javascript">
+</script>
+<div class="lock" id="lock_loader"><img id="logo" src="images/logo.png"/></div>
+</body>
+</html>

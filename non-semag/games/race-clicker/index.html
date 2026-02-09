@@ -1,0 +1,2293 @@
+<html>
+<head><base href="./"/>
+<!--Meta stuff-->
+<meta content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" name="viewport"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" rel="stylesheet"/>
+<script src="js/v4/lagged.js" type="text/javascript"></script>
+<title>Roblox Race Clicker</title>
+<style>
+    * {
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        font-family: sans-serif;
+        font-weight: 400;
+        outline: none;
+        user-select: none;
+    }
+    body {
+        margin: 0;
+        overflow: hidden;
+    }
+    #loading {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        color: white;
+        text-align: center;
+        font-size: 30px;
+        font-weight: 100;
+        background-color: #4153A5;
+        text-shadow:         /* create a black outline */
+        -1px -1px 0 #000,
+         0   -1px 0 #000,
+         1px -1px 0 #000,
+         1px  0   0 #000,
+         1px  1px 0 #000,
+         0    1px 0 #000,
+        -1px  1px 0 #000,
+        -1px  0   0 #000;
+
+    }
+    #loading>div {
+        margin-top: 30vh;
+    }
+    .progress {
+        margin-top: 1vh;
+        display: inline-block;
+        border-radius: 10vw;
+        width: 50vw;
+        height: 1.5vw;
+        background-color: #2B292A;
+    }
+    #progressbar {
+        width: 0;
+        border-radius: 10vw;
+        height: 1.5vw;
+        background: rgb(253,105,41);
+        background: -moz-linear-gradient(90deg, rgba(253,105,41,1) 19%, rgba(244,192,41,1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(253,105,41,1) 19%, rgba(244,192,41,1) 100%);
+        background: linear-gradient(90deg, rgba(253,105,41,1) 19%, rgba(244,192,41,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fd6929",endColorstr="#f4c029",GradientType=1);
+    }
+    #lagged {
+        margin-bottom: 10vh;
+        display: inline-block;
+        width: 30vh;
+        height: 30vh;
+        background-image: url(Images/lagged.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+    }
+    #c {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    #loaderPlayButton {
+        position: fixed;
+        left: 50%;
+        bottom: 10px;
+        transform:translateX(-50%);
+        background-image: url(Images/btnPlay.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+        width: 400px;
+        height: 180px;
+        visibility: hidden;
+    }
+
+
+    /* IN-GAME UI */
+    #gameUI {
+        position: fixed;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        visibility: hidden;
+    }
+    #ingameLagged {
+        display: inline-block;
+        width: 18vh;
+        height: 9vh;
+        background-image: url(Images/lagged2.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+        margin-top: -15px;
+    }
+    #timer {
+        display: inline-block;
+        transform: translateY(-50%);
+        margin-top: 2%;
+        letter-spacing: 1px;
+        text-align: center;
+        color: white;
+        font-size: 500%;
+        font-weight: 1000;
+        text-shadow:0px 0px 3px #1F496F, 0px 0px 3px #1F496F, 0px 0px 3px #1F496F, 0px 0px 3px #1F496F, 0px 0px 3px #1F496F,
+        -1px -1px 3px #1F496F,
+         0   -1px 3px #1F496F,
+         1px -1px 3px #1F496F,
+         1px  0   3px #1F496F,
+         1px  1px 3px #1F496F,
+         0    1px 3px #1F496F,
+        -1px  1px 3px #1F496F,
+        -1px  0   3px #1F496F;
+        visibility: hidden;
+    }
+    #speedContainer {
+        position: fixed;
+        bottom: 10px;
+        left: 0;
+        /* transform: translateX(-50%); */
+        width: 100%;
+        /* height: 500px; */
+        /* background: rgba(0,0,0,0.5); */
+        text-align: center;
+    }
+    #speed_start {
+        display: inline-block;
+        color: white;
+        font-size: 200%;
+        font-weight: 1000;
+        text-shadow:
+        -1px -1px 0 #000,
+         0   -1px 0 #000,
+         1px -1px 0 #000,
+         1px  0   0 #000,
+         1px  1px 0 #000,
+         0    1px 0 #000,
+        -1px  1px 0 #000,
+        -1px  0   0 #000;
+    }
+    #speed_image {
+        display: inline-block;
+        background-image: url(Images/speed2.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+        width: 224px;
+        height: 129px;
+        transform: translateY(20px);
+    }
+    #speed_end {
+        display: inline-block;
+        color: yellow;
+        font-size: 200%;
+        font-weight: 1000;
+        text-shadow:
+        -1px -1px 0 #000,
+         0   -1px 0 #000,
+         1px -1px 0 #000,
+         1px  0   0 #000,
+         1px  1px 0 #000,
+         0    1px 0 #000,
+        -1px  1px 0 #000,
+        -1px  0   0 #000;
+    }
+    /* END */
+
+    /* OPENING EGGS */
+    #eggContainer {
+        position: fixed;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        height: 30%;
+        text-align: center;
+        visibility: hidden;
+        background-color: rgba(0,0,0,0.5);
+        background: rgb(0,0,0);
+        background: -moz-linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6026785714285714) 10%, rgba(0,0,0,0.6) 90%, rgba(0,0,0,0) 100%);
+        background: -webkit-linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6026785714285714) 10%, rgba(0,0,0,0.6) 90%, rgba(0,0,0,0) 100%);
+        background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6026785714285714) 10%, rgba(0,0,0,0.6) 90%, rgba(0,0,0,0) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#000000",GradientType=1);
+    }
+    #eggText {
+        display: inline-block;
+        font-size: 400%;
+        font-weight: 800;
+        color: white;
+        text-shadow:         /* create a black outline */
+        -1px -1px 0 #000,
+         0   -1px 0 #000,
+         1px -1px 0 #000,
+         1px  0   0 #000,
+         1px  1px 0 #000,
+         0    1px 0 #000,
+        -1px  1px 0 #000,
+        -1px  0   0 #000;
+    }
+    #btnYes {
+        display: inline-block;
+        border: 5px solid black;
+        border-radius: 10px;
+        width: 300px;
+        height: 100px;
+        font-size: 400%;
+        font-weight: 1000;
+        line-height: 90px;
+        color: white;
+        background-color: yellowgreen;
+        margin-right: 20px;
+        margin-top: 20px
+
+        text-shadow:         /* create a black outline */
+        -1px -1px 0 #000,
+         0   -1px 0 #000,
+         1px -1px 0 #000,
+         1px  0   0 #000,
+         1px  1px 0 #000,
+         0    1px 0 #000,
+        -1px  1px 0 #000,
+        -1px  0   0 #000;
+    }
+    #btnNo {
+        display: inline-block;
+        border: 5px solid black;
+        border-radius: 10px;
+        width: 300px;
+        height: 100px;
+        font-size: 400%;
+        font-weight: 1000;
+        line-height: 90px;
+        color: white;
+        background-color: tomato;
+        margin-left: 20px;
+
+        text-shadow:         /* create a black outline */
+        -1px -1px 0 #000,
+         0   -1px 0 #000,
+         1px -1px 0 #000,
+         1px  0   0 #000,
+         1px  1px 0 #000,
+         0    1px 0 #000,
+        -1px  1px 0 #000,
+        -1px  0   0 #000;
+    }
+    /* END */
+
+    /* GAME-OVER UI */
+    #gameOverUI {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        visibility: hidden;
+        background-color: rgba(0,0,0,0.5);
+    }
+    /* END */
+
+
+    /*MISC & BUTTONS*/
+    #btnSound {
+        position: fixed;
+        left: 0.5%;
+        top: 1%;
+        width: 8%;
+        height: 8%;
+        visibility: hidden;
+        background-image: url(Images/btnSound.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+    }
+    .button {
+        transition: all .1s;
+        cursor: pointer;
+        user-select: none;
+    }
+    .button:hover {
+        transform: scale(1.1);
+    }
+    #whiteFX{
+        position: fixed;
+        right: 0%;
+        top: 0%;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255,255,255,0.5);
+        visibility: hidden;
+        user-select: none;
+        pointer-events: none;
+        --animate-duration: 0.9s;
+    }
+    #joystickDIV {
+        position: fixed;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        visibility: hidden;
+    }
+    #btnReward {
+        position: fixed;
+        width: 182px;
+        height: 191px;
+        left: 10px;
+        bottom: 10px;
+        visibility: hidden;
+
+        background-image: url(Images/reward.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+    }
+    /* END */
+
+
+
+    /*ORIENTATION LOCK*/
+    #rotateDeviceBG {
+        background-color: rgba(0,0,0,1);
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        visibility: hidden;
+    }
+    .phone {
+        margin-top: 20%;
+        display: inline-block;
+        height: 100px;
+        width: 200px;
+        border: 4px solid white;
+        border-radius: 10px;
+        animation: rotate 1.5s ease-in-out infinite alternate;
+    }
+    .message {
+        position: fixed;
+        width: 100%;
+        height: 10%;
+        left: 0;
+        text-align: center;
+        color: white;
+        font-size: 200%;
+        font-weight: 800;
+        bottom: 10%;
+      /* display: none; */
+    }
+    @keyframes rotate {
+      0% {
+            transform: rotate(0deg)
+        }
+        50% {
+            transform: rotate(-90deg)
+        }
+        100% {
+            transform: rotate(-90deg)
+        }
+    }
+    /* END */
+
+    /* MEDIA QUERIES */
+    @media only screen and (max-width: 900px) {
+        /* MISC */
+        #loading {
+            font-size: 20px;
+        }
+        .progress {
+            width: 70vw;
+        }
+        #btnSound {
+            width: 11%;
+            height: 11%;
+        }
+        #btnReward {
+            width: 97px;
+            height: 100px;
+            left: 10px!important;
+            bottom: 10px;
+        }
+        /* END */
+
+        /* IN GAME UI */
+        #ingameLagged {
+            width: 17vh;
+            height: 9vh;
+            margin-top: -4px;
+        }
+        #timer {
+            font-size: 300%;
+        }
+        #speedContainer {
+            transform: scale(0.65);
+            bottom: -20px;
+        }
+        /* END */
+
+        /* GAMEOVER UI */
+
+        /* END */
+    }
+    /* END */
+</style>
+</head>
+<body>
+<script src="games/race-clicker-new2/Libs/three.min.js"></script>
+<script src="games/race-clicker-new2/Libs/FBXLoader.js"></script>
+<script src="games/race-clicker-new2/Libs/inflate.min.js"></script>
+<script src="games/race-clicker-new2/Libs/SkeletonUtils.js"></script>
+<script src="games/race-clicker-new2/Libs/confetti.browser.js"></script>
+<script src="games/race-clicker-new2/Libs/nipplejs.js"></script>
+<div id="loading">
+<div>
+<div id="lagged"></div>
+<div id="progressText">0%</div>
+<div class="progress"><div id="progressbar"></div></div>
+<div id="loadddi">Loading...</div>
+</div>
+</div>
+<canvas id="c"></canvas>
+<div class="button" id="loaderPlayButton" onclick="btnLoader()"></div>
+<div id="gameUI">
+<div id="ingameLagged"></div><br/>
+<div id="timer">00:00</div><br/>
+<div id="speedContainer">
+<div id="speed_start">0</div>
+<div id="speed_image"></div>
+<div id="speed_end">100</div>
+</div>
+</div>
+<div id="joystickDIV"></div>
+<div class="animate__fast" id="whiteFX"></div>
+<div class="animate__animated animate__pulse animate__infinite button" id="btnReward"></div>
+<div id="eggContainer">
+<div id="eggText">Do you want to open this egg</div><br/>
+<div class="button" id="btnYes" onclick="btnYes()">Yes</div>
+<div class="button" id="btnNo" onclick="btnNo()">No</div>
+</div>
+<div id="gameOverUI">
+</div>
+<div class="button" id="btnSound" onclick="btnSound()"></div>
+<div id="rotateDeviceBG">
+<div class="phone">
+</div>
+<div class="message">
+      Please rotate your device!
+    </div>
+</div>
+<script>
+// GLOBAL VAR
+console.warn = function(){};
+var scene = null;
+var camera = null;
+var renderer = null;
+var clock = new THREE.Clock();
+var onMobile = false;
+var joystick = null;
+var raycaster = new THREE.Raycaster();
+var mousePlane = null;
+// more in-game stuff
+var wins = 0; // currency
+var petsArray = [];
+var saveObject = {
+    wins: 0,
+    petsArray: [],
+}; // save wins and pets here
+var egg1Cost = 3;
+var egg2Cost = 50;
+var egg3Cost = 500;
+var egg4Cost = 1000;
+var botUsernameArray = ["AholicTricky","AlphaPerfect","AttractiveKuro","Avatexcu","Beatersc","BootyFamous","BuddieTrauma","BugConfident","Careamso","CentNews","Cheech","Cinquilt","Columnio","CoolFrog","Curelin","Dailiesti","Dayig","Decorest", "NasebyRede", "Nomenclature", "GlosedIsopor", "Furbelow", "MasterhBinate", "CybereyBevy", "Tai2Rash", "Britches", "Griffade", "GibboxNiggle", "TagteamMedius", "Nidifugous", "Subturbary", "Gymkhana", "Nascar1Tenrec", "OcreatAgog", "OndskoGazebo", "Cocksure", "Cariniform", "Bombastic", "Opsiometer", "Hootenanny", "Impaste", "Pascal0Bust", "Wastelot", "Scofflaw", "Thrutch", "Scrumptious", "Byssine", "Demitasse", "Pseudosophy", "Arthur2Fracas", "Studmuffin", "ImabKelvin", "LemonnVeneer", "Menagerie", "Rubious", "Carbuncle", "TallyakDewlap", "Phalanx", "Ekistics", "Egghead", "Bastion", "Blubber", "Verve", "Pleach", "Monsoon", "Misa25Meme", "Zibeline", "YellobRubric", "AdrianBuskin", "Diphthong", "Popocracy", "Appaloosa", "Hurlyburly", "Gallivant", "Wuthering", "Spelunker", "Irruption", "Haboob", "Watching", "Hormone", "Ostinato", "Jawbreaker", "Popocracy", "Appaloosa", "Desideratum", "Zenography", "Serendipity", "Paysage", "Spelunker", "MetazBlamps", "ShihTzu", "Bonanza", "Shlep", "Cankle", "Machinations", "Quotition", "Ste3lboyOutfox", "Monoploxy", "Eggcorn", "Kameez", "Hangdog"];
+
+var awardIsAvailable=false;
+
+// RESETABLE VARS
+var player = null;
+var gameOver = false;
+var skybox,clouds;
+var hubObjects = {};
+var gameMode = 0; // 0 = hub, 1 = race countdown, 2 = race, -1 = shop, 3 = gameover
+// open world movement
+var playerAngle = 0;
+var playerSpeed = 0;
+var playerMove = false;
+// race mode
+var click = 0; // race speed
+var upgradedBasedSpeed = 0; // based on speed perks from pets
+var minutes = 0;
+var seconds = 0;
+var shopDialogOpen = false;
+
+// RESETABLE ARRAYS
+var updateArray = [];
+var scrollArray = [];
+var collidersArray = [];
+var groundArray = [];
+var sensorsArray = [];
+var particleArray = [];
+var eggArray = [];
+
+// Load Game
+var loadSave = null;
+try{
+    loadSave = JSON.parse(localStorage.getItem("RobloxRaceClickerLaggedSave"));
+}catch(e){
+    console.log(e);
+}
+if (loadSave){
+    wins = loadSave.wins;
+    petsArray = loadSave.petsArray;
+}
+
+const BaseModel = {
+    char1: {url: 'Models/char1.fbx'},// player model
+    char2: {url: 'Models/char2.fbx'},
+    char3: {url: 'Models/char3.fbx'},
+    char4: {url: 'Models/char4.fbx'},
+    char5: {url: 'Models/char5.fbx'},
+    char6: {url: 'Models/char6.fbx'},
+    char7: {url: 'Models/char7.fbx'},
+    char8: {url: 'Models/char8.fbx'},
+    environment: {url: 'Models/environment.fbx'},
+    egg: {url: 'Models/egg.fbx'},
+}
+const Anims = {
+    idle: {url: 'Models/a_idle.fbx'},
+    run: {url: 'Models/a_run.fbx'},
+    fall: {url: 'Models/a_fall.fbx'},
+    taunt1: {url: 'Models/a_taunt1.fbx'},
+    taunt2: {url: 'Models/a_taunt2.fbx'},
+}
+const Textures = {
+    shadow: {url: 'Images/shadow.png'},
+    clouds: {url: 'Images/clouds.png'},
+    add: {url: 'Images/add.png'},
+    particle: {url: 'Images/particle.png'},
+    billboard2: {url: 'Models/tex_HubRace2.png'},
+
+    clickSign: {url: 'Models/tex_click.png'},
+    clickFX: {url: 'Models/tex_clickFX.png'},
+
+    egg1: {url: 'Models/egg1.jpeg'},
+    egg2: {url: 'Models/egg2.jpeg'},
+    egg3: {url: 'Models/egg3.jpeg'},
+    egg4: {url: 'Models/egg4.jpeg'},
+
+    pet1_1: {url: 'Images/pet1_1.png'},
+    pet1_2: {url: 'Images/pet1_2.png'},
+    pet2_1: {url: 'Images/pet2_1.png'},
+    pet2_2: {url: 'Images/pet2_2.png'},
+    pet3_1: {url: 'Images/pet3_1.png'},
+    pet3_2: {url: 'Images/pet3_2.png'},
+    pet4_1: {url: 'Images/pet4_1.png'},
+    pet4_2: {url: 'Images/pet4_2.png'},
+}
+const Sound = {
+    music: {url: 'Sound/music.mp3'},
+    button: {url: 'Sound/button.mp3'},
+    walk: {url: 'Sound/footsteps.mp3'},
+    gainedWin: {url: 'Sound/gainedWin.mp3'},
+    egg: {url: 'Sound/egg.mp3'},
+    over: {url: 'Sound/over.mp3'},
+    click: {url: 'Sound/click.mp3'},
+    click2: {url: 'Sound/button2.mp3'},
+}
+
+// DOM elements
+const CANVAS = document.querySelector('#c');
+const PROGRESS_TEXT = document.querySelector('#progressText');
+const LOADER_BUTTON  = document.querySelector('#loaderPlayButton');
+
+// IN-GAME
+const GAME_UI = document.querySelector('#gameUI');
+const TIMER_TEXT = document.querySelector('#timer');
+const SPEED_IMAGE = document.querySelector('#speed_image');
+const SPEED_TEXTSTART = document.querySelector('#speed_start');
+const SPEED_TEXTEND = document.querySelector('#speed_end');
+
+// PETS
+const EGG_CONTAINER = document.querySelector('#eggContainer');
+
+// GAME_OVER
+const GAMEOVER_UI = document.querySelector('#gameOverUI');
+
+// Misc
+const JOYSTICK = document.querySelector('#joystickDIV');
+const BTN_SOUND = document.querySelector('#btnSound');
+const ROTATE_MSG  = document.querySelector('#rotateDeviceBG');
+const WHITE_FX = document.querySelector('#whiteFX');
+const BTN_REWARD = document.querySelector('#btnReward');
+
+function preload() {
+    const progressbarElem = document.querySelector('#progressbar');
+    let manager = new THREE.LoadingManager();
+    manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+        //console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+    };
+    manager.onLoad = function ( ) {
+        //console.log( 'Loading complete!');
+        //init();
+        // hide the loading bar
+        //const loadingElem = document.querySelector('#loading');
+        //loadingElem.style.display = 'none';
+        LaggedAPI.init();
+        LOADER_BUTTON.style.visibility = "visible";
+
+        document.getElementById('loadddi').style.visibility="hidden";
+            document.getElementById('progressText').style.visibility="hidden";
+    };
+    manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+        //console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+        progressbarElem.style.width = `${itemsLoaded / itemsTotal * 100 | 0}%`;
+        PROGRESS_TEXT.innerHTML = `${itemsLoaded / itemsTotal * 100 | 0}%`;
+    };
+    manager.onError = function ( url ) {
+        //console.log( 'There was an error loading ' + url );
+    };
+
+    var loader = new THREE.FBXLoader( manager );
+    // load base character model
+    for (const model of Object.values(BaseModel)) {
+        loader.load( model.url, function ( fbx ) {
+            model.fbx = fbx;
+        });
+    }
+    // load anims
+    for (const model of Object.values(Anims)) {
+        loader.load( model.url, function ( fbx ) {
+            //model.fbx = fbx;
+            model.animation = fbx.animations[ 0 ];
+        });
+    }
+    // load textures
+    var loaderTex = new THREE.TextureLoader(manager);
+    for (const img of Object.values(Textures)) {
+        loaderTex.load( img.url, function(texture) {
+            texture.encoding = THREE.sRGBEncoding;
+            img.texture = texture;
+        });
+    }
+    // load audio
+    Sound.listener = new THREE.AudioListener();
+    const audioLoader = new THREE.AudioLoader( manager );
+    for (const key of Object.values(Sound)) {
+        audioLoader.load( key.url, function(buffer) {
+            key.sound = new THREE.Audio( Sound.listener );
+            key.sound.setBuffer( buffer );
+            key.sound.setVolume( 1 );
+            if (key.url == 'Sound/music.mp3'){
+                key.sound.setLoop( true );
+                key.sound.setVolume( 1.3 );
+            }
+            else if (key.url == 'Sound/footsteps.mp3'){
+                key.sound.setLoop( true );
+                key.sound.setVolume( 1 );
+            }
+            else if (key.url == 'Sound/egg.mp3'){
+                key.sound.setVolume( 3 );
+            }
+            else if (key.url == 'Sound/gainedWin.mp3'){
+                key.sound.setVolume( 1 );
+            }
+            else if (key.url == 'Sound/button.mp3'){
+                key.sound.setVolume( 2 );
+            }
+            else if (key.url == 'Sound/button2.mp3'){
+                key.sound.setVolume( 0.5 );
+            }
+            else if (key.url == 'Sound/click.mp3'){
+                key.sound.setVolume( 0.6 );
+            }
+        });
+    }
+}
+
+function init(){
+    console.log("init 1");
+    if (is_touch_device()){
+        onMobile = true;
+    }
+    BTN_SOUND.style.visibility = "visible";
+    GAME_UI.style.visibility = "visible";
+
+    renderer = new THREE.WebGLRenderer({canvas: CANVAS, antialias: true,});
+    renderer.setPixelRatio( 1 );
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    //renderer.shadowMapEnabled = true;
+
+    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 40000 );
+    camera.position.set(0, 500, -1000);
+    camera.lookAt(0,0,0);
+    camera.add( Sound.listener );
+
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color( 0x00B9FE ).convertSRGBToLinear();
+
+    window.addEventListener( 'resize', onWindowResize, false );
+    document.addEventListener('touchstart', touchStart, false);
+    document.addEventListener('mousedown', mouseDown, false);
+
+    joystick=null;
+    document.getElementById('joystickDIV').innerHTML="";
+    joystick = nipplejs.create({
+        zone: document.getElementById('joystickDIV'),//container
+        mode: 'dynamic',
+        catchDistance: 50,
+        color: 'black',
+        position: {top: '89%', left: '50%'},
+        size: 100,
+        restOpacity: 2,
+        dynamicPage: true,
+    });
+    joystick.on('move', function (evt, nipple) {
+        playerAngle = nipple.angle.degree - 90;
+        playerSpeed = nipple.distance*0.1;
+    })
+    joystick.on('start', function (evt, nipple) {
+        playerMove = true;
+    })
+    joystick.on('end', function (evt, nipple) {
+        playerMove = false;
+    })
+
+    setUpGame();
+    animate();
+}
+
+function setUpGame() {
+    console.log("set up game 1");
+    calculatePlayerBaseSpeed();
+    // UI
+    JOYSTICK.style.visibility = "visible";
+    updateSpeedUIText();
+    // LIGHT
+    var ambientLight= new THREE.AmbientLight( 0xFFFFFF , 0.5 );
+    scene.add(ambientLight);
+    var dLight = new THREE.DirectionalLight( 0xFFFFFF, 0.7 );
+    dLight.position.set( 1000, 1000, 0 ); //dLight.position.set( 0, 10000, -5000 );
+    scene.add(dLight);
+
+    // Sky
+    var buffgeoBack = new THREE.BufferGeometry();
+    buffgeoBack.fromGeometry( new THREE.IcosahedronGeometry(1900,2) );
+    skybox = new THREE.Mesh( buffgeoBack, new THREE.MeshBasicMaterial( { map:gradTexture([[0.7,0.5,0.1], ['#00619B', '#3DB6FF','#68ECFF']]), side:THREE.BackSide, depthWrite: false, fog:false }  ));
+    scene.add( skybox );
+    clouds = new THREE.Sprite(new THREE.SpriteMaterial({ map:Textures.clouds.texture, fog:false}));
+    scene.add(clouds);
+    clouds.scale.set(50000*0.75,19000*0.5);
+    clouds.position.set(0,0,20000);
+
+    // Level
+    let levelMesh = BaseModel.environment.fbx.clone();
+    levelMesh.traverse(function ( child ) {
+        if ( child instanceof THREE.Mesh ) {
+            const oldMat = child.material;
+            child.material = new THREE.MeshLambertMaterial( { map: oldMat.map, color: oldMat.color, name: oldMat.name, });
+            if (oldMat.name == "ground" || oldMat.name == "ground2" || oldMat.name == "ground3"){
+                //child.material = new THREE.MeshLambertMaterial( {color: 0xC5C3C6});//0xF8F8FF
+                groundArray.push(child);
+
+                child.scrollRepeat = false;
+                scrollArray.push(child);
+            }
+            else if (oldMat.name == "underWater"){
+                child.material = new THREE.MeshBasicMaterial( { color: new THREE.Color( 0x008ADD ).convertSRGBToLinear(), transparent: true, opacity: 0.3 });
+
+                child.scrollRepeat = false;
+                scrollArray.push(child);
+            }
+            else if (oldMat.name == "wall"){
+                //child.material = new THREE.MeshLambertMaterial( { color: 0xC5C3C6 });
+
+                child.boundingBox = new THREE.BoxHelper(child, 0x00ff00);
+                //scene.add(child.boundingBox);
+                child.box3 = new THREE.Box3().setFromObject(child);
+                collidersArray.push(child);
+
+                child.scrollRepeat = false;
+                scrollArray.push(child);
+            }
+            else if (oldMat.name == "win"){
+                child.material = new THREE.MeshBasicMaterial( {  map: oldMat.map, transparent: true, depthWrite: false,  });
+
+                child.boundingBox = new THREE.BoxHelper(child, 0x00ff00);
+                //scene.add(child.boundingBox);
+                child.box3 = new THREE.Box3().setFromObject(child);
+                collidersArray.push(child);
+
+                child.scrollRepeat = true;
+                scrollArray.push(child);
+            }
+            else if ( oldMat.name.substring(0,11) == "ground_loop" ){
+                //child.material = new THREE.MeshBasicMaterial( {  map: oldMat.map, transparent: true });
+
+                // child.boundingBox = new THREE.BoxHelper(child, 0x00ff00);
+                // scene.add(child.boundingBox);
+                // child.box3 = new THREE.Box3().setFromObject(child);
+                // collidersArray.push(child);
+                child.name = oldMat.name;
+                child.scrollRepeat = true;
+                scrollArray.push(child);
+            }
+            else if (oldMat.name == "race_billboard"){
+                child.material = new THREE.MeshBasicMaterial( { map: oldMat.map,  transparent: true});
+                hubObjects.raceBillboard = child;
+
+                child.scrollRepeat = false;
+                scrollArray.push(child);
+            }
+            else if ( oldMat.name == "sensor_shop" ) {
+                child.visible = false;
+                // child.material = new THREE.MeshBasicMaterial( { map: oldMat.map,  transparent: true, side: THREE.DoubleSide});
+                //
+                // child.boundingBox = new THREE.BoxHelper(child, 0x00ff00);
+                // //scene.add(child.boundingBox);
+                // child.box3 = new THREE.Box3().setFromObject(child);
+                // sensorsArray.push(child);
+                // child.purchaseMode = true;
+                // hubObjects.shopSensor = child;
+                //
+                // child.scrollRepeat = false;
+                // scrollArray.push(child);
+            }
+            else if ( oldMat.name == "sensor_race") {
+                child.material = new THREE.MeshBasicMaterial( { map: oldMat.map,  transparent: true, side: THREE.DoubleSide, depthWrite: false});
+
+                child.boundingBox = new THREE.BoxHelper(child, 0x00ff00);
+                //scene.add(child.boundingBox);
+                child.box3 = new THREE.Box3().setFromObject(child);
+                sensorsArray.push(child);
+                child.startRace = true;
+                hubObjects.startRaceSensor = child;
+
+                child.scrollRepeat = false;
+                scrollArray.push(child);
+            }
+            else if ( oldMat.name == "text_StartRace" ) {
+                child.material = new THREE.MeshBasicMaterial( { map: oldMat.map,  transparent: true });
+                hubObjects.startRaceText = child;
+
+                child.scrollRepeat = false;
+                scrollArray.push(child);
+            }
+            else if (oldMat.name == 'Material.004') {
+                child.material = new THREE.MeshBasicMaterial( { visible: false });
+            }
+        }
+    });
+    scene.add(levelMesh);
+
+    // Spawn eggs to purchase
+    let e1 = new Egg(new THREE.Vector3(2200,0,1500), 1);
+    let e2 = new Egg(new THREE.Vector3(2200,0,3300), 2);
+    let e3 = new Egg(new THREE.Vector3(-2200,0,1500), 3);
+    let e4 = new Egg(new THREE.Vector3(-2200,0,3300), 4);
+    eggArray.push(e1);
+    eggArray.push(e2);
+    eggArray.push(e3);
+    eggArray.push(e4);
+
+    // Spawn players and bots
+    player = new Player();
+    new Bot();
+    new Bot();
+    new Bot();
+    new Bot();
+
+    // Game plane, used for Mouse Co-ordinates
+    mousePlane = new THREE.Mesh( new THREE.PlaneGeometry( 5000, 5000 ), new THREE.MeshLambertMaterial( {visible: false , side: THREE.DoubleSide} ) );
+    //mousePlane.rotation.x = THREE.Math.degToRad(90);
+    mousePlane.position.z = 2945;
+    scene.add( mousePlane );
+}
+
+function Egg(spawnPos, rarity) {
+    var self = {
+        egg: null,
+        egg2: null,
+        sin: 0,
+
+        rarity: rarity,
+        text_description: null,
+        text_cost: null,
+        cost: 3,
+        tempVec3: new THREE.Vector3(),
+    }
+    self.init = function(){
+        // graphic
+        let egg = BaseModel.egg.fbx.clone();
+        egg.traverse(function ( child ) {
+            if ( child instanceof THREE.Mesh ) {
+                const oldMat = child.material;
+                if (oldMat.name == "egg"){
+                    child.material = new THREE.MeshLambertMaterial({ map: eval("Textures.egg"+rarity+".texture") });
+                    self.egg = child;
+                }
+                else if (oldMat.name == "ring"){
+                    child.material = new THREE.MeshBasicMaterial( { color: oldMat.color });
+                }
+                else if (oldMat.name == "cylinder"){
+                    child.material = new THREE.MeshBasicMaterial( { map: oldMat.map, transparent: true });
+                }
+            }
+        });
+        egg.scale.set(0.9,0.9,0.9);
+        egg.position.copy(spawnPos);
+        scene.add(egg);
+        self.egg2 = egg;
+
+        // collision
+        //let box = new THREE.Mesh( new THREE.BoxGeometry(500, 500, 500), new THREE.MeshBasicMaterial({ color: 0x123456, wireframe: true  }) );
+        egg.boundingBox = new THREE.BoxHelper(egg, 0x00ff00);
+        //scene.add(egg.boundingBox);
+        egg.box3 = new THREE.Box3().setFromObject(egg);
+        sensorsArray.push(egg);
+        eval("egg.egg"+rarity+"=true");//egg.egg1 = true;
+
+        // Getting right starting price
+        self.cost = eval("egg"+rarity+"Cost");
+        self.calculateStartingPrice();
+
+        // Text
+        let petText = "";
+        if (rarity == 1)
+            petText = "Common Egg"
+        else if (rarity == 2)
+            petText = "Uncommon Egg"
+        else if (rarity == 3)
+            petText = "Mythical Egg"
+        else if (rarity == 4)
+            petText = "Legendary Egg"
+
+        self.text_description = new TextSprite(petText, '#FFFFFF').nameSprite;
+        self.text_description.material.depthTest = false;
+        self.text_description.scale.set(600,600);
+        scene.add(self.text_description);
+        self.text_description.position.copy(spawnPos);
+        self.text_description.position.y = 400;
+
+        self.text_cost = new TextSprite(self.cost + " wins", '#FF6600').nameSprite;//"Buy for: " +
+        self.text_cost.material.depthTest = false;
+        self.text_cost.scale.set(450,450);
+        scene.add(self.text_cost);
+        self.text_cost.position.copy(spawnPos);
+        self.text_cost.position.y = 300;
+        self.tempVec3.copy(spawnPos);
+    }
+    self.updatePrice = function() {
+        scene.remove(self.text_cost);
+        self.text_cost = null;
+        self.cost *= 2;
+
+        self.text_cost = new TextSprite(self.cost + " wins", '#FF6600').nameSprite;//"Buy for: " +
+        self.text_cost.material.depthTest = false;
+        self.text_cost.scale.set(450,450);
+        scene.add(self.text_cost);
+        self.text_cost.position.copy(self.tempVec3);
+        self.text_cost.position.y = 300;
+    }
+    self.calculateStartingPrice = function() {
+        for (let i in petsArray){
+            if (petsArray[i] == self.rarity){
+                self.cost *= 2;
+            }
+        }
+    }
+    self.update = function(delta) {
+        self.egg.rotation.y += 1*delta;
+
+        self.sin += 13*delta;
+        self.egg.position.y -= Math.sin(self.sin)*(150*delta);
+    }
+
+    self.init();
+    updateArray.push(self);
+    return self;
+}
+
+function Player() {
+
+    console.log("player 1");
+
+    var self = {
+        group: null,
+        model: null,
+        mixer: null,
+        israceset: false,
+        initCollisionCooldown: 10,
+
+        raycaster: new THREE.Raycaster(),
+        posVector: new THREE.Vector3(),
+        dirVector: new THREE.Vector3(0,-1,0),
+        tempVector: new THREE.Vector3(),
+        oldPos: new THREE.Vector3(),
+
+        raceCountdown: 10,
+        countdownSpritePosVec: new THREE.Vector3(0, 600, 3500),
+        countdownInterval: null,
+
+        clicks: 0,
+
+        floatingTextArray: [],
+
+        eggType: 0,
+
+        liningUpBots: 0,
+    }
+    self.init = function(){
+
+        // MODEL
+        self.group = new THREE.Object3D();
+        scene.add(self.group);
+
+        self.model = THREE.SkeletonUtils.clone(BaseModel.char1.fbx);
+        self.group.add(self.model);
+        self.model.traverse(function ( child ) {
+            if ( child instanceof THREE.Mesh ) {
+                const oldMat = child.material;
+                child.material = new THREE.MeshPhongMaterial( { color: oldMat.color, map: oldMat.map, skinning: true, });
+                //child.castShadow = true;
+            }
+        });
+        /* --END-- */
+
+        // ANIMATIONS
+        self.mixer = new THREE.AnimationMixer(self.model);
+        self.idle = self.mixer.clipAction(Anims.idle.animation);
+        self.run = self.mixer.clipAction(Anims.run.animation);
+        self.fall = self.mixer.clipAction(Anims.fall.animation);
+        self.idle.play();
+
+        //self.run.timeScale = 2.5;
+
+        self.fall.setLoop( THREE.LoopOnce );
+        self.fall.clampWhenFinished = true;
+        self.fall._clip.name = "fall";
+
+        self.mixer.addEventListener( 'finished', function( e ) {
+            if (e.action._clip.name == "fall"){
+                gameOverFunction();
+            }
+        });
+        /* --END-- */
+
+        // BOUNDING BOX
+        self.box = new THREE.Mesh( new THREE.BoxGeometry(200, 500, 200), new THREE.MeshBasicMaterial({ visible: false }) );
+        self.box.position.y += 50;
+        self.group.add(self.box);
+        self.boundingBox = new THREE.BoxHelper(self.box, 0x00ff00);
+        //scene.add(self.boundingBox);
+        self.box3 = new THREE.Box3().setFromObject(self.box);
+        /* --END-- */
+
+
+        //Shadow
+        var circleGeometry = new THREE.CircleGeometry(320, 6, 15);
+        var shadowMaterial = new THREE.MeshBasicMaterial({
+            map: Textures.shadow.texture,
+            transparent: true,
+            opacity: 0.5,
+            side: THREE.DoubleSide,
+            depthWrite: false,
+        });
+        self.shadow = new THREE.Mesh(circleGeometry, shadowMaterial);
+        self.shadow.rotation.x = -1.57;
+        self.group.add(self.shadow);
+        self.shadow.position.y = 0.5;
+        /* --END-- */
+
+        // NAME
+        let p = new TextSprite("You", '#FFFFFF');
+        self.username = p.nameSprite;
+        self.username.scale.set(270,270);
+        self.group.add(self.username);
+        self.username.position.y = 540;
+        /* --END-- */
+
+        // WINS
+        let p2 = new TextSprite("Wins: " + wins, '#FF6600');
+        self.winsText = p2.nameSprite;
+        self.winsText.scale.set(300,300);
+        self.group.add(self.winsText);
+        self.winsText.position.y = 590;
+        /* --END-- */
+    }
+    self.moveHub = function(delta){
+        if (playerSpeed > 0.5)
+            self.group.rotation.y = playerAngle * (Math.PI/180);
+
+        if (playerMove && playerSpeed > 0.5){
+            self.oldPos.copy(self.group.position);
+            self.group.translateZ((playerSpeed*170)*delta);
+            if (!self.run.isRunning()) {
+                self.mixer.stopAllAction();
+                self.run.fadeIn(0.3);
+                self.run.play();
+                Sound.walk.sound.play();
+            }
+        }
+        else if (!self.idle.isRunning()){
+            self.mixer.stopAllAction();
+            self.idle.fadeIn(0.3);
+            self.idle.play();
+            Sound.walk.sound.pause();
+        }
+    }
+    self.moveRace = function(delta){
+        //self.model.rotation.set(0,0,0);
+        if (!self.run.isRunning()) {
+            self.mixer.stopAllAction();
+            self.run.fadeIn(0.3);
+            self.run.play();
+            Sound.walk.sound.play();
+        }
+        // player left right movement
+        if (playerMove && playerSpeed > 0.5){
+            self.oldPos.copy(self.group.position);
+            if (playerAngle > 0 && playerAngle < 181){
+                if (self.group.position.x < 1000)
+                    self.group.translateX((playerSpeed*90)*delta);
+            }
+            else{
+                if (self.group.position.x > -1000)
+                    self.group.translateX((playerSpeed*-90)*delta);
+            }
+        }
+
+        // world movement
+        let scrollSpeed = (upgradedBasedSpeed+click)*100;
+        for (let i in scrollArray){
+            scrollArray[i].position.z -= scrollSpeed*delta;
+            if (scrollArray[i].boundingBox){
+                scrollArray[i].boundingBox.setFromObject(scrollArray[i]);
+                scrollArray[i].box3.setFromObject(scrollArray[i]);
+            }
+
+            // check if passed enough z and if yes then place at the beginning of loop - find me
+            if (scrollArray[i].scrollRepeat && scrollArray[i].position.z < -12618){
+                scrollArray[i].position.z = 81600;
+                scrollArray[i].visible = true;// new
+            }
+        }
+    }
+    self.dontWalkOffGround = function() {
+        self.posVector.copy(self.group.position);//self.posVector = self.group.position.clone();
+        self.posVector.y += 200;
+        self.raycaster.set(self.posVector,self.dirVector);
+        const intersect = self.raycaster.intersectObjects(groundArray);
+        if (!intersect.length>0){
+            self.group.position.copy(self.oldPos);
+        }
+    }
+    self.collisionCheck = function() {
+        if (gameOver || shopDialogOpen) return;
+
+        // COLLISION CHECK IN FREE ROAM
+        for (let i in collidersArray){
+            let child = collidersArray[i];
+            let collision = self.box3.intersectsBox(child.box3);
+            if (collision && gameMode == 0){
+
+                var overlapX = Math.min( self.box3.max.x, child.box3.max.x ) - Math.max( self.box3.min.x, child.box3.min.x );
+
+                if ( overlapX < 0 ) return false;
+
+                var overlapY = Math.min( self.box3.max.y, child.box3.max.y ) - Math.max( self.box3.min.y, child.box3.min.y );
+
+                if ( overlapY < 0 ) return false;
+
+                var overlapZ = Math.min( self.box3.max.z, child.box3.max.z ) - Math.max( self.box3.min.z, child.box3.min.z );
+
+                if ( overlapZ < 0 ) return false;
+
+                var minOverlap = Math.min( overlapX, overlapZ );
+                var x = y = z = 0;
+
+                switch ( minOverlap ) {
+
+                    case overlapX:
+
+                        x = Math.sign( self.box3.min.x + self.box3.max.x - child.box3.min.x - child.box3.max.x );
+                        self.group.position.x += (x * minOverlap);
+                        break;
+
+                    case overlapY:
+
+                        y = Math.sign( self.box3.min.y + self.box3.max.y - child.box3.min.y - child.box3.max.y );
+                        break;
+
+                    case overlapZ:
+
+                        z = Math.sign( self.box3.min.z + self.box3.max.z - child.box3.min.z - child.box3.max.z );
+                        self.group.position.z += (z * minOverlap);
+                        break;
+                }
+            }
+            else if (collision && gameMode == 2 && self.initCollisionCooldown < 0) {
+                self.initCollisionCooldown = 2;
+                wins ++;
+                self.scoredWinFX();
+                child.visible = false;
+            }
+        }
+        /* --END-- */
+
+        // COLLISION CHECK WITH HUB WORLD INTERACTIVE POINTS
+        if (gameMode == 0) {
+            for (let i in sensorsArray){
+                let child = sensorsArray[i];
+                let collision = self.box3.intersectsBox(child.box3);
+                // START RACE
+                if (collision && self.initCollisionCooldown < 0 && child.startRace){
+                   gameMode = 1;
+                   // start race countdown and set up race mode - find me
+                   self.setUpRace();
+                }
+                // EGG COMMON
+                else if (collision && self.initCollisionCooldown < 0 && child.egg1 && wins >= eggArray[0].cost){
+                    // Open shop - find me
+                    //console.log('egg1');
+                    openEgg(1);
+                }
+                // EGG MEDIUM
+                else if (collision && self.initCollisionCooldown < 0 && child.egg2 && wins >= eggArray[1].cost){
+                    // Open shop - find me
+                    //console.log('egg2');
+                    openEgg(2);
+                }
+                // EGG RARE
+                else if (collision && self.initCollisionCooldown < 0 && child.egg3 && wins >= eggArray[2].cost){
+                    // Open shop - find me
+                    //console.log('egg3');
+                    openEgg(3);
+                }
+                // EGG EPIC
+                else if (collision && self.initCollisionCooldown < 0 && child.egg4 && wins >= eggArray[3].cost){
+                    // Open shop - find me
+                    //console.log('egg4');
+                    openEgg(4);
+                }
+            }
+        }
+        /* --END-- */
+    }
+    self.setUpRace = function() {
+
+        console.log("set up race 1");
+
+        if(self.israceset){
+            return;
+        }
+
+        self.israceset=true;
+        self.group.rotation.y = 0;
+        self.mixer.stopAllAction();
+        self.idle.fadeIn(0.3);
+        self.idle.play();
+        Sound.walk.sound.pause();
+        if (Sound.click.sound.isPlaying)
+            Sound.click.sound.stop();
+        Sound.click.sound.play();
+
+        //hubObjects.shopSensor.visible = false;
+        hubObjects.startRaceSensor.visible = false;
+        hubObjects.startRaceText.visible = false;
+
+        hubObjects.raceBillboard.material.map = Textures.billboard2.texture;
+        hubObjects.raceBillboard.material.needsUpdate = true;
+        JOYSTICK.style.visibility = "hidden";
+        SPEED_IMAGE.style.backgroundImage = "url(Images/speed.png)";
+        updateSpeedUIText();
+
+        // create mouse click sprite
+        self.clickTextSprite = new THREE.Sprite( new THREE.SpriteMaterial({map:Textures.clickSign.texture}) );
+        self.group.add(self.clickTextSprite);
+        let ns = 600;
+        self.clickTextSprite.scale.set(1*ns,1.1*ns);
+        self.clickTextSprite.position.y = 650;
+        self.clickTextSprite.position.x = -500;
+
+        // create countdown sprite
+        let textSprite = new TextSprite(self.raceCountdown, '#FF5E6E');
+        self.counterSprite = textSprite.nameSprite;
+        self.counterSprite.scale.set(2000,2000);
+        scene.add(self.counterSprite);
+        self.counterSprite.position.copy(self.countdownSpritePosVec);
+        self.countdownInterval = setInterval(function(){
+            if (Sound.click.sound.isPlaying)
+                Sound.click.sound.stop();
+            Sound.click.sound.play();
+            self.raceCountdown --;
+            //console.log(self.raceCountdown);
+            //update countdown sprite
+            scene.remove(self.counterSprite);
+            self.counterSprite = null;
+
+            let tSprite = new TextSprite(self.raceCountdown, '#FF5E6E');
+            self.counterSprite = tSprite.nameSprite;
+            self.counterSprite.scale.set(2000,2000);
+            scene.add(self.counterSprite);
+            self.counterSprite.position.copy(self.countdownSpritePosVec);
+            //on 0 finish start race countdown and start actual race
+            if (self.raceCountdown <= 0){
+
+                clearInterval(self.countdownInterval);
+                scene.remove(self.counterSprite);
+                self.counterSprite = null;
+                hubObjects.raceBillboard.visible = false;
+                self.clickTextSprite.visible = false;
+                gameMode = 2;
+                for (let i in eggArray){
+                    eggArray[i].egg2.visible = false;
+                    eggArray[i].text_description.visible = false;
+                    eggArray[i].text_cost.visible = false;
+                }
+                //console.log("start running");
+                JOYSTICK.style.visibility = "visible";
+                TIMER_TEXT.style.visibility = "visible";
+                minutes = 0;
+                seconds = 20;
+                setTimerText();
+                setTimeout(function(){
+                    if(!awardIsAvailable){
+                        LaggedAPI.GEvents.reward(canShowReward,rewardSuccess);
+                    }  
+                }, 2000);
+                self.raceTimerInterval = setInterval(function(){
+
+                    seconds --;
+                    if (seconds <= 0){
+                        if (minutes > 0){
+                            seconds = 60;
+                            minutes --;
+                        }
+                        else {
+                            minutes = 0;
+                            seconds = 0;
+                            clearInterval(self.raceTimerInterval);
+                            gameOver = true;
+                            gameMode = 3;
+                            self.mixer.stopAllAction();
+                            self.fall.fadeIn(0.3);
+                            self.fall.play();
+                            self.shadow.visible = false;
+                            Sound.over.sound.play();
+                            Sound.walk.sound.pause();
+
+                            // end of race
+                        }
+                    }
+                    setTimerText();
+                },1000);
+            }
+        },1000);
+    }
+    self.scoredWinFX = function() {
+        Sound.gainedWin.sound.play();
+        self.group.remove(self.winsText);
+        self.winsText = null;
+        whiteFX();
+
+        let p2 = new TextSprite("Wins: " + wins, '#FF6600');
+        self.winsText = p2.nameSprite;
+        self.winsText.scale.set(300,300);
+        self.group.add(self.winsText);
+        self.winsText.position.y = 590;
+
+        // +1 floatin text fx
+        let s = new THREE.Sprite(new THREE.SpriteMaterial({ map:Textures.add.texture }));
+        self.group.add(s);
+        s.scale.set(150,110);
+        s.position.y = 500;
+        s.position.x = 0;
+        s.spawnTimer = -3;
+        self.floatingTextArray.push(s);
+    }
+    self.update = function(delta) {
+        self.mixer.update(delta);
+        self.boundingBox.setFromObject(self.box);
+        self.box3.setFromObject(self.box);
+        self.initCollisionCooldown -= 5*delta;
+
+        // Movement
+        if (gameMode == 0)
+            self.moveHub(delta);
+        else if (gameMode == 2){
+            self.moveRace(delta);
+            if (self.group.position.z < 4000){
+                self.group.position.z = THREE.Math.lerp( self.group.position.z, 4000, 4*delta  );//5024 at 5*delta
+            }
+        }
+        if (gameMode == 0)
+            self.dontWalkOffGround();
+        self.collisionCheck();
+        /* --END-- */
+
+        // +1 win floating text fx
+        for (let i in self.floatingTextArray){
+            self.floatingTextArray[i].position.y += 250*delta;
+            self.floatingTextArray[i].spawnTimer += 6*delta;
+            if (self.floatingTextArray[i].spawnTimer > 3){
+                self.group.remove(self.floatingTextArray[i]);
+                self.floatingTextArray.splice(i,1);
+            }
+        }
+
+        // Camera
+        var worldPos = self.group.getWorldPosition(self.tempVector);
+        worldPos.z -= 1900;//-1500
+        worldPos.y += 1000;// 808
+        camera.position.lerp(worldPos, 1*delta);
+        let pos = self.group.position.clone();
+        pos.y += 400; // 200
+        pos.z += 0; // 200
+        camera.lookAt(pos);
+        // keep sky and clouds at same distance
+        skybox.position.set(self.group.position.x,-100,self.group.position.z);
+        clouds.position.set(self.group.position.x,-100,self.group.position.z+15000);
+    }
+
+    self.init();
+    updateArray.push(self);
+    return self;
+}
+
+function Bot() {
+    var self = {
+        group: null,
+        model: null,
+        mixer: null,
+        username: "ThankYouDom",
+
+        // Hub Area roaming around
+        newDestinationCooldown: rand(1,20),//100
+        vectorDestination: new THREE.Vector3(),
+        walkSpeed: 500,
+        dancing: false,
+
+        linedUp: false,
+        // During actual race
+        targetz: 0,
+
+        // Extra
+        tempVector: new THREE.Vector3(),
+        tempVector2: new THREE.Vector3(0,0,40000),
+    }
+    self.init = function(){
+        // MODEL
+        self.group = new THREE.Object3D();
+        scene.add(self.group);
+        self.group.position.set(rand(-2912,2815), 0, rand(21,3631));
+        self.vectorDestination.copy(self.group.position);
+
+        self.model = THREE.SkeletonUtils.clone(eval("BaseModel.char"+rand(2,8)+".fbx"));
+        self.group.add(self.model);
+        self.model.traverse(function ( child ) {
+            if ( child instanceof THREE.Mesh ) {
+                const oldMat = child.material;
+                child.material = new THREE.MeshPhongMaterial( { color: oldMat.color, map: oldMat.map, skinning: true, });
+                //child.castShadow = true;
+            }
+        });
+        /* --END-- */
+
+        // ANIMATIONS
+        self.mixer = new THREE.AnimationMixer(self.model);
+        self.idle = self.mixer.clipAction(Anims.idle.animation);
+        self.run = self.mixer.clipAction(Anims.run.animation);
+        self.taunt1 = self.mixer.clipAction(Anims.taunt1.animation);
+        self.taunt2 = self.mixer.clipAction(Anims.taunt2.animation);
+        self.idle.play();
+
+        self.taunt1.setLoop( THREE.LoopOnce );
+        self.taunt1.clampWhenFinished = true;
+        self.taunt1._clip.name = "taunt1";
+
+        self.taunt2.setLoop( THREE.LoopOnce );
+        self.taunt2.clampWhenFinished = true;
+        self.taunt2._clip.name = "taunt2";
+
+        self.mixer.addEventListener( 'finished', function( e ) {
+            if (e.action._clip.name == "taunt1" || e.action._clip.name == "taunt2"){
+                self.mixer.stopAllAction();
+                self.idle.fadeIn(0.3);
+                self.idle.play();
+                self.dancing = false;
+            }
+        });
+        /* --END-- */
+
+        // BOUNDING BOX
+        self.box = new THREE.Mesh( new THREE.BoxGeometry(200, 500, 200), new THREE.MeshBasicMaterial({ visible: false }) );
+        self.box.position.y += 50;
+        self.group.add(self.box);
+        self.boundingBox = new THREE.BoxHelper(self.box, 0x00ff00);
+        //scene.add(self.boundingBox);
+        self.box3 = new THREE.Box3().setFromObject(self.box);
+        /* --END-- */
+
+        // SHADOW
+        var circleGeometry = new THREE.CircleGeometry(320, 6, 15);
+        var shadowMaterial = new THREE.MeshBasicMaterial({
+            map: Textures.shadow.texture,
+            transparent: true,
+            opacity: 0.5,
+            side: THREE.DoubleSide,
+            depthWrite: false,
+        });
+        self.shadow = new THREE.Mesh(circleGeometry, shadowMaterial);
+        self.shadow.rotation.x = -1.57;
+        self.group.add(self.shadow);
+        self.shadow.position.y = 0.5;
+        /* --END-- */
+
+        // NAME
+        let randomUsername = rand(1,140);
+        if (randomUsername > 100)
+            self.username = 'Guest'+rand(10,20)+rand(10,20);
+        else
+            self.username = botUsernameArray[randomUsername];
+        let p = new TextSprite(self.username, '#FFFFFF');
+        self.username = p.nameSprite;
+        self.username.scale.set(270,270);
+        self.group.add(self.username);
+        self.username.position.y = 540;
+        /* --END-- */
+    }
+    self.moveAroundHubArea = function(delta){
+        self.newDestinationCooldown -= rand(5,15)*delta;
+
+        // find new destination
+        if (self.newDestinationCooldown < 0 && !self.dancing){
+            self.newDestinationCooldown = rand(80,190);
+            self.vectorDestination.set(rand(-2912,2815), 0, rand(21,3631));
+
+            let r = rand (1,6);
+            if (r == 4 || r == 5){
+                self.dancing = true;
+                self.mixer.stopAllAction();
+                self.taunt1.fadeIn(0.3);
+                self.taunt1.play();
+            }
+            else if (r == 6){
+                self.dancing = true;
+                self.mixer.stopAllAction();
+                self.taunt2.fadeIn(0.3);
+                self.taunt2.play();
+            }
+        }
+        self.group.lookAt(self.vectorDestination);
+
+        // move towards new destination
+        if (self.group.position.distanceTo(self.vectorDestination) > 100 && !self.dancing){
+            self.group.translateZ(self.walkSpeed*delta);
+            if (!self.run.isRunning()) {
+                self.mixer.stopAllAction();
+                self.run.fadeIn(0.3);
+                self.run.play();
+            }
+        }
+        else if (!self.dancing){
+            if (!self.idle.isRunning()){
+                self.mixer.stopAllAction();
+                self.idle.fadeIn(0.3);
+                self.idle.play();
+            }
+        }
+    }
+    self.moveRace = function(delta){
+        //self.group.rotation.y = 0
+        self.group.lookAt(self.tempVector2);
+        let ta = [0,1000,2000,3500,30000,50000,70000]
+        if (self.targetz == 0){
+            self.targetz = ta[rand(1,ta.length)-1];//4000 is player's
+        }
+        // set self.z tween
+        // if (self.group.position.z < self.targetz){
+        self.group.position.z = THREE.Math.lerp( self.group.position.z, self.targetz, 0.1*delta  );
+        // }
+        if (!self.run.isRunning()) {
+            self.mixer.stopAllAction();
+            self.run.fadeIn(0.3);
+            self.run.play();
+        }
+    }
+    self.collisionCheck = function() {
+        // COLLISION CHECK IN FREE ROAM
+        for (let i in collidersArray){
+            let child = collidersArray[i];
+            let collision = self.box3.intersectsBox(child.box3);
+            if (collision && gameMode == 0){
+
+                var overlapX = Math.min( self.box3.max.x, child.box3.max.x ) - Math.max( self.box3.min.x, child.box3.min.x );
+
+                if ( overlapX < 0 ) return false;
+
+                var overlapY = Math.min( self.box3.max.y, child.box3.max.y ) - Math.max( self.box3.min.y, child.box3.min.y );
+
+                if ( overlapY < 0 ) return false;
+
+                var overlapZ = Math.min( self.box3.max.z, child.box3.max.z ) - Math.max( self.box3.min.z, child.box3.min.z );
+
+                if ( overlapZ < 0 ) return false;
+
+                var minOverlap = Math.min( overlapX, overlapZ );
+                var x = y = z = 0;
+
+                switch ( minOverlap ) {
+
+                    case overlapX:
+
+                        x = Math.sign( self.box3.min.x + self.box3.max.x - child.box3.min.x - child.box3.max.x );
+                        self.group.position.x += (x * minOverlap);
+                        break;
+
+                    case overlapY:
+
+                        y = Math.sign( self.box3.min.y + self.box3.max.y - child.box3.min.y - child.box3.max.y );
+                        break;
+
+                    case overlapZ:
+
+                        z = Math.sign( self.box3.min.z + self.box3.max.z - child.box3.min.z - child.box3.max.z );
+                        self.group.position.z += (z * minOverlap);
+                        break;
+                }
+            }
+        }
+        /* --END-- */
+    }
+    self.lineUpForRace = function(delta) {
+        if (!self.linedUp) {
+            if (player.liningUpBots == 0)
+                self.tempVector.set(763, 0, 3156);
+            else if (player.liningUpBots == 1)
+                self.tempVector.set(475, 0, 3156);
+            else if (player.liningUpBots == 2)
+                self.tempVector.set(-443, 0, 3156);
+            else if (player.liningUpBots == 3)
+                self.tempVector.set(-754, 0, 3156);
+
+            //self.tempVector.set(rand(-1000,1000), 0, 3156);
+            player.liningUpBots ++;
+            self.linedUp = true;
+        }
+
+        //self.group.rotation.y = 0;
+        //self.group.lookAt(self.vectorDestination);
+        if (self.group.position.distanceTo(self.tempVector) > 50){
+            self.group.position.z = THREE.Math.lerp( self.group.position.z, self.tempVector.z, 2*delta  );
+            self.group.position.x = THREE.Math.lerp( self.group.position.x, self.tempVector.x, 2*delta  );
+            self.group.lookAt(self.tempVector);
+        }
+        // else {
+        //     self.group.rotation.y = 0;
+        // }
+        if (!self.idle.isRunning()){
+            self.mixer.stopAllAction();
+            self.idle.fadeIn(0.3);
+            self.idle.play();
+            //Sound.walk.sound.pause();
+        }
+    }
+    self.update = function(delta) {
+        self.mixer.update(delta);
+        self.boundingBox.setFromObject(self.box);
+        self.box3.setFromObject(self.box);
+
+
+        // Movement
+        if (gameMode == 0) {
+            self.moveAroundHubArea(delta);
+            //self.collisionCheck();
+        }
+        else if (gameMode == 1) {
+            self.lineUpForRace(delta);
+        }
+        else if (gameMode == 2) {
+            self.moveRace(delta);
+        }
+        /* --END-- */
+    }
+
+    self.init();
+    updateArray.push(self);
+    return self;
+}
+
+function gameOverFunction() {
+    TIMER_TEXT.style.visibility = "hidden";
+    //console.log("Game Over");
+    BTN_REWARD.style.visibility = "hidden";
+    awardIsAvailable=false;
+    reset();
+    setUpGame();
+
+    // Saving
+    saveObject.wins = wins;
+    saveObject.petsArray = petsArray;
+    localStorage.setItem("RobloxRaceClickerLaggedSave",JSON.stringify(saveObject));
+
+    setTimeout(function(){
+        // Lagged API achievements
+        var ach=false;
+        var ach_numb=[];
+        if(wins > 49){
+            ach=true;
+            ach_numb.push("race_clicker_bfybb001");
+        }
+        if(wins > 199){
+            ach=true;
+            ach_numb.push("race_clicker_bfybb002");
+        }
+        if(wins > 499){
+            ach=true;
+            ach_numb.push("race_clicker_bfybb003");
+        }
+        if(wins > 999){
+            ach=true;
+            ach_numb.push("race_clicker_bfybb004");
+        }
+        if(ach){
+            LaggedAPI.Achievements.save(ach_numb, function(response) {
+                if(response.success) {
+                    console.log('achievement saved')
+                }else {
+                    console.log(response.errormsg);
+                }
+            });
+        }
+
+
+        // Lagged API show ad
+        if (Sound.music.sound.isPlaying)
+            Sound.music.sound.pause();
+        LaggedAPI.APIAds.show(function() {
+            // ad is finished, unpause game/music
+            console.log("ad completed");
+            if (!Sound.music.sound.isPlaying)
+                Sound.music.sound.play();
+        });
+    },1500)
+}
+
+function reset() {
+    for( var i = scene.children.length - 1; i >= 0; i--)
+        scene.remove(scene.children[i]);
+
+    player = null;
+    skybox = null;
+    clouds = null;
+    playerAngle = 0;
+    playerSpeed = 0;
+    playerMove = false;
+    click = 0;
+    upgradedBasedSpeed = 0
+    minutes = 0;
+    seconds = 0;
+
+    hubObjects = {};
+    updateArray = [];
+    scrollArray = [];
+    collidersArray = [];
+    groundArray = [];
+    sensorsArray = [];
+    particleArray = [];
+    eggArray = [];
+    gameMode = 0;
+    gameOver = false;
+    shopDialogOpen = false;
+}
+
+// BUTTONS
+function btnLoader() {
+    Sound.button.sound.play(); // !!! Important. Dont't remove. It is to avoid The AudioContext was not allowed to start console messages, and smoothly trigger audio on user interaction just how the browsers nowadays like it
+    LaggedAPI.APIAds.show(function() {
+        // ad is finished, unpause game/music
+        console.log("ad completed");
+        init();
+        // hide the loading bar
+        const loadingElem = document.querySelector('#loading');
+        loadingElem.style.display = 'none';
+        LOADER_BUTTON.style.display = 'none';
+        Sound.music.sound.play();
+    });
+}
+
+function btnGO() {
+    Sound.button.sound.play();
+    // Lagged API show ad on after game over screen interaction
+    if (Sound.music.sound.isPlaying)
+        Sound.music.sound.pause();
+    LaggedAPI.APIAds.show(function() {
+        // ad is finished, unpause game/music
+        console.log("ad completed");
+        if (!Sound.music.sound.isPlaying)
+            Sound.music.sound.play();
+        // start new level below
+        reset();
+        setUpGame();
+    });
+}
+
+function btnSound() {
+    Sound.button.sound.play();
+    if (BTN_SOUND.style.opacity == 1){
+        BTN_SOUND.style.opacity = 0.5;
+        Sound.listener.setMasterVolume(0);
+    }
+    else {
+        BTN_SOUND.style.opacity = 1;
+        Sound.listener.setMasterVolume(1);
+    }
+}
+
+// EGG
+function openEgg(eggType) {
+    Sound.button.sound.play();
+    shopDialogOpen = true;
+    EGG_CONTAINER.style.visibility = "visible";
+    JOYSTICK.style.visibility = "hidden";
+    player.eggType = eggType;
+}
+
+function btnYes() { // for egg
+    Sound.button.sound.play();
+    //player.initCollisionCooldown = 20;
+    //shopDialogOpen = false;
+    EGG_CONTAINER.style.visibility = "hidden";
+    JOYSTICK.style.visibility = "visible";
+
+    // create and award pet bonus stat to base speed permanently
+    let p = new Pet(player.eggType);
+    // raise price of the egg
+    eggArray[player.eggType-1].updatePrice();
+}
+
+function btnNo() { // for egg
+    Sound.button.sound.play();
+    player.initCollisionCooldown = 20;
+    shopDialogOpen = false;
+    EGG_CONTAINER.style.visibility = "hidden";
+    JOYSTICK.style.visibility = "visible";
+}
+
+function Pet(type) {
+    var self = {
+        sprite: null,
+        spriteScale: 600,
+        cooldown: 20,
+
+        text_description: null,
+        text_cost: null,
+    }
+    self.init = function() {
+        Sound.egg.sound.play();
+        self.sprite = new THREE.Sprite( new THREE.SpriteMaterial({ map:eval("Textures.pet"+type+"_"+rand(1,2)+".texture"), opacity: 1, transparent: true, depthTest: false, depthWrite: false }) );
+        scene.add(self.sprite);
+        self.sprite.position.set(player.group.position.x, player.group.position.y+800,player.group.position.z);
+        self.sprite.scale.set(self.spriteScale,self.spriteScale+50);
+        //updateSpeedUIText();
+
+        // TEXT
+        let petText = "";
+        if (type == 1)
+            petText = "Common Pet"
+        else if (type == 2)
+            petText = "Uncommon Pet"
+        else if (type == 3)
+            petText = "Mythical Pet"
+        else if (type == 2)
+            petText = "Legendary Pet"
+        self.text_description = new TextSprite(petText, '#FF6600').nameSprite;
+        self.text_description.material.depthTest = false;
+        self.text_description.scale.set(500,500);
+        scene.add(self.text_description);
+        self.text_description.position.copy(self.sprite.position);
+        self.text_description.position.y -= 500;
+
+        self.text_cost = new TextSprite("+"+type*20+" Base Speed", '#FFFFFF').nameSprite;//"Buy for: " +
+        self.text_cost.material.depthTest = false;
+        self.text_cost.scale.set(500,450);
+        scene.add(self.text_cost);
+        self.text_cost.position.copy(self.text_description.position);
+        self.text_cost.position.y -= 200;
+
+        petsArray.push(type);
+        calculatePlayerBaseSpeed();
+        updateSpeedUIText();
+        player.username.visible = false;
+        player.winsText.visible = false;
+    }
+    self.tweenEnd = function(delta){
+        self.spriteScale -= 300*delta;
+        self.sprite.scale.set(self.spriteScale,self.spriteScale);
+        self.sprite.material.opacity -= 0.4*delta;
+        self.sprite.material.needsUpdate = true;
+
+        if (self.sprite.material.opacity < 0.3){
+            scene.remove(self.sprite);
+            for (let i in particleArray){
+                if (particleArray[i].sprite.uuid == self.sprite.uuid)
+                    particleArray.splice(i,1);
+                    //player.initCollisionCooldown = 7;
+                    //shopDialogOpen = false;
+                    //JOYSTICK.style.visibility = "visible";
+            }
+        }
+    }
+    self.update = function(delta){
+        self.cooldown -= 10*delta;
+        if (self.cooldown < 0){
+            if (self.text_description){
+                scene.remove(self.text_description);
+                self.text_description = null;
+
+                player.username.visible = true;
+                player.winsText.visible = true;
+
+                player.initCollisionCooldown = 10;
+                shopDialogOpen = false;
+            }
+            if (self.text_cost){
+                scene.remove(self.text_cost);
+                self.text_cost = null;
+            }
+            self.tweenEnd(delta)
+        }
+
+        // follow player
+        if (self.sprite){
+            self.sprite.position.set(player.group.position.x, player.group.position.y+600,player.group.position.z);
+        }
+        if (self.text_description){
+            self.text_description.position.copy(self.sprite.position);
+            self.text_description.position.y -= 450;
+            self.text_description.position.x += 40;
+        }
+        if (self.text_cost){
+            self.text_cost.position.copy(self.text_description.position);
+            self.text_cost.position.y -= 100;
+        }
+    }
+
+    self.init();
+    particleArray.push(self);
+    return self;
+}
+
+// CLICKER CONTROLS
+var mouse = new THREE.Vector2();
+function touchStart(event) {
+    let touch = event.changedTouches[0];
+    if (gameMode == 1){
+
+        mouse.x = (touch.pageX / window.innerWidth) * 2 - 1;
+        mouse.y = -(touch.pageY / window.innerHeight) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        let intersect =raycaster.intersectObject(mousePlane);
+        if (intersect.length > 0 ) {
+            new ClickFX(intersect[0].point);
+        }
+
+        click ++;
+    }
+}
+function mouseDown(event) {
+    if (gameMode == 1){
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        let intersect =raycaster.intersectObject(mousePlane);
+        if (intersect.length > 0 ) {
+            new ClickFX(intersect[0].point);
+        }
+
+        click ++;
+    }
+}
+
+// ACTUAL GAME
+function animate(){
+    requestAnimationFrame( animate );
+    var delta = clock.getDelta();
+    if (delta > 0.2)
+        delta = 0;
+
+    for (let i in updateArray){
+        updateArray[i].update(delta);
+    }
+    for (let i in particleArray){
+        particleArray[i].update(delta);
+    }
+
+    showLandscapeMessage();
+    renderer.render( scene, camera );
+}
+preload();
+
+// HELPER AND EXTRA STUFF
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+function rand(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
+}
+
+function showLandscapeMessage() { // landscape on mobile
+    if (onMobile) {
+        if (window.innerWidth < window.innerHeight){
+            ROTATE_MSG.style.visibility = "visible";
+        }
+        else if (ROTATE_MSG.style.visibility == "visible"){
+            ROTATE_MSG.style.visibility = "hidden";
+        }
+    }
+}
+
+function is_touch_device() {
+  try {
+    document.createEvent("TouchEvent");
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function callConfetti() {
+    var duration = 2 * 40;
+    var end = Date.now() + duration;
+
+    (function frame() {
+        // launch a few confetti from the left edge
+        confetti({
+            particleCount: 7,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 }
+        });
+        // and launch a few from the right edge
+        confetti({
+            particleCount: 7,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 }
+        });
+
+        // keep going until we are out of time
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        }
+    }());
+
+    confetti({
+        particleCount: 150,
+        spread: 180
+    });
+}
+
+function gradTexture(color) {
+    var c = document.createElement("canvas");
+    var ct = c.getContext("2d");
+    var size = 1024;
+    c.width = 16; c.height = size;
+    var gradient = ct.createLinearGradient(0,0,0,size);
+    var i = color[0].length;
+    while(i--){ gradient.addColorStop(color[0][i],color[1][i]); }
+    ct.fillStyle = gradient;
+    ct.fillRect(0,0,16,size);
+    var texture = new THREE.Texture(c);
+    texture.needsUpdate = true;
+    texture.encoding = THREE.sRGBEncoding;
+    return texture;
+}
+
+function TextSprite (text, textColor) {
+    var self = {
+
+    }
+    self.init = function(){
+        const ctx = document.createElement('canvas').getContext('2d');
+        const borderSize = 2;
+        const font =  `1000 30px Arial`;
+        ctx.font = font;
+        // measure how long the name will be
+        const textWidth = ctx.measureText(text).width;
+        const doubleBorderSize = borderSize * 2;
+        const width = 200 + doubleBorderSize;
+        const height = 200 + doubleBorderSize;
+        ctx.canvas.width = width;
+        ctx.canvas.height = height;
+        ctx.font = font;
+
+        // need to set font again after resizing canvas
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'center';
+        // scale to fit but don't stretch
+        const scaleFactor = Math.min(1, 200 / textWidth);
+        ctx.translate(width / 2, height / 2);
+        ctx.scale(scaleFactor, 1);
+        if (textColor)
+            ctx.fillStyle = textColor;
+        else
+            ctx.fillStyle = '#FFFFFF';
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 5;
+        ctx.strokeText(text, 0, 0);
+        ctx.fillText(text, 0, 0);
+
+        const texture = new THREE.CanvasTexture(ctx.canvas);
+        texture.encoding = THREE.sRGBEncoding;
+        texture.minFilter = THREE.LinearFilter;
+        texture.wrapS = THREE.ClampToEdgeWrapping;
+        texture.wrapT = THREE.ClampToEdgeWrapping;
+
+        spriteMaterial = new THREE.SpriteMaterial({map:texture});
+        self.nameSprite = new THREE.Sprite(spriteMaterial);
+        const labelBaseScale = 0.01;
+        self.nameSprite.scale.x =  width*1.4;
+        self.nameSprite.scale.y =  height*1.3;
+    }
+
+    self.init();
+    return self;
+}
+
+function ClickFX(spawnPos){
+    var self = {
+        sprite: null,
+        spriteScale: 0,
+    }
+    self.init = function() {
+        if (Sound.click2.sound.isPlaying)
+            Sound.click2.sound.stop();
+        Sound.click2.sound.play();
+        self.sprite = new THREE.Sprite( new THREE.SpriteMaterial({ map:Textures.clickFX.texture, opacity: 1, transparent: true, depthTest: false, depthWrite: false }) );
+        scene.add(self.sprite);
+        self.sprite.position.set(spawnPos.x, spawnPos.y, spawnPos.z);
+        self.sprite.scale.set(0,0);
+        updateSpeedUIText();
+    }
+    self.update = function(delta){
+        self.spriteScale += 1000*delta;
+        self.sprite.scale.set(self.spriteScale,self.spriteScale);
+        self.sprite.material.opacity -= 0.6*delta;
+        self.sprite.material.needsUpdate = true;
+
+        if (self.sprite.material.opacity < 0.3){
+            scene.remove(self.sprite);
+            for (let i in particleArray){
+                if (particleArray[i].sprite.uuid == self.sprite.uuid)
+                    particleArray.splice(i,1);
+            }
+        }
+    }
+
+    self.init();
+    particleArray.push(self);
+    return self;
+}
+
+function whiteFX() {
+    WHITE_FX.style.opacity = "0.9";
+    WHITE_FX.style.visibility = "visible";
+    WHITE_FX.classList.add('animate__animated', 'animate__fadeOut');
+    WHITE_FX.addEventListener('animationend', removeMenu);
+    function removeMenu() {
+        WHITE_FX.removeEventListener('animationend', removeMenu);
+        WHITE_FX.classList.remove('animate__animated', 'animate__fadeOut');
+        WHITE_FX.style.visibility = "hidden";
+        WHITE_FX.style.opacity = "0.9";
+    }
+}
+
+function updateSpeedUIText () {
+    SPEED_TEXTSTART.innerHTML = upgradedBasedSpeed;//"Base Speed: "+
+    SPEED_TEXTEND.innerHTML = upgradedBasedSpeed+click;
+}
+
+function calculatePlayerBaseSpeed() {
+    upgradedBasedSpeed = 0;
+
+    for (let i in petsArray) {
+        //key
+        //pets[key]
+        upgradedBasedSpeed += petsArray[i]*20//pets[key];
+    }
+}
+
+function setTimerText() {
+    if (seconds < 10){
+        TIMER_TEXT.innerHTML = "0"+minutes+":0"+seconds;
+    }
+    else {
+        TIMER_TEXT.innerHTML = "0"+minutes+":"+seconds;
+    }
+}
+
+// LAGGED API REWARDED ADS
+//this will be called if a reward ad can be shown or not
+var checkedIt=0;
+function canShowReward (success,showAdFn){
+    checkedIt++;
+    if(success) {
+        checkedIt=0;
+        //you can show user a button for a reward, must call showAdFn() on click
+        //ex: rewardButton.onclick=function(){showAdFn();}
+        showReviveUI();
+        awardIsAvailable=true;
+        document.querySelector('#btnReward').onclick=function(){
+            Sound.listener.setMasterVolume(0);
+            // pause game here if needed
+            showAdFn();
+            BTN_REWARD.style.visibility = "hidden";
+        }
+    }
+    else {
+        awardIsAvailable=false;
+        //no ad to show, do nothing
+        console.log('No rewarded ad available');
+        BTN_REWARD.style.visibility = "hidden";
+
+        if(checkedIt<3){
+            setTimeout(function(){
+                    if(!awardIsAvailable){
+                        LaggedAPI.GEvents.reward(canShowReward,rewardSuccess);
+                    }  
+         }, 1000);
+        }else{
+            checkedIt=0;
+        }
+
+    }
+}
+
+//after ad is played (after showAdFn() is called)
+function rewardSuccess(success){
+    if(success) {
+        //give user the reward
+        console.log('Reward granted successfully');
+        //Sound.good.sound.play();
+        wins += 100;
+        if (gameMode == 2){
+            player.scoredWinFX();
+        }
+    }
+    else {
+        //no reward
+        console.log('No reward');
+
+    }
+    if (BTN_SOUND.style.opacity == 1){
+        Sound.listener.setMasterVolume(1);
+    }
+    //remove reward button
+    BTN_REWARD.style.visibility = "hidden";
+    awardIsAvailable=false;
+}
+
+function showReviveUI() {
+    BTN_REWARD.style.visibility = "visible";
+}
+
+</script>
+</body>
+</html>

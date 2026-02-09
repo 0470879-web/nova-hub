@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head><base href="./"/>
+<meta charset="utf-8"/>
+<title>Choir</title>
+<script onload="LaggedAPI.init();" src="js/v4/lagged.js" type="text/javascript"></script>
+<link href="en/g/choir" rel="canonical"/>
+<style>
+      body,html{margin:0;padding:0}
+      iframe{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;border:0}
+      #adsbox{position:fixed;top:0;right:0;bottom:0;left:0;z-index:999;}
+      #showad{display:none;position: fixed;bottom:0;text-align: center;left:0;right:0;float:left;width:100%;height:300px;opacity: 1 !important}
+  #showad a{width:100%;display:block}
+  #showad img{
+    width:600px;height: 315px;border-radius: 10px;box-shadow: 0 0 4px 0 rgb(0 0 0 / 80%);
+  }
+      #closeit{position: absolute;top: -23px; left: calc(50% - 20px); background-color: #fff;
+          border: 1px solid #333;
+          padding: 7px 15px;
+          border-radius: 6px;
+          font-weight: bold;}
+          @media(max-width:660px){
+        #showad{width: 100%;height: auto;}
+        #showad img{width: 100%;height: auto;}
+      }
+        </style>
+<script>
+  var clickCnt=0;
+  var adcnt=0;
+  var checkTimer=setInterval(function(){
+    adcnt++;
+    if(adcnt>22){
+      document.getElementById('showad').style.display="block";
+    }
+    if(adcnt>30){
+      LaggedAPI.APIAds.show(function(response) {console.log('ad done')});
+    }
+  },999);
+  function closeAd(){
+    clickCnt++;
+    if(clickCnt>3){
+      clearInterval(checkTimer);
+    }
+    LaggedAPI.APIAds.show(function(response) {console.log('ad done')});
+    document.getElementById('showad').style.display="none";adcnt=-45;
+  }
+  </script>
+</head>
+<body>
+<iframe sandbox="allow-scripts allow-same-origin" src="https://d21u3ic0kp9e91.cloudfront.net/choir/04/index.html"></iframe>
+<div id="showad"><a href="https://lagged.com/cool-games-777" target="_blank"><img alt="play games" src="https://imgs2.dab3games.com/elasticplug.png"/></a><button id="closeit" onclick="closeAd();">X</button></div>
+</body>
+</html>

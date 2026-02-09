@@ -1,0 +1,1426 @@
+<html>
+<head><base href="./"/>
+<!--Meta stuff-->
+<meta content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" name="viewport"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" rel="stylesheet"/>
+<script onload="LaggedAPI.init();" src="js/v4/lagged.js"></script>
+<title>Shape Shift Run</title>
+<style>
+    * {
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        font-family: sans-serif;
+        font-weight: 400;
+        outline: none;
+        user-select: none;
+    }
+    body {
+        margin: 0;
+        overflow: hidden;
+    }
+    #loading {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        color: white;
+        text-align: center;
+        font-size: 30px;
+        font-weight: 100;
+        background-color: #4153A5;
+        text-shadow:         /* create a black outline */
+        -1px -1px 0 #000,
+         0   -1px 0 #000,
+         1px -1px 0 #000,
+         1px  0   0 #000,
+         1px  1px 0 #000,
+         0    1px 0 #000,
+        -1px  1px 0 #000,
+        -1px  0   0 #000;
+
+    }
+    #loading>div {
+        margin-top: 30vh;
+    }
+    .progress {
+        margin-top: 1vh;
+        display: inline-block;
+        border-radius: 10vw;
+        width: 50vw;
+        height: 1.5vw;
+        background-color: #2B292A;
+    }
+    #progressbar {
+        width: 0;
+        border-radius: 10vw;
+        height: 1.5vw;
+        background: rgb(253,105,41);
+        background: -moz-linear-gradient(90deg, rgba(253,105,41,1) 19%, rgba(244,192,41,1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(253,105,41,1) 19%, rgba(244,192,41,1) 100%);
+        background: linear-gradient(90deg, rgba(253,105,41,1) 19%, rgba(244,192,41,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fd6929",endColorstr="#f4c029",GradientType=1);
+    }
+    #lagged {
+        margin-bottom: 10vh;
+        display: inline-block;
+        width: 30vh;
+        height: 30vh;
+        background-image: url(Images/lagged.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+    }
+    #c {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    #gameUI {
+        position: fixed;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        visibility: hidden;
+    }
+    #ingameLagged {
+        display: inline-block;
+        width: 25vh;
+        height: 12vh;
+        background-image: url(Images/lagged2.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+    }
+    #lvlNo {
+        display: inline-block;
+        margin-top: -2vh;
+        text-align: center;
+        color: white;
+        font-size: 300%;
+        font-weight: 800;
+        text-shadow: 0px 4px 0px rgba(0, 0, 0, 0.6),2px 2px 4px #000000,         /* create a black outline */
+        -1px -1px 0 #000,
+         0   -1px 0 #000,
+         1px -1px 0 #000,
+         1px  0   0 #000,
+         1px  1px 0 #000,
+         0    1px 0 #000,
+        -1px  1px 0 #000,
+        -1px  0   0 #000;
+    }
+    #btnStart {
+        position: fixed;
+        width: 310px;
+        height: 111px;
+        bottom: 12px;
+        left: 44%;
+        transform: translateX(-50%);
+        cursor: pointer;
+        text-align: center;
+        user-select: none;
+        background-image: url(Images/btnPlay.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+        animation: rubberBand 1s ease infinite;
+    }
+    #buttonsContainer {
+        position: fixed;
+        width: 100%;
+        height: 130px;
+        /*background-color: rgba(0,0,0,0.5);*/
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        visibility: hidden;
+    }
+    .buttonMenu {
+        display: inline-block;
+        width: 200px;
+        height: 200px;
+        justify-content: space-between;
+    }
+    #btnCar {
+        background-image: url(Images/btnCar.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+    }
+    #btnBoat {
+        background-image: url(Images/btnBoat.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+    }
+    #btnChopper {
+        background-image: url(Images/btnChopper.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+    }
+    /*SEPERATE THEN GAME AND GAMEOVER UI BUTTONS*/
+    #btnSound {
+        position: fixed;
+        left: 0.5%;
+        top: 1%;
+        width: 8%;
+        height: 8%;
+        visibility: hidden;
+        background-image: url(Images/btnSound.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+    }
+    .button {
+        transition: all .1s;
+        cursor: pointer;
+        user-select: none;
+    }
+    .button:hover {
+        transform: scale(1.1);
+    }
+    /*RESPONSIVE*/
+    #gameOverUI {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        visibility: hidden;
+        background-color: rgba(0,0,0,0.5);
+    }
+    #moreGames {
+        display: inline-block;
+        width: 400px;
+        height: 400px;
+        background-color: rgba(0,0,0,0.5);
+        color: white;
+        margin-top: -0.5%;
+    }
+    /* add #moreGames h3 and .thumbWrapper style ~lagged template */
+    #moreGames h3{float:left;clear:both;width:100%;line-height:16px;height:16px;font-size:16px;font-weight:600;padding-top:3px}
+    .thumbWrapper{overflow:hidden;position:relative;background-color:#a5a5a5;box-shadow:0 0 4px 0 rgba(0,0,0,.5);margin:3% 0 0 5%;width:43%;padding-bottom:43%;border-radius:5px}.thumbWrapper div{top:0;left:0;right:0;bottom:0;overflow:hidden;border-radius:5px}.thumbWrapper a{top:0;left:0;bottom:0;right:0;z-index:200;text-indent:-99999px}.thumbWrapper img{width:100%;height:100%;border-radius:2px}.thumbWrapper span.thumbname{position:absolute;transition:bottom .6s ease;font-size:15px;font-weight:700;letter-spacing:1px;width:100%;bottom:-125%;left:0;height:auto;min-height:18px;line-height:20px;padding:7px 0 4px;text-align:center;text-transform:uppercase;background-color:rgba(42,100,144,.8);color:#fff;border-bottom-left-radius:2px;border-bottom-right-radius:2px}.thumbWrapper:hover span{display:block}
+
+    #btnNext{
+        display: inline-block;
+        margin-top: 16vh;
+        background-image: url(Images/btnNextLevel.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+        width: 300px;
+        height: 140px;
+    }
+    #btnRestart{
+        display: inline-block;
+        margin-top: 16vh;
+        background-image: url(Images/btnRestart.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+        width: 300px;
+        height: 140px;
+    }
+    #goMessage {
+        color: white;
+        font-size: 300%;
+        font-weight: 800;
+
+        display: inline-block;
+        margin-top: 1%;
+        text-shadow: 0px 4px 0px rgba(0, 0, 0, 0.6),2px 2px 4px #000000,
+        -1px -1px 0 #000,
+         0   -1px 0 #000,
+         1px -1px 0 #000,
+         1px  0   0 #000,
+         1px  1px 0 #000,
+         0    1px 0 #000,
+        -1px  1px 0 #000,
+        -1px  0   0 #000;
+    }
+    #rotateDeviceBG {
+        background-color: rgba(0,0,0,1);
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        visibility: hidden;
+        top: 0;
+        left: 0;
+    }
+    .phone {
+        margin-top: 15%;
+        display: inline-block;
+        height: 100px;
+        width: 200px;
+        border: 4px solid white;
+        border-radius: 10px;
+        animation: rotate 1.5s ease-in-out infinite alternate;
+    }
+    .message {
+        position: fixed;
+        width: 100%;
+        height: 10%;
+        left: 0;
+        text-align: center;
+        color: white;
+        font-size: 200%;
+        font-weight: 800;
+        bottom: 10%;
+      /* display: none; */
+    }
+    @keyframes rotate {
+      0% {
+            transform: rotate(0deg)
+        }
+        50% {
+            transform: rotate(-90deg)
+        }
+        100% {
+            transform: rotate(-90deg)
+        }
+    }
+    #hand {
+        position: fixed;
+        width: 60px;
+        height: 70px;
+        bottom: -20px;
+        left: 38%;
+        transform: translateX(-50%);
+        background-image: url(Images/hand.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+        animation: hand1Anim .5s ease-in-out infinite alternate;
+        display: none;
+    }
+    @keyframes hand1Anim {
+      0% {
+            transform: scale(1)
+        }
+        100% {
+            transform: scale(1.3)
+        }
+    }
+    #whiteFX{
+        position: fixed;
+        right: 0%;
+        top: 0%;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255,255,255,1);
+        visibility: hidden;
+        user-select: none;
+        pointer-events: none;
+        --animate-duration: 200ms;
+    }
+    @media only screen and (max-width: 900px) {
+        #loading {
+            font-size: 20px;
+        }
+        .progress {
+            width: 70vw;
+        }
+        #lvlNo {
+            font-size: 220%;
+            font-weight: 800;
+        }
+        #btnSound {
+            width: 13%;
+            height: 13%;
+        }
+        #ingameLagged {
+            width: 18vh;
+            height: 9vh;
+        }
+        #moreGames {
+            width: 200px;
+            height: 200px;
+            margin-top: -1.5%;
+        }
+        #goMessage {
+            font-size: 150%;
+            font-weight: 800;
+            margin-top: 1%
+        }
+        #btnNext{
+            width: 200px;
+            height: 90px;
+            margin-top: 12vh;
+        }
+        #btnRestart{
+            width: 200px;
+            height: 90px;
+            margin-top: 12vh;
+        }
+        #btnStart {
+            width: 206px;
+            height: 58px;
+            bottom: -12px;
+            left: 39%;
+            transform: translateX(-50%);
+        }
+        #buttonsContainer {
+            bottom: -55px;
+        }
+        .buttonMenu {
+            display: inline-block;
+            width: 90px;
+            height: 90px;
+            justify-content: space-between;
+        }
+        #hand {
+
+            width: 30px;
+            height: 40px;
+        }
+        @keyframes handAnim2 {
+            0% {
+                transform: translate(50px, -250px)
+            }
+            100% {
+                transform: translate(-70px, -300px)
+            }
+        }
+    }
+
+</style>
+</head>
+<body>
+<script src="games/play2/shape-shift-run2/Libs/three.min.js"></script>
+<script src="games/play2/shape-shift-run2/Libs/FBXLoader.js"></script>
+<script src="games/play2/shape-shift-run2/Libs/inflate.min.js"></script>
+<script src="games/play2/shape-shift-run2/Libs/SkeletonUtils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+<div id="loading">
+<div>
+<div id="lagged"></div>
+<div id="progressText">0%</div>
+<div class="progress"><div id="progressbar"></div></div>
+<div>Loading...</div>
+</div>
+</div>
+<canvas id="c"></canvas>
+<div id="gameUI">
+<div id="ingameLagged"></div><br/>
+<div id="lvlNo">Level 1</div><br/>
+<div id="btnStart" onclick="btnStartGame()"></div>
+<div id="buttonsContainer">
+<div class="button buttonMenu" id="btnCar" onclick="btnVehicle(1)"></div>
+<div class="button buttonMenu" id="btnBoat" onclick="btnVehicle(2)"></div>
+<div class="button buttonMenu" id="btnChopper" onclick="btnVehicle(3)"></div>
+</div>
+</div>
+<div id="gameOverUI">
+<div class="animate__animated animate__rubberBand animate__infinite animate__slow button" id="btnRestart" onclick="btnRestart()"></div><br/>
+<div class="animate__animated animate__rubberBand animate__infinite animate__slow button" id="btnNext" onclick="btnNext()"></div><br/>
+<br/>
+<div class="animate__animated animate__tada animate__infinite" id="goMessage">Level Complete!</div><br/>
+</div>
+<div id="hand"></div>
+<div class="button" id="btnSound" onclick="btnSound()"></div>
+<div class="animate__faster" id="whiteFX"></div>
+<div id="rotateDeviceBG">
+<div class="phone">
+</div>
+<div class="message">
+      Please rotate your device!
+    </div>
+</div>
+<script>
+// GLOBAL VAR
+//console.warn = function(){};
+var scene = null;
+var camera = null;
+var renderer = null;
+var clock = new THREE.Clock();
+var onMobile = false;
+var skybox = null;
+
+// RESETABLE VARS
+var level = 1; // save
+var player = null;
+var e1 = null;
+var e2 = null;
+var spawner = null;
+var gameStarted = false;
+var gameOver = false;
+var lost = false;
+
+// RESETABLE ARRAYS
+var updateArray = [];
+var particleArray = [];
+
+const BaseModel = {
+    groundCar: {url: 'Models/groundCar.fbx'},
+    groundBoat: {url: 'Models/groundBoat.fbx'},
+    groundChopper: {url: 'Models/groundChopper.fbx'},
+    groundEnd: {url: 'Models/groundEnd.fbx'},
+    character: {url: 'Models/character.fbx'},
+    car: {url: 'Models/car.fbx'},
+    boat: {url: 'Models/boat.fbx'},
+    chopper: {url: 'Models/chopper.fbx'},
+}
+const Anims = {
+    idle_AI: {url: 'Models/a_idle_AI.fbx'},
+    idle: {url: 'Models/a_idle.fbx'},
+    run: {url: 'Models/a_run.fbx'},
+}
+const Textures = {
+    shadow: {url: 'Images/shadow.png'},
+    particle: {url: 'Images/particle.png'},
+    redCar: {url: 'Models/redCar.png'},
+    yellowCar: {url: 'Models/yellowCar.png'},
+    redChopper: {url: 'Models/redChopper.png'},
+    yellowChopper: {url: 'Models/yellowChopper.png'},
+}
+const Sound = {
+    applause: {url: 'Sound/applause.mp3'},
+    button: {url: 'Sound/button.mp3'},
+    changeVehicle: {url: 'Sound/changeVehicle.mp3'},
+    gameOver: {url: 'Sound/gameOver.mp3'},
+    music: {url: 'Sound/music.mp3'},
+    car: {url: 'Sound/car.mp3'},
+    boat: {url: 'Sound/boat.mp3'},
+    chopper: {url: 'Sound/copter.mp3'},
+}
+
+// DOM elements
+const CANVAS = document.querySelector('#c');
+const PROGRESS_TEXT = document.querySelector('#progressText');
+const GAME_UI = document.querySelector('#gameUI');
+const BTN_SOUND = document.querySelector('#btnSound');
+const BUTTONS_CONTAINER  = document.querySelector('#buttonsContainer');
+const HAND  = document.querySelector('#hand');
+const WHITE_FX = document.querySelector('#whiteFX');
+const GAMEOVER_UI = document.querySelector('#gameOverUI');
+const ROTATE_MSG  = document.querySelector('#rotateDeviceBG');
+const BTN_RESTART = document.querySelector('#btnRestart');
+const BTN_NEXT = document.querySelector('#btnNext');
+const GO_MESSAGE = document.querySelector('#goMessage');
+const LEVEL_TEXT = document.querySelector('#lvlNo');
+
+function preload() {
+    const progressbarElem = document.querySelector('#progressbar');
+    let manager = new THREE.LoadingManager();
+    manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+        //console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+    };
+    manager.onLoad = function ( ) {
+        //console.log( 'Loading complete!');
+        init();
+        // hide the loading bar
+        const loadingElem = document.querySelector('#loading');
+        loadingElem.style.display = 'none';
+    };
+    manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+        //console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+        progressbarElem.style.width = `${itemsLoaded / itemsTotal * 100 | 0}%`;
+        PROGRESS_TEXT.innerHTML = `${itemsLoaded / itemsTotal * 100 | 0}%`;
+    };
+    manager.onError = function ( url ) {
+        //console.log( 'There was an error loading ' + url );
+    };
+
+    var loader = new THREE.FBXLoader( manager );
+    // load base character model
+    for (const model of Object.values(BaseModel)) {
+        loader.load( model.url, function ( fbx ) {
+            model.fbx = fbx;
+        });
+    }
+    // load anims
+    for (const model of Object.values(Anims)) {
+        loader.load( model.url, function ( fbx ) {
+            //model.fbx = fbx;
+            model.animation = fbx.animations[ 0 ];
+        });
+    }
+    // load textures
+    var loaderTex = new THREE.TextureLoader(manager);
+    for (const img of Object.values(Textures)) {
+        loaderTex.load( img.url, function(texture) {
+            texture.encoding = THREE.sRGBEncoding;
+            img.texture = texture;
+        });
+    }
+    // load audio
+    Sound.listener = new THREE.AudioListener();
+    const audioLoader = new THREE.AudioLoader( manager );
+    for (const key of Object.values(Sound)) {
+        audioLoader.load( key.url, function(buffer) {
+            key.sound = new THREE.Audio( Sound.listener );
+            key.sound.setBuffer( buffer );
+            key.sound.setVolume( 2 );
+            if (key.url == 'Sound/music.mp3'){
+                key.sound.setLoop( true );
+                key.sound.setVolume( 0.7 );
+            }
+        });
+    }
+    const skyLoader = new THREE.CubeTextureLoader(manager);
+    skybox = skyLoader.load([
+        'Images/s_left.png',
+        'Images/s_right.png',
+        'Images/s_up.png',
+        'Images/s_down.png',
+        'Images/s_front.png',
+        'Images/s_back.png',
+    ]);
+}
+
+function init(){
+    if (is_touch_device()){
+        onMobile = true;
+    }
+    BTN_SOUND.style.visibility = "visible";
+    GAME_UI.style.visibility = "visible";
+
+
+    renderer = new THREE.WebGLRenderer({canvas: CANVAS, antialias: true,});
+    renderer.setPixelRatio( 1 );
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    //renderer.shadowMapEnabled = true;
+
+    camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 14000 );
+    camera.position.set(100, 1000, 0);
+    camera.lookAt(0,0,0);
+    camera.add( Sound.listener );
+
+    scene = new THREE.Scene();
+    scene.background = skybox;//scene.background = new THREE.Color( 0x00B9FE ).convertSRGBToLinear();
+    // fog
+    const color = new THREE.Color( 0x77CEFF );
+    const near = 1300;
+    const far = 1700;
+    scene.fog = new THREE.Fog(color, near, far);
+
+    window.addEventListener( 'resize', onWindowResize, false );
+    document.addEventListener('touchstart', touchStart, false);
+    document.addEventListener('touchend', touchEnd, false);
+    document.addEventListener('touchmove', touchMoved, false);
+
+    document.addEventListener('mousemove', mouseMoved, false);
+    document.addEventListener('mousedown', mouseDown, false);
+    document.addEventListener('mouseup', mouseUp, false);
+
+    setUpGame();
+    animate();
+}
+
+function setUpGame() {
+    LEVEL_TEXT.innerHTML = "Level "+level;
+     // Lights
+    var ambientLight = new THREE.AmbientLight( 0x707070, 0.8 );
+    scene.add( ambientLight );
+
+    var light = new THREE.DirectionalLight( 0xffffff, 1 );
+    light.position.set( -1000, 1000, -1000 );
+    light.castShadow = true;
+    var d = 5000;
+    light.shadow.camera.left = - d;
+    light.shadow.camera.right = d;
+    light.shadow.camera.top = d;
+    light.shadow.camera.bottom = - d;
+
+    light.shadow.camera.near = 2;
+    light.shadow.camera.far = 10000;
+
+    light.shadow.mapSize.x = 1024;
+    light.shadow.mapSize.y = 1024;
+
+    scene.add( light );
+
+    player = new Player('player');
+    e1 = new Player('enemy', 5, 0xDA222E, 0xBB0008);
+    e2 = new Player('enemy', 120, 0xE7E200, 0xDAAD00);
+    spawner = new Spawner();
+}
+
+function Player(type, spawnX, colorLight, colorDark) {
+    var self = {
+        group: null,
+        model: null,
+        mixer: null,
+        type: type,
+        cameraPos: new THREE.Vector3(),
+        cameraLookAt: new THREE.Vector3(),
+        speed: 200,
+        mode: 'human',
+        carSin: 0,
+        chopperBlade: null,
+        smokeFXCooldown: 60,
+        raycaster: new THREE.Raycaster(),
+        rayDir: new THREE.Vector3(0,-1,0),
+        rayDir2: new THREE.Vector3(0,0,1),
+        rayPos: new THREE.Vector3(0,0,0),
+        rayPos2: new THREE.Vector3(0,0,0),
+        aiTransforming: false,
+        aiTimeout: 0,
+        shiftZTime: 200,
+    }
+    self.init = function(){
+        // model
+        self.group = new THREE.Object3D();
+        self.group.position.x = -125;
+        if (spawnX)
+            self.group.position.x = spawnX;
+        scene.add(self.group);
+
+        self.model = THREE.SkeletonUtils.clone(BaseModel.character.fbx);
+        self.model.traverse(function ( child ) {
+            if ( child instanceof THREE.Mesh ) {
+                const oldMat = child.material;
+                if (colorLight){
+                    if (oldMat.name == 'clothes')
+                        child.material = new THREE.MeshLambertMaterial( { color: colorLight, skinning: true, });
+                    if (oldMat.name == 'skin')
+                        child.material = new THREE.MeshLambertMaterial( { color: colorDark, skinning: true, });
+                }
+                else
+                    child.material = new THREE.MeshLambertMaterial( { color: oldMat.color, skinning: true, });
+            }
+        });
+        self.group.add(self.model);
+        self.mixer = new THREE.AnimationMixer(self.model);
+        if (type == 'enemy')
+            self.idle = self.mixer.clipAction(Anims.idle_AI.animation);
+        else
+            self.idle = self.mixer.clipAction(Anims.idle.animation);
+        self.run = self.mixer.clipAction(Anims.run.animation);
+        self.idle.play();
+
+        // Shadow
+        self.shadow = new THREE.Mesh(new THREE.CircleGeometry(55, 5, 15), new THREE.MeshBasicMaterial({ map: Textures.shadow.texture, transparent: true, opacity: 0.35, side: THREE.DoubleSide,}));
+        self.shadow.rotation.x = THREE.Math.degToRad(90);
+        self.group.add(self.shadow);
+        self.shadow.position.y = 1;
+
+        // boundingbox
+        self.box = new THREE.Mesh(new THREE.BoxGeometry(40, 90, 35), new THREE.MeshBasicMaterial({visible: false}));
+        self.box.position.set(0, 45, 10);
+        self.group.add(self.box);
+        self.boundingBox = new THREE.BoxHelper(self.box, 0x00ff00);
+        //scene.add(self.boundingBox);
+        self.box3 = new THREE.Box3().setFromObject(self.box);
+
+        // Car
+        self.car = BaseModel.car.fbx.clone();
+        self.car.traverse(function ( child ) {
+            if ( child instanceof THREE.Mesh ) {
+                const oldMat = child.material;
+                child.material = new THREE.MeshLambertMaterial( { color: oldMat.color, map: oldMat.map, });
+                if (spawnX == 5)
+                    child.material.map = Textures.redCar.texture;
+                else if (spawnX == 120)
+                    child.material.map = Textures.yellowCar.texture;
+            }
+        });
+        self.group.add(self.car);
+        self.car.visible = false;
+        self.car.scale.set(0.9,0.9,0.9);
+        self.car.position.z = 60;
+
+        // Boat
+        self.boat = BaseModel.boat.fbx.clone();
+        self.boat.traverse(function ( child ) {
+            if ( child instanceof THREE.Mesh ) {
+                const oldMat = child.material;
+                if (spawnX == 5 && oldMat.name == "lambert4")
+                    child.material = new THREE.MeshLambertMaterial( { color: 0xff271c });
+                else if (spawnX == 120 && oldMat.name == "lambert4")
+                    child.material = new THREE.MeshLambertMaterial( { color: 0xffa500 });
+                else
+                    child.material = new THREE.MeshLambertMaterial( { color: oldMat.color });
+            }
+        });
+        self.group.add(self.boat);
+        self.boat.visible = false;
+        self.boat.scale.set(0.8,0.8,0.8);
+        self.boat.position.z = 45;
+        // Chopper
+        self.chopper = BaseModel.chopper.fbx.clone();
+        self.chopper.traverse(function ( child ) {
+            if ( child instanceof THREE.Mesh ) {
+                const oldMat = child.material;
+                child.material = new THREE.MeshLambertMaterial( { color: oldMat.color, map: oldMat.map, });
+                if (child.name == "Propeller_2"){
+                    self.chopperRotateY = child;
+                }
+                if (child.name == "Propeller"){
+                    self.chopperRotateX = child;
+                }
+                if (spawnX == 5)
+                    child.material.map = Textures.redChopper.texture;
+                else if (spawnX == 120)
+                    child.material.map = Textures.yellowChopper.texture;
+            }
+        });
+        self.group.add(self.chopper);
+        self.chopper.visible = false;
+        self.chopper.scale.set(0.075,0.075,0.06);
+        self.chopper.position.z = 45;
+    }
+    self.collisionCheck = function() {
+
+    }
+    self.movement = function(delta) {
+        let aiCar = false;
+        let aiBoat  = false;
+        let aiChopper = false;
+        // Raycasting Y
+        let onGround = false;
+        let onWater = false;
+        self.rayPos.copy(self.group.position);
+        if (self.shiftZTime > 0)
+            self.rayPos.z += 50;
+        else
+            self.rayPos.z -= 60;
+        self.rayPos.y += 40;
+        self.raycaster.set(self.rayPos,self.rayDir);
+        const intersect = self.raycaster.intersectObjects(spawner.collisionArray);
+        if (intersect.length > 0 && intersect[0].object.material.name == 'water'){ // check if on water
+            onWater = true;
+            aiBoat = true;
+        }
+        if (intersect.length > 0 && intersect[0].distance < 50){ // check if on ground
+            onGround = true;
+            aiCar = true;
+        }
+        if (!onGround && self.mode != 'chopper'){ // fall down if not chopper
+            self.group.position.y -= 500*delta;
+
+                //aiChopper = true;
+        }
+        if (onWater && self.mode == 'car'){ // fall down if not chopper
+            self.car.position.y = -30;
+            self.shadow.visible = false;
+        }
+        else{
+            self.car.position.y = 0;
+            if (self.mode == 'car')
+                self.shadow.visible = true;
+        }
+        // Raycasting X
+        let blockForward = false;
+        self.rayPos2.copy(self.group.position);
+        self.rayPos2.y += 30;
+        self.raycaster.set(self.rayPos2,self.rayDir2);
+        const intersect2 = self.raycaster.intersectObjects(spawner.collisionArray);
+        if (intersect2.length > 0 && intersect2[0].distance < 120){ // check if on water
+            blockForward = true;
+            aiChopper = true;
+        }
+
+        // Finally moving
+        if (self.mode == 'human' && !blockForward){
+            self.group.position.z += (self.speed*0.5)*delta;
+           /* if (onWater ){ // fall down if not chopper
+                self.group.position.y = -50;
+            }*/
+        }
+        if (self.mode == 'chopper'){
+            self.chopperRotateY.rotation.y += 10*delta;
+            self.chopperRotateX.rotation.x += 10*delta;
+            if (!blockForward)
+                self.group.position.z += (self.speed*0.85)*delta;
+            if (self.group.position.y<220)
+                self.group.position.y += (self.speed*0.3)*delta;
+        }
+        // Car
+        if (self.mode == 'car' && !onWater && !blockForward){
+            self.group.position.z += (self.speed*1.7)*delta;
+        }
+        else if (self.mode == 'car' && onWater && !blockForward){
+            self.group.position.z += (self.speed*0.4)*delta;
+        }
+        // Boat
+        if (self.mode == 'boat' && !onWater && !blockForward){
+            self.group.position.z += (self.speed*0.2)*delta;
+        }
+        else if (self.mode == 'boat' && onWater && !blockForward){
+            self.group.position.z += (self.speed*1.7)*delta;
+        }
+
+        // AI
+        self.aiTimeout -= 700*delta;
+        self.shiftZTime -= 100*delta;
+        if (self.type == "enemy" && self.mode != "chopper" && aiChopper && self.aiTimeout < 0){
+            console.log('turn into chopper');
+            /*setTimeout(function(){*/
+                self.model.visible = false;
+                self.car.visible = false;
+                self.boat.visible = false;
+                self.chopper.visible = true;
+                self.mode = "chopper";
+                self.shadow.visible = false;
+                self.aiTimeout = 1000;
+            /*},rand(1000,1100));*/
+        }
+
+        else if (self.type == "enemy" && self.mode != "car" && aiCar && self.aiTimeout < 0){
+            console.log('turn into car');
+            setTimeout(function(){
+                self.model.visible = false;
+                self.car.visible = true;
+                self.boat.visible = false;
+                self.chopper.visible = false;
+                self.mode = "car";
+                self.shadow.visible = true;
+                self.aiTimeout = 1000;
+            },1000);
+        }
+
+        else if (self.type == "enemy" && self.mode != "boat" && aiBoat && self.aiTimeout < 0){
+            console.log('turn into boat');
+            /*setTimeout(function(){*/
+                self.model.visible = false;
+                self.car.visible = false;
+                self.boat.visible = true;
+                self.chopper.visible = false;
+                self.mode = "boat";
+                self.shadow.visible = true;
+                self.aiTimeout = 1000;
+            /*},rand(1000,1100));*/
+        }
+        else if (self.group.position.y>210 && self.aiTimeout < 0){
+            self.model.visible = false;
+            self.car.visible = true;
+            self.boat.visible = false;
+            self.chopper.visible = false;
+            self.mode = "car";
+            self.shadow.visible = true;
+            self.aiTimeout = 1000;
+        }
+    }
+    self.cameraFollow = function(delta) {
+        self.cameraPos.copy(self.group.position);
+        if (self.mode != "human")
+            self.cameraPos.x = -900;
+        else
+            self.cameraPos.x = -600;
+        self.cameraPos.z -= 150;
+        self.cameraPos.y += 350;
+        camera.position.lerp(self.cameraPos, 2*delta);
+
+        self.cameraLookAt = self.group.position.clone();
+        self.cameraLookAt.x = 0;
+        self.cameraLookAt.y += 130;
+        //self.cameraLookAt.z -= 0;
+        camera.lookAt(self.cameraLookAt);
+    }
+    self.update = function(delta) {
+        self.mixer.update(delta);
+        self.boundingBox.setFromObject(self.box);
+        self.box3.setFromObject(self.box);
+        self.collisionCheck();
+        if (self.type == 'player'){
+            self.cameraFollow(delta);
+        }
+        if (!gameOver && gameStarted && self.group.position.z < 11600)
+            self.movement(delta);
+        self.carSin += 0.07;
+        self.car.scale.y -= Math.sin(self.carSin)*(0.6*delta);
+        self.boat.scale.y -= Math.sin(self.carSin)*(0.3*delta);
+        self.chopper.scale.y -= Math.sin(self.carSin)*(0.03*delta);
+        self.smokeFXCooldown -= 200*delta;
+        if (self.smokeFXCooldown < 0 ){
+            if (self.mode == 'car')
+                new RunFX(self.group.position, 0x6A6A62);
+            else if (self.mode == 'boat')
+                new RunFX(self.group.position, 0x0099FF);
+            self.smokeFXCooldown = 100;
+        }
+        // race finish
+        if (self.group.position.z > 11500 && !gameOver){
+            if (self.type == 'enemy')
+                lost = true;
+            else
+                gameOverFunction();
+        }
+    }
+
+    self.init();
+    updateArray.push(self);
+    return self;
+}
+
+function Spawner() {
+    var self = {
+        group: null,
+        nextX: -1000,
+        collisionArray: [],
+    }
+    self.init = function(){
+        // spawn level ground
+        self.group = new THREE.Object3D();
+        scene.add(self.group);
+        self.spawnGround(1);
+        self.spawnGround(1);
+        for (let i=1; i < 9; i ++ ){
+            self.spawnGround(rand(1,3));
+        }
+        self.spawnGround(4);
+        self.spawnGround(1);
+        self.spawnGround(1);
+    }
+    self.spawnGround = function(type){
+        let tempGround = null;
+        if (type == 1)
+            tempGround = BaseModel.groundCar.fbx.clone();
+        if (type == 2)
+            tempGround = BaseModel.groundBoat.fbx.clone();
+        if (type == 3)
+            tempGround = BaseModel.groundChopper.fbx.clone();
+        if (type == 4)
+            tempGround = BaseModel.groundEnd.fbx.clone();
+        tempGround.traverse(function ( child ) {
+            if ( child instanceof THREE.Mesh ) {
+                const oldMat = child.material;
+                self.collisionArray.push(child);
+                // sort collidable objects into correct array
+                if (oldMat.name == "water"){
+                    //child.boundingBox = new THREE.BoxHelper(child, 0x00ff00);
+                    //self.group.add(child.boundingBox);
+                    //child.box3 = new THREE.Box3().setFromObject(child);
+                    child.material = new THREE.MeshBasicMaterial( { color: oldMat.color, transparent: true, opacity: 0.6, side: THREE.DoubleSide, name:'water'});
+                }
+                // Add correct material
+                /*else if (oldMat.name == "collisionBoat"){
+                    child.material = new THREE.MeshBasicMaterial( { visible: false });
+                    child.boundingBox = new THREE.BoxHelper(child, 0x00ff00);
+                    self.group.add(child.boundingBox);
+                    child.box3 = new THREE.Box3().setFromObject(child);
+                    self.collisionArray.push(child);
+                    child.type = "boat";
+                }
+                else if (oldMat.name == "collisionChopper"){
+                    child.material = new THREE.MeshBasicMaterial( { color: oldMat.color });
+                    child.boundingBox = new THREE.BoxHelper(child, 0x00ff00);
+                    self.group.add(child.boundingBox);
+                    child.box3 = new THREE.Box3().setFromObject(child);
+                    self.collisionArray.push(child);
+                    child.type = "chopper";
+                }*/
+                else{
+                    child.material = new THREE.MeshBasicMaterial( { color: oldMat.color, map: oldMat.map, side: THREE.DoubleSide });
+                }
+            }
+        });
+        tempGround.position.z = self.nextX;
+        self.group.add(tempGround);
+        self.nextX += 1273;
+    }
+    self.update = function(delta) {
+        // Update bounding box of elements
+        /*for (let i in self.collisionArray){
+            self.collisionArray[i].boundingBox.setFromObject(self.collisionArray[i]);
+            self.collisionArray[i].box3.setFromObject(self.collisionArray[i]);
+        }*/
+    }
+
+    self.init();
+    updateArray.push(self);
+    return self;
+}
+
+function gameOverFunction() {
+    gameOver = true;
+    GAMEOVER_UI.style.visibility = "visible";
+    let winOrLoose = 1;
+    if (lost)
+        winOrLoose = 0;
+    lost = false;
+    if (winOrLoose == 0){ // loose
+        Sound.gameOver.sound.play();
+        GO_MESSAGE.innerHTML = "Try Again..!";
+        BTN_RESTART.style.display = "inline-block";
+        BTN_NEXT.style.display = "none";
+
+        LaggedAPI.APIAds.show(function() {console.log("ad completed");});
+    }
+    else {
+        callConfetti();
+        Sound.applause.sound.play();
+
+
+        var ach=false;
+        var ach_numb=[];
+        if(level>1){
+            ach=true;
+            ach_numb.push("shape_shiftrun_qnybz001");
+        }
+        if(level>4){
+            ach=true;
+            ach_numb.push("shape_shiftrun_qnybz002");
+        }
+        if(level>9){
+            ach=true;
+            ach_numb.push("shape_shiftrun_qnybz003");
+        }
+        if(level>14){
+            ach=true;
+            ach_numb.push("shape_shiftrun_qnybz004");
+        }
+
+        //can push more then one award at a time
+        if(ach){
+            LaggedAPI.Achievements.save(ach_numb, function(response) {
+                if(response.success) {
+                    console.log('achievement saved')
+                }else {
+                    console.log(response.errormsg);
+                }
+            });
+        }
+
+        level ++;
+        GO_MESSAGE.innerHTML = "Level Complete!";
+        BTN_RESTART.style.display = "none";
+        BTN_NEXT.style.display = "inline-block";
+
+        // Save
+        try{
+            localStorage.setItem("shapeShiftRunSave",level);
+        }catch(e){
+          console.log(e);
+        }
+    }
+
+}
+
+function reset() {
+    for( var i = scene.children.length - 1; i >= 0; i--)
+        scene.remove(scene.children[i]);
+    player = null;
+    e1 = null;
+    e2 = null;
+    spawner = null;
+    gameStarted = false;
+    gameOver = false;
+    lost = false;
+
+    // RESETABLE ARRAYS
+    updateArray = [];
+    particleArray = [];
+    GAMEOVER_UI.style.visibility = "hidden";
+    document.querySelector('#btnStart').style.display = "block";
+    buttonsContainer.style.visibility = "hidden";
+}
+
+// BUTTONS
+function btnRestart() {
+    LaggedAPI.APIAds.show(function() {console.log("ad completed");});
+    Sound.button.sound.play();
+    reset();
+    setUpGame();
+}
+
+function btnNext() {
+    LaggedAPI.APIAds.show(function() {console.log("ad completed");});
+    Sound.button.sound.play();
+    reset();
+    setUpGame();
+}
+
+function btnSound() {
+
+    
+    LaggedAPI.APIAds.show(function() {console.log("ad completed");});
+
+    Sound.button.sound.play();
+    if (BTN_SOUND.style.opacity == 1){
+        BTN_SOUND.style.opacity = 0.5;
+        Sound.listener.setMasterVolume(0);
+    }
+    else {
+        BTN_SOUND.style.opacity = 1;
+        Sound.listener.setMasterVolume(1);
+    }
+}
+
+// CONTROLS
+var move = {
+    lastX: null,
+    lastY: null,
+    angle: null,
+};
+
+function touchStart(event) {
+    let touch = event.changedTouches[0];
+
+    if (!Sound.music.sound.isPlaying)
+        Sound.music.sound.play();
+}
+
+function touchEnd(event) {
+
+}
+
+function touchMoved(event) {
+    let touch = event.changedTouches[0];
+
+}
+
+function mouseDown(event) {
+
+
+    if (!Sound.music.sound.isPlaying)
+        Sound.music.sound.play();
+}
+
+function mouseUp(event) {
+
+}
+
+function mouseMoved(event) {
+
+}
+
+// ACTUAL GAME
+function animate(){
+    requestAnimationFrame( animate );
+    var delta = clock.getDelta();
+    if (delta > 0.2)
+        delta = 0;
+
+    for (let i in updateArray){
+        updateArray[i].update(delta);
+    }
+    for (let i in particleArray){
+        particleArray[i].update(delta);
+    }
+
+    showLandscapeMessage();
+    renderer.render( scene, camera );
+}
+preload();
+
+// HELPER AND EXTRA STUFF
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+function rand(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
+}
+
+function showLandscapeMessage() { // landscape on mobile
+
+    if (onMobile) {
+        if (window.innerWidth < window.innerHeight){
+            ROTATE_MSG.style.visibility = "visible";
+        }
+        else if (ROTATE_MSG.style.visibility == "visible"){
+            ROTATE_MSG.style.visibility = "hidden";
+        }
+    }
+}
+
+function is_touch_device() {
+  try {
+    document.createEvent("TouchEvent");
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function btnStartGame() {
+
+    
+    LaggedAPI.APIAds.show(function() {
+        
+        Sound.button.sound.play();
+    gameStarted = true;
+    player.mixer.stopAllAction();
+    player.run.fadeIn(0.2);
+    player.run.play();
+    e1.mixer.stopAllAction();
+    e1.run.fadeIn(0.2);
+    e1.run.play();
+    e2.mixer.stopAllAction();
+    e2.run.fadeIn(0.2);
+    e2.run.play();
+    document.querySelector('#btnStart').style.display = "none";
+    buttonsContainer.style.visibility = "visible";
+    if (level == 1){
+        HAND.style.display = "block";
+        setTimeout(function(){
+            HAND.style.display = "none";
+        },2000)
+    }
+    
+    
+    });
+
+}
+
+function btnVehicle(type){
+    if (Sound.changeVehicle.sound.isPlaying)
+        Sound.changeVehicle.sound.stop();
+    Sound.changeVehicle.sound.play();
+    whiteFX();
+    scene.fog.near = 1400;
+    scene.fog.far = 2000;
+    player.shadow.scale.x = 2;
+    player.shadow.scale.y = 4;
+    player.shadow.material.opacity = 0.5;
+
+    if (type == 1){ // Car
+        if (Sound.boat.sound.isPlaying)
+            Sound.boat.sound.stop();
+        if (Sound.chopper.sound.isPlaying)
+            Sound.chopper.sound.stop();
+        if (Sound.car.sound.isPlaying)
+            Sound.car.sound.stop();
+        Sound.car.sound.play();
+        player.model.visible = false;
+        player.car.visible = true;
+        player.boat.visible = false;
+        player.chopper.visible = false;
+        player.mode = "car";
+        player.shadow.visible = true;
+    }
+    else if (type == 2){ // Boat
+        if (Sound.chopper.sound.isPlaying)
+            Sound.chopper.sound.stop();
+        if (Sound.car.sound.isPlaying)
+            Sound.car.sound.stop();
+        if (Sound.boat.sound.isPlaying)
+            Sound.boat.sound.stop();
+        Sound.boat.sound.play();
+        player.model.visible = false;
+        player.car.visible = false;
+        player.boat.visible = true;
+        player.chopper.visible = false;
+        player.mode = "boat";
+        player.shadow.visible = true;
+        player.shiftZTime = 200;
+    }
+    else if (type == 3){ // Chopper
+        if (Sound.boat.sound.isPlaying)
+            Sound.boat.sound.stop();
+        if (Sound.car.sound.isPlaying)
+            Sound.car.sound.stop();
+        if (Sound.chopper.sound.isPlaying)
+            Sound.chopper.sound.stop();
+        Sound.chopper.sound.play();
+        player.model.visible = false;
+        player.car.visible = false;
+        player.boat.visible = false;
+        player.chopper.visible = true;
+        player.mode = "chopper";
+        player.shadow.visible = false;
+    }
+}
+
+function whiteFX() {
+    WHITE_FX.style.visibility = "visible";
+    WHITE_FX.classList.add('animate__animated', 'animate__fadeOut');
+    WHITE_FX.addEventListener('animationend', removeMenu);
+    function removeMenu() {
+        WHITE_FX.removeEventListener('animationend', removeMenu);
+        WHITE_FX.classList.remove('animate__animated', 'animate__fadeOut');
+        WHITE_FX.style.visibility = "hidden";
+        WHITE_FX.style.opacity = "1";
+    }
+}
+
+function RunFX(spawnPos, col){
+    var self = {
+        particles: [],
+        max: 3,
+        mesh: null,
+        index: null,
+    }
+    self.init = function() {
+        let geo = new THREE.Geometry();
+        for(let i=0; i<self.max; i++) {
+            let particle = {
+                position: new THREE.Vector3(
+                      rand(-10,10),
+                      rand(-5,5),
+                      -80),
+                velocity: new THREE.Vector3(
+                      rand(-2,2),
+                      rand(7,13),
+                      rand(-6,-1)),
+                acceleration: new THREE.Vector3(0, -0.4, 0),
+            }
+            self.particles.push(particle)
+            geo.vertices.push(particle.position)
+        }
+        var mat = new THREE.PointsMaterial({color:col,size: 100, map: Textures.particle.texture, opacity: 0.3, transparent: true, depthWrite: false })
+        self.mesh = new THREE.Points(geo,mat)
+        self.mesh.position.copy(spawnPos);
+        scene.add(self.mesh);
+    }
+    self.update = function(delta){
+        self.particles.forEach(p => {
+            p.velocity.add(p.acceleration);
+            p.position.add(p.velocity);
+            self.mesh.material.size -= 70*delta;
+        })
+        self.mesh.geometry.verticesNeedUpdate = true;
+        if (self.mesh.material.size < 0){
+            scene.remove(self.mesh);
+            for (let i in particleArray){
+                if (particleArray[i].mesh.uuid == self.mesh.uuid)
+                    particleArray.splice(i,1);
+            }
+        }
+    }
+
+    self.init();
+    //updateArray.push(self);
+    particleArray.push(self);
+    return self;
+}
+
+function callConfetti() {
+    //Sound.complete.sound.play();
+    var duration = 2 * 50;
+    var end = Date.now() + duration;
+
+    (function frame() {
+        // launch a few confetti from the left edge
+        confetti({
+            particleCount: 7,
+            angle: 60,
+
+            spread: 55,
+            origin: { x: 0 },
+            scalar: 2,
+        });
+        // and launch a few from the right edge
+        confetti({
+            particleCount: 7,
+            angle: 120,
+
+            spread: 55,
+            origin: { x: 1 },
+            scalar: 2
+        });
+
+        // keep going until we are out of time
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        }
+    }());
+
+    confetti({
+        particleCount: 150,
+        spread: 180
+    });
+}
+
+</script>
+</body>
+</html>

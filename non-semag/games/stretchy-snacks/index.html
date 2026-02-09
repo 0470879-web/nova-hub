@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head><base href="./"/>
+<meta charset="utf-8"/>
+<link href="games/cookie-catcher-v10/polygonjs.png" rel="icon"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Catch a Cookie</title>
+<link href="games/cookie-catcher-v10/font-files/inter.css" rel="stylesheet"/>
+<script crossorigin="" src="games/cookie-catcher-v10/assets/index-e1573cf7.js" type="module"></script>
+<link href="games/cookie-catcher-v10/assets/index-a75a5f25.css" rel="stylesheet"/>
+<style>
+			* {
+				-moz-box-sizing: border-box;
+				-webkit-box-sizing: border-box;
+				box-sizing: border-box;
+				font-family: sans-serif;
+				font-weight: 400;
+				outline: none;
+				user-select: none;
+				margin:0;
+			}
+			body{
+				overflow: hidden;
+				overscroll-behavior: contain;
+				user-select: none;
+				-moz-user-select: none;
+				-webkit-user-select: none;
+				-ms-user-select: none;
+			}
+			body, canvas, object {
+				touch-action: none;
+				display: block;overflow: hidden;
+				user-select: none;
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-webkit-text-size-adjust: none;
+				-webkit-tap-highlight-color: transparent;
+				-webkit-tap-highlight-color: transparent;
+				touch-action-delay: none;
+			}
+			canvas {
+			display: block;
+			width: 100vw;
+			height: 100vh;
+			}
+		</style>
+</head>
+<body class="disable-select">
+<div id="loading-poster"></div>
+<span class="page-title" href="https://polygonjs.com" id="title-container">
+<span class="number-container disable-select">
+<span class="page-title-text-large number" id="cookies-collected-count"></span>
+<span class="page-title-text-large number hidden" id="cookies-collected-count-animated"></span>
+</span>
+<span class="page-title-text-normal disable-select" id="cookies-collected-label">Pull mouth to eat cookies</span>
+<div id="progress-bar-container">
+<div class="progress-bar">
+<div class="progress" id="progress-width"></div>
+</div>
+</div>
+</span>
+<div id="app"></div>
+<div class="active" id="cookie-activation-container">
+<span class="cookie-activation-label if-inactive">No Cookies</span>
+<span class="cookie-activation-icon if-inactive">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+<span class="cookie-activation-label if-active">Yes Cookies</span>
+<span class="cookie-activation-icon if-active">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+</div>
+<script>
+			const progressBarWidthElement = document.getElementById('progress-width');
+			let progress = 0;
+			function _updateProgressBar() {
+				const currentWidth = progressBarWidthElement.style.width.replace('%', '');
+				const displayedProgress = (parseInt(currentWidth) || 0) / 100;
+				const newProgress = Math.max(displayedProgress, progress);
+				progressBarWidthElement.style.width = Math.floor(newProgress * 100) + '%';
+			}
+			const intervalId = setInterval(() => {
+				progress += 0.01;
+				_updateProgressBar();
+				if (progress >= 1) {
+					clearInterval(intervalId);
+				}
+			}, 100);
+		</script>
+<script>
+			const loadTimeStart = performance.now();
+			// analytics events using document.addEventListener
+			// document.addEventListener('gameLoaded', () => {
+			// 	const loadTime = performance.now() - loadTimeStart;
+			// 	console.log('game loaded', loadTime);
+			// });
+			// document.addEventListener('cookieRunsIncrement', (event) => {
+			// 	console.log('cookie runs increment', event.detail);
+			// });
+			// document.addEventListener('cookieCaught', (event) => {
+			// 	console.log('cookie caught', event.detail);
+			// });
+			// document.addEventListener('cookieActivateChange', (event) => {
+			// 	console.log('cookieActivateChange', event.detail);
+			// 	LaggedAPI.APIAds.show(function() {console.log("ad completed");});
+			// });
+			// analytics events using global functions
+			window.onGameLoaded = function () {
+				console.log('onGameLoaded');
+			};
+			window.onRunsIncrement = function (count) {
+				console.log('onRunsIncrement', count);
+			};
+			window.onCookieCaught = function (count) {
+				console.log('onCookieCaught', count);
+			};
+			var cntrr=0;
+			window.onCookieActivationStateChange = function (state) {
+				console.log('onCookieActivationStateChange', state);
+				if(cntrr>0){
+					LaggedAPI.APIAds.show(function() {console.log("ad completed");});
+				}
+				cntrr++;
+			};
+		</script>
+<script onload="LaggedAPI.init(true);" src="js/v4/lagged.js"></script>
+</body>
+</html>

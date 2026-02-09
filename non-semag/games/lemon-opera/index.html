@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head><base href="./"/>
+<meta charset="utf-8"/>
+<link href="games/lemon-opera-v5/polygonjs.png" rel="icon"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lemon Opera</title>
+<script onload="LaggedAPI.init();" src="js/v4/lagged.js"></script>
+<script crossorigin="" src="games/lemon-opera-v5/assets/index-c45822a4.js" type="module"></script>
+<link href="games/lemon-opera-v5/assets/index-cff59ab4.css" rel="stylesheet"/>
+</head>
+<body>
+<div onclick="window.open('https://lagged.com','_blank')" style="position:fixed;top: 5px;right: 5px;width: 200px;height: auto;z-index: 10000;"><img src="https://lagged.com/games/lemon-opera-v5/images/logo.png"/></div>
+<div id="app"></div>
+<!--
+			the 'route-info' element below needs to have the 'data-base-url' defined
+			with the base url of the app, so that the router can properly function.
+		-->
+<div data-base-url="/" id="route-info"></div>
+<script>
+			//
+			// default_singer = 'cookie';
+			// default_singer = 'homer';
+			default_singer = 'lemon';
+			// default_singer = 'mango';
+			// default_singer = 'shinchan';
+			// default_singer = 'avocado';
+			// default_singer = 'pumpkin';
+			// default_singer = 'lego';
+			// default_singer = 'turtle';
+			// default_singer = 'highland_cow';
+			// default_singer = 'unicorn';
+			// default_singer = 'dinosaur';
+			//
+			function gameLoaded() {
+				console.log('gameLoaded');
+				setTimeout(function(){
+					LaggedAPI.APIAds.show(function() {console.log("ad completed");});
+				},6000);
+			}
+			function startSong(songName) {
+				console.log('startSong', songName);
+			}
+			function loseHeart(songName) {
+				console.log('loseHeart', songName);
+			}
+			function watchAdForHeart(songName) {
+				console.log('watchAdForHeart', songName);
+			}
+			function exitSongBeforeComplete(songName) {
+				console.log('exitSongBeforeComplete', songName);
+			}
+			function completeSong(songName) {
+				console.log('completeSong', songName);
+			}
+			function selectSkin(skin) {
+				console.log('selectSkin', skin);
+				LaggedAPI.APIAds.show(function() {console.log("ad completed");});
+			}
+			function enterSingMode() {
+				console.log('enterSingMode');
+			}
+			function unlockWithAd(songName, skin) {
+				console.log('unlockWithAd', songName, skin);
+			}
+			function unlockWithCoins(songName, skin) {
+				console.log('unlockWithCoins', songName, skin);
+			}
+			function unlockWithStars(songName, skin) {
+				console.log('unlockWithStars', songName, skin);
+			}
+		</script>
+</body>
+</html>

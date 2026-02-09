@@ -1,0 +1,740 @@
+<html>
+<head><base href="./"/>
+<!--Meta stuff-->
+<meta content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" name="viewport"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" rel="stylesheet"/>
+<script src="api/rev-share/lagged.js" type="text/javascript"></script>
+<title>Talking Angela</title>
+<style>
+    * {
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        font-family: sans-serif;
+        font-weight: 400;
+        outline: none;
+        user-select: none;
+    }
+    body {
+        margin: 0;
+        overflow: hidden;
+    }
+    #loading {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        color: white;
+        text-align: center;
+        font-size: 30px;
+        font-weight: 100;
+        background-color: #4153A5;
+        text-shadow:         /* create a black outline */
+        -1px -1px 0 #000,
+         0   -1px 0 #000,
+         1px -1px 0 #000,
+         1px  0   0 #000,
+         1px  1px 0 #000,
+         0    1px 0 #000,
+        -1px  1px 0 #000,
+        -1px  0   0 #000;
+
+    }
+    #loading>div {
+        margin-top: 30vh;
+    }
+    .progress {
+        margin-top: 1vh;
+        display: inline-block;
+        border-radius: 10vw;
+        width: 50vw;
+        height: 1.5vw;
+        background-color: #2B292A;
+    }
+    #progressbar {
+        width: 0;
+        border-radius: 10vw;
+        height: 1.5vw;
+        background: rgb(253,105,41);
+        background: -moz-linear-gradient(90deg, rgba(253,105,41,1) 19%, rgba(244,192,41,1) 100%);
+        background: -webkit-linear-gradient(90deg, rgba(253,105,41,1) 19%, rgba(244,192,41,1) 100%);
+        background: linear-gradient(90deg, rgba(253,105,41,1) 19%, rgba(244,192,41,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fd6929",endColorstr="#f4c029",GradientType=1);
+    }
+    #lagged {
+        margin-bottom: 10vh;
+        display: inline-block;
+        width: 30vh;
+        height: 30vh;
+        background-image: url(Images/lagged.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+    }
+    #c {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    #loaderPlayButton {
+        position: fixed;
+        left: 50%;
+        bottom: 10px;
+        transform:translateX(-50%);
+        background-image: url(Images/btnPlay.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+        width: 400px;
+        height: 180px;
+        visibility: hidden;
+    }
+
+    /* IN-GAME UI */
+    #gameUI {
+        position: fixed;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        visibility: hidden;
+    }
+    #ingameLagged {
+        display: inline-block;
+        width: 26vh;
+        height: 13vh;
+        background-image: url(Images/lagged2.png);
+        background-repeat: no-repeat;
+        background-size:contain;
+        margin-top: -24px;
+    }
+    /* END */
+
+
+    #instruction{
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 500px;
+        padding: 20px 20px;
+        text-align: center;
+        border-radius: 10px;
+        display: inline-block;
+        color: rgba(0,0,0,0.5);
+        font-size: 90%;
+        font-weight: 600;
+        background: rgba(255,255,255,0.8);
+        visibility: hidden;
+        box-shadow: 0px 0px 0px 3px rgb(0 0 0 / 42%);
+        animation: insAnim 1s linear infinite alternate;
+    }
+    .second {
+        font-weight: 1000;
+        /* color: seagreen; */
+        margin: 0;
+        font-size: 120%;
+    }
+    .red {
+        color: rgba(255,0,0,0.8);
+        font-weight: 600;
+        padding: 0;
+        margin: 0;
+        display: none;
+        font-size: 120%;
+    }
+    @keyframes insAnim {
+      0% {
+            transform: translate(-50%, -50%) scale(1)
+        }
+
+        100% {
+            transform: translate(-50%, -50%) scale(1.1)
+        }
+    }
+    #instruction div{
+        display: inline-block;
+        width: 70px;
+        height: 70px;
+        background-image: url(Images/mic.png);
+        background-repeat: no-repeat;
+        background-size: contain;
+        border-radius: 50vw;
+    }
+
+    /*Misc BUTTONS*/
+    .button {
+        transition: all .1s;
+        cursor: pointer;
+        user-select: none;
+    }
+    .button:hover {
+        transform: scale(1.1);
+    }
+    /* END */
+
+    /*RESPONSIVE*/
+    /*for desktop screens*/
+    #coverLeft {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 35%;
+        height: 100%;
+        background: black;
+        pointer-events: none;
+    }
+    #coverRight {
+        position: fixed;
+        right: 0;
+        top: 0;
+        width: 35%;
+        height: 100%;
+        background: black;
+        pointer-events: none;
+    }
+
+    #rotateDeviceBG {
+        background-color: rgba(0,0,0,1);
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        visibility: hidden;
+    }
+    .phone {
+        margin-top: 20%;
+        display: inline-block;
+        height: 100px;
+        width: 200px;
+        border: 4px solid white;
+        border-radius: 10px;
+        animation: rotate 1.5s ease-in-out infinite alternate;
+    }
+    .message {
+        position: fixed;
+        width: 100%;
+        height: 10%;
+        left: 0;
+        text-align: center;
+        color: white;
+        font-size: 200%;
+        font-weight: 800;
+        bottom: 10%;
+      /* display: none; */
+    }
+    @keyframes rotate {
+      0% {
+            transform: rotate(0deg)
+        }
+        50% {
+            transform: rotate(-90deg)
+        }
+        100% {
+            transform: rotate(-90deg)
+        }
+    }
+    @media only screen and (max-width: 900px) {
+        #loading {
+            font-size: 20px;
+        }
+        .progress {
+            width: 70vw;
+        }
+        #loaderPlayButton {
+            bottom: 0px;
+            width: 250px;
+            height: 110px;
+        }
+        #coverLeft {
+            display: none;
+        }
+        #coverRight {
+            display: none;
+        }
+
+        /* GAME-UI */
+        #ingameLagged {
+            width: 17vh;
+            height: 9vh;
+            margin-top: -10px;
+        }
+        /* END */
+
+        #instruction{
+            width: 360px;
+            padding: 10px 5px;
+            border-radius: 10px;
+            font-size: 70%;
+            font-weight: 700;
+        }
+        /* .second {
+            font-size: 120%;
+        }
+        .red {
+            font-size: 120%;
+        } */
+        #instruction div{
+            width: 50px;
+            height: 50px;
+        }
+    }
+    @media only screen and (max-width: 1600px) {
+        #coverLeft {
+            width: 30%;
+        }
+        #coverRight {
+            width: 30%;
+        }
+    }
+    @media only screen and (max-width: 1200px) {
+        #coverLeft {
+            width: 25%;
+        }
+        #coverRight {
+            width: 25%;
+        }
+    }
+    /* For very small iphone 5 and SE vertical display with tabs bar, since I have one */
+    @media only screen and (max-height: 670px) {
+
+    }
+
+</style>
+</head>
+<body>
+<script src="games/play2/talkcat1215/Libs/three.min.js"></script>
+<script src="games/play2/talkcat1215/Libs/FBXLoader.js"></script>
+<script src="games/play2/talkcat1215/Libs/inflate.min.js"></script>
+<script src="games/play2/talkcat1215/Libs/SkeletonUtils.js"></script>
+<script src="games/play2/talkcat1215/Libs/pixi.min.js"></script>
+<script src="games/play2/talkcat1215/Libs/pixi-sound.js"></script>
+<script src="games/play2/talkcat1215/Libs/volume-meter.js"></script>
+<div id="loading">
+<div>
+<div id="lagged"></div>
+<div id="progressText">0%</div>
+<div class="progress"><div id="progressbar"></div></div>
+<div id="loadddi">Loading...</div>
+</div>
+</div>
+<canvas id="c"></canvas>
+<div class="button" id="loaderPlayButton" onclick="btnLoader()"></div>
+<div id="gameUI">
+<div id="ingameLagged"></div><br/>
+</div>
+<div id="instruction">
+    This game needs access to your microphone device to be played.
+    <br/>
+<p class="second">Please allow microphone acces when prompted.</p>
+<br/>
+<div id="micIcon"></div>
+<br/><br/>
+<p class="red">
+        If you are still seeing this message, please allow microphone access and reload the page.
+    </p>
+</div>
+<div id="coverLeft"></div>
+<div id="coverRight"></div>
+<div id="rotateDeviceBG">
+<div class="phone">
+</div>
+<div class="message">
+      Please rotate your device!
+    </div>
+</div>
+<script>
+// GLOBAL VAR
+console.warn = function(){};
+var scene = null;
+var camera = null;
+var renderer = null;
+var clock = new THREE.Clock();
+var onMobile = false;
+
+// RESETABLE VARS
+var player = null;
+
+// RESETABLE ARRAYS
+var updateArray = [];
+
+const BaseModel = {
+    /*level: {url: 'Models/Level.fbx'},*/
+}
+const Anims = {
+    /*run: {url: 'Models/Anim_Running.fbx'},*/
+}
+const Textures = {
+    idle1: {url: 'Models/idle.png'},
+    idle2: {url: 'Models/idle2.png'},
+    idle3: {url: 'Models/idle3.png'},
+    idle4: {url: 'Models/idle2.png'},
+    idle5: {url: 'Models/idle.png'},
+    idle6: {url: 'Models/idle.png'},
+    idle7: {url: 'Models/idle.png'},
+    idle8: {url: 'Models/idle.png'},
+    idle9: {url: 'Models/idle.png'},
+
+    listening: {url: 'Models/listening.png'},
+
+    talking1: {url: 'Models/talking1.png'},
+    talking2: {url: 'Models/talking2.png'},
+    talking3: {url: 'Models/idle.png'},
+    talking4: {url: 'Models/talking2.png'},
+    talking5: {url: 'Models/talking1.png'},
+    talking6: {url: 'Models/idle.png'},
+    talking7: {url: 'Models/talking1.png'},
+}
+const Sound = {
+    button: {url: 'Sound/button.mp3'},
+}
+
+// DOM elements
+const CANVAS = document.querySelector('#c');
+const PROGRESS_TEXT = document.querySelector('#progressText');
+
+// IN-GAME
+const GAME_UI = document.querySelector('#gameUI');
+const MICROPONE_INSTRUCTION = document.querySelector('#instruction');
+const ERROR = document.querySelector('.red');
+const MIC_ICON = document.querySelector('#micIcon');
+// MISC
+const ROTATE_MSG  = document.querySelector('#rotateDeviceBG');
+const COVER_LEFT  = document.querySelector('#coverLeft');
+const COVER_RIGHT  = document.querySelector('#coverRight');
+const LOADER_BUTTON  = document.querySelector('#loaderPlayButton');
+
+function preload() {
+    const progressbarElem = document.querySelector('#progressbar');
+    let manager = new THREE.LoadingManager();
+    manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+        //console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+    };
+    manager.onLoad = function ( ) {
+        //console.log( 'Loading complete!');
+        //init();
+        // hide the loading bar
+        //const loadingElem = document.querySelector('#loading');
+        //loadingElem.style.display = 'none';
+        LaggedAPI.init('lagdev_2', 'ca-pub-8999528956543364');
+        LOADER_BUTTON.style.visibility = "visible";
+
+            document.getElementById('loadddi').style.visibility="hidden";
+            document.getElementById('progressText').style.visibility="hidden";
+ 
+    };
+    manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+        //console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+        progressbarElem.style.width = `${itemsLoaded / itemsTotal * 100 | 0}%`;
+        PROGRESS_TEXT.innerHTML = `${itemsLoaded / itemsTotal * 100 | 0}%`;
+    };
+    manager.onError = function ( url ) {
+        //console.log( 'There was an error loading ' + url );
+    };
+
+    var loader = new THREE.FBXLoader( manager );
+    // load base character model
+    for (const model of Object.values(BaseModel)) {
+        loader.load( model.url, function ( fbx ) {
+            model.fbx = fbx;
+        });
+    }
+    // load anims
+    for (const model of Object.values(Anims)) {
+        loader.load( model.url, function ( fbx ) {
+            //model.fbx = fbx;
+            model.animation = fbx.animations[ 0 ];
+        });
+    }
+    // load textures
+    var loaderTex = new THREE.TextureLoader(manager);
+    for (const img of Object.values(Textures)) {
+        loaderTex.load( img.url, function(texture) {
+            texture.encoding = THREE.sRGBEncoding;
+            img.texture = texture;
+        });
+    }
+    // load audio
+    Sound.listener = new THREE.AudioListener();
+    const audioLoader = new THREE.AudioLoader( manager );
+    for (const key of Object.values(Sound)) {
+        audioLoader.load( key.url, function(buffer) {
+            key.sound = new THREE.Audio( Sound.listener );
+            key.sound.setBuffer( buffer );
+            key.sound.setVolume( 1 );
+            if (key.url == 'Sound/music.mp3'){
+                key.sound.setLoop( true );
+                key.sound.setVolume( 0.7 );
+            }
+        });
+    }
+}
+
+function init(){
+    if (is_touch_device()){
+        onMobile = true;
+        COVER_LEFT.style.display = 'none';
+        COVER_RIGHT.style.display = 'none';
+    }
+    //LaggedAPI.init('lagdev_71', 'ca-pub-3246139287445519');
+    GAME_UI.style.visibility = "visible";
+    MICROPONE_INSTRUCTION.style.visibility = "visible";
+
+    renderer = new THREE.WebGLRenderer({canvas: CANVAS, antialias: true,});
+    renderer.setPixelRatio( 1 );
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    //renderer.shadowMapEnabled = true;
+
+    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 14000 );
+    camera.position.set(0, 500, 1000);
+    camera.lookAt(0,0,0);
+    camera.add( Sound.listener );
+
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color( 0x000000 ).convertSRGBToLinear();
+
+    window.addEventListener( 'resize', onWindowResize, false );
+
+    setUpGame();
+    player = new Player();
+    animate();
+}
+let audioChunks = [];
+let meter = null;
+var recording = false;
+let mediaRecorder = null;
+let playing = false;
+let mediaStreamSource = null;
+function setUpGame() {
+    //let gotAccess = false;
+    // Setup
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
+
+    if (!window.currentAudioContext) {
+        window.currentAudioContext = new AudioContext();
+    }
+    let audioContext = new AudioContext();
+    navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+        //gotAccess = true;
+        MICROPONE_INSTRUCTION.style.padding = '10px 10px';
+        MICROPONE_INSTRUCTION.innerHTML = '<p class="second">Angela is listening, Say something in your microphone to talk to him!</p><div ></div>';
+        setTimeout(function(){
+            MICROPONE_INSTRUCTION.style.visibility = 'hidden';
+        },5000);
+
+        mediaRecorder = new MediaRecorder(stream);
+        //mediaRecorder.start();
+
+        mediaStreamSource = audioContext.createMediaStreamSource(stream);
+        // Create a new volume meter and connect it.
+        meter = createAudioMeter(audioContext);
+        mediaStreamSource.connect(meter);
+
+        mediaRecorder.addEventListener("dataavailable", event => {
+            audioChunks.push(event.data);
+            //console.log('recording now');
+        });
+
+        // Talk Back
+        mediaRecorder.addEventListener("stop", () => {
+            player.changeState(2);
+            const audioBlob = new Blob(audioChunks);
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+            //audio.play();
+            playing = true;
+            PIXI.sound.Sound.from({
+                url: audioUrl,
+                autoPlay: true,
+                speed: 1.8,
+
+                complete: function() {
+                    //console.log('Sound finished');
+                    player.changeState(0);
+                    playing = false;
+                    audioChunks = [];
+                }
+            });
+        });
+
+        // Listen/Record/Don't record
+        setTimeout(function(){
+            setInterval(function(){
+                if (meter.volume*500*1.4 >= 3 && !recording && !playing){
+                    mediaRecorder.start();
+                    recording = true;
+                    player.changeState(1);
+                }
+                else if (meter.volume*500*1.4 < 3 && recording && !playing){
+                    mediaRecorder.stop();
+                    recording = false;
+                    player.changeState(0);
+                }
+            },100)
+        },2000)
+    }).catch(err => {
+        //gotAccess = false;
+        //alert("Error getting microphone, please reload the page and try again")
+        MICROPONE_INSTRUCTION.style.visibility = 'visible';
+        ERROR.style.display = 'inline-block';
+        //MIC_ICON.style.backgroundColor = 'rgba(255,0,0,0.7)';
+        MIC_ICON.style.backgroundImage = 'url(Images/mic2.png)';
+    })
+
+
+
+    // LAGGED Show ads every 2 minutes
+    setInterval(function(){
+        LaggedAPI.APIAds.show(function() {
+            console.log("ad completed");
+        });
+    },120000)
+}
+
+function Player() {
+    var self = {
+        sprite: null,
+        animFrame: 1,
+        animSpeed: 0,
+        state: 0, // 0 = idle, 1 = listening, 2 = talking
+    }
+    self.init = function(){
+        // self.sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: Textures.idle.texture, depthTest: false }));//eval('Textures.idle'+self.type+'.texture')
+        // scene.add(self.sprite);
+        // self.sprite.scale.set(561*1.1,852*1.1);
+        // self.sprite.position.x = 30;
+        // self.sprite.position.y = -5;
+        self.changeSprite();
+    }
+    self.changeState = function(newState) {
+        self.state = newState;
+        self.animFrame = 1;
+        self.animSpeed = 0;
+        self.changeSprite();
+    }
+    self.changeSprite = function() {
+        // cleanup
+        if (self.sprite){
+            scene.remove(self.sprite);
+        }
+
+        // new sprite
+        if (self.state == 0)
+            self.sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: eval('Textures.idle'+self.animFrame+'.texture'), depthTest: false }));
+        else if (self.state == 1)
+            self.sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: Textures.listening.texture, depthTest: false }));
+        else if (self.state == 2)
+            self.sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: eval('Textures.talking'+self.animFrame+'.texture'), depthTest: false }));
+        scene.add(self.sprite);
+        self.sprite.scale.set(561*1.1,852*1.1);
+        self.sprite.position.x = 30;
+        self.sprite.position.y = -5;
+    }
+    self.update = function(delta) {
+        // Idle anim
+        if (self.state == 0){
+            self.animSpeed += 60*delta;
+            if (self.animSpeed > 10){
+                self.animSpeed = 0;
+                self.animFrame ++;
+                if (self.animFrame > 9)
+                    self.animFrame = 1;
+                // magic
+                self.changeSprite();
+            }
+        }
+
+        // Talking anim
+        if (self.state == 2){
+            self.animSpeed += 100*delta;
+            if (self.animSpeed > 10){
+                self.animSpeed = 0;
+                self.animFrame ++;
+                if (self.animFrame > 7)
+                    self.animFrame = 1;
+                // magic
+                self.changeSprite();
+            }
+        }
+    }
+
+    self.init();
+    updateArray.push(self);
+    return self;
+}
+
+
+
+// BUTTONS
+function btnLoader() {
+    Sound.button.sound.play(); // !!! Important. Dont't remove. It is to avoid The AudioContext was not allowed to start console messages, and smoothly trigger audio on user interaction just how the browsers nowadays like it
+    LOADER_BUTTON.style.display = 'none';
+    LaggedAPI.APIAds.show(function() {
+        // ad is finished, unpause game/music
+        console.log("ad completed");
+        init();
+        // hide the loading bar
+        const loadingElem = document.querySelector('#loading');
+        loadingElem.style.display = 'none';
+        LOADER_BUTTON.style.display = 'none';
+        //Sound.music.sound.play();
+    });
+}
+
+// ACTUAL GAME
+function animate(){
+    requestAnimationFrame( animate );
+    var delta = clock.getDelta();
+
+    for (let i in updateArray){
+        updateArray[i].update(delta);
+    }
+
+    showLandscapeMessage();
+    renderer.render( scene, camera );
+}
+preload();
+
+// HELPER AND EXTRA STUFF
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+function rand(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
+}
+
+function showLandscapeMessage() { // portrait on mobile
+    if (onMobile) {
+        if (window.innerWidth > window.innerHeight){
+            ROTATE_MSG.style.visibility = "visible";
+        }
+        else if (ROTATE_MSG.style.visibility == "visible"){
+            ROTATE_MSG.style.visibility = "hidden";
+        }
+    }
+}
+
+function is_touch_device() {
+  try {
+    document.createEvent("TouchEvent");
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+</script>
+</body>
+</html>

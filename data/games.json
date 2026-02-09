@@ -7822,5 +7822,181 @@
 		"source": "non-semag",
 		"gameUrl": "/non-semag/games/bubble-shooter-play-on-crazygames/index.html",
 		"imagePath": "/non-semag/games/covers/bubble-shooter-play-on-crazygames.png"
+	},
+	{
+		"name": "Whack Your Boss",
+		"directory": "whack-your-boss",
+		"image": "covers/whack-your-boss.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/whack-your-boss/index.html",
+		"imagePath": "/non-semag/games/covers/whack-your-boss.png"
+	},
+	{
+		"name": "Whack Your Ex",
+		"directory": "whack-your-ex",
+		"image": "covers/whack-your-ex.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/whack-your-ex/index.html",
+		"imagePath": "/non-semag/games/covers/whack-your-ex.png"
+	},
+	{
+		"name": "Blob Opera",
+		"directory": "blob-opera",
+		"image": "covers/blob-opera.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/blob-opera/index.html",
+		"imagePath": "/non-semag/games/covers/blob-opera.png"
+	},
+	{
+		"name": "Ragdoll Playground",
+		"directory": "ragdoll-playground",
+		"image": "covers/ragdoll-playground.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/ragdoll-playground/index.html",
+		"imagePath": "/non-semag/games/covers/ragdoll-playground.png"
+	},
+	{
+		"name": "Choir",
+		"directory": "choir",
+		"image": "covers/choir.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/choir/index.html",
+		"imagePath": "/non-semag/games/covers/choir.png"
+	},
+	{
+		"name": "Lemon Opera",
+		"directory": "lemon-opera",
+		"image": "covers/lemon-opera.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/lemon-opera/index.html",
+		"imagePath": "/non-semag/games/covers/lemon-opera.png"
+	},
+	{
+		"name": "Toilet Race",
+		"directory": "toilet-race",
+		"image": "covers/toilet-race.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/toilet-race/index.html",
+		"imagePath": "/non-semag/games/covers/toilet-race.png"
+	},
+	{
+		"name": "Two Cats Duet",
+		"directory": "two-cats-duet",
+		"image": "covers/two-cats-duet.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/two-cats-duet/index.html",
+		"imagePath": "/non-semag/games/covers/two-cats-duet.png"
+	},
+	{
+		"name": "Thief Puzzle",
+		"directory": "thief-puzzle",
+		"image": "covers/thief-puzzle.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/thief-puzzle/index.html",
+		"imagePath": "/non-semag/games/covers/thief-puzzle.png"
+	},
+	{
+		"name": "Poppy Playtime Chapter 2",
+		"directory": "poppy-playtime-chapter-2",
+		"image": "covers/poppy-playtime-chapter-2.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/poppy-playtime-chapter-2/index.html",
+		"imagePath": "/non-semag/games/covers/poppy-playtime-chapter-2.png"
+	},
+	{
+		"name": "Stretchy Snacks",
+		"directory": "stretchy-snacks",
+		"image": "covers/stretchy-snacks.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/stretchy-snacks/index.html",
+		"imagePath": "/non-semag/games/covers/stretchy-snacks.png"
+	},
+	{
+		"name": "Sandwich Runner",
+		"directory": "sandwich-runner",
+		"image": "covers/sandwich-runner.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/sandwich-runner/index.html",
+		"imagePath": "/non-semag/games/covers/sandwich-runner.png"
+	},
+	{
+		"name": "SPRUNKY",
+		"directory": "sprunky",
+		"image": "covers/sprunky.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/sprunky/index.html",
+		"imagePath": "/non-semag/games/covers/sprunky.png"
+	},
+	{
+		"name": "Race Clicker",
+		"directory": "race-clicker",
+		"image": "covers/race-clicker.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/race-clicker/index.html",
+		"imagePath": "/non-semag/games/covers/race-clicker.png"
+	},
+	{
+		"name": "Tall Man Runner",
+		"directory": "tall-man-runner",
+		"image": "covers/tall-man-runner.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/tall-man-runner/index.html",
+		"imagePath": "/non-semag/games/covers/tall-man-runner.png"
+	},
+	{
+		"name": "Red Impostor",
+		"directory": "red-impostor",
+		"image": "covers/red-impostor.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/red-impostor/index.html",
+		"imagePath": "/non-semag/games/covers/red-impostor.png"
+	},
+	{
+		"name": "Draw the Ways",
+		"directory": "draw-the-ways",
+		"image": "covers/draw-the-ways.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/draw-the-ways/index.html",
+		"imagePath": "/non-semag/games/covers/draw-the-ways.png"
+	},
+	{
+		"name": "Juice Run",
+		"directory": "juice-run",
+		"image": "covers/juice-run.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/juice-run/index.html",
+		"imagePath": "/non-semag/games/covers/juice-run.png"
+	},
+	{
+		"name": "Shape Shift Run",
+		"directory": "shape-shift-run",
+		"image": "covers/shape-shift-run.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/shape-shift-run/index.html",
+		"imagePath": "/non-semag/games/covers/shape-shift-run.png"
+	},
+	{
+		"name": "Troll Thief",
+		"directory": "troll-thief",
+		"image": "covers/troll-thief.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/troll-thief/index.html",
+		"imagePath": "/non-semag/games/covers/troll-thief.png"
+	},
+	{
+		"name": "Backrooms Escape 1",
+		"directory": "backrooms-escape-1",
+		"image": "covers/backrooms-escape-1.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/backrooms-escape-1/index.html",
+		"imagePath": "/non-semag/games/covers/backrooms-escape-1.png"
+	},
+	{
+		"name": "My Angel Cat 2",
+		"directory": "my-angel-cat-2",
+		"image": "covers/my-angel-cat-2.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/my-angel-cat-2/index.html",
+		"imagePath": "/non-semag/games/covers/my-angel-cat-2.png"
 	}
 ]
