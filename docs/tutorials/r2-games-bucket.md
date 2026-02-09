@@ -2,6 +2,28 @@
 
 This guide walks you through setting up Cloudflare R2 to serve games for Nova Hub.
 
+## Clone R2 (populate the bucket)
+
+To get games into your R2 bucket:
+
+1. **Get the semag games** — Clone a repo that contains the `semag/` folder (e.g. your fork or the upstream Nova Hub repo with semag), or copy from an existing backup.
+2. **Create the bucket** (if needed): `npx wrangler r2 bucket create nova-hub`
+3. **Upload all games to R2:**
+
+```bash
+node scripts/upload-game-to-r2.js semag
+```
+
+Or upload a single game:
+
+```bash
+node scripts/upload-game-to-r2.js semag/happywheels
+```
+
+The script expects a `semag/` directory in your project root with game folders inside (e.g. `semag/happywheels/`, `semag/fnaf2/`).
+
+---
+
 ## Overview
 
 - **Static games**: Served from `non-semag/games/` (deployed with Pages)

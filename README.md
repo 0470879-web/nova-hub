@@ -204,11 +204,15 @@ npm run dev:r2
 
 ### Cloudflare Pages
 
-- **Build command:** `node scripts/pages-build.js`
-- **Output directory:** `dist`
-- **Build script** copies the site into `dist/`, omits Escape Road folders, and generates `sitemap.xml`
-- Set `SITE_URL` env var (e.g. `https://your-domain.com`) to customize sitemap URLs
-- Connect the repo to Cloudflare Pages; deployment is automatic on push
+1. **Connect your repo** to Cloudflare Pages (Workers & Pages → Create → Pages → Connect to Git).
+2. **Configure the build:**
+   - **Build command:** `npm run build`
+   - **Output directory:** `dist`
+3. **Build script** copies the site into `dist/`, omits Escape Road folders, and generates `sitemap.xml`.
+4. **Optional:** Set `SITE_URL` env var (e.g. `https://your-domain.com`) to customize sitemap URLs.
+5. Deployment runs automatically on push.
+
+**R2 games:** To serve games from R2, create the `nova-hub` bucket, bind it in Settings → Functions → R2 bucket bindings (`semag` → `nova-hub`), then clone and upload games. See [r2-games-bucket.md](docs/tutorials/r2-games-bucket.md) for how to clone the R2 data.
 
 ### Other hosts (Railway, Render, etc.)
 
@@ -222,7 +226,7 @@ npm run dev:r2
 | Document | Purpose |
 |----------|---------|
 | [cloudflare-workers-and-kv.md](docs/tutorials/cloudflare-workers-and-kv.md) | KV namespaces, Workers, migration, Pages config |
-| [r2-games-bucket.md](docs/tutorials/r2-games-bucket.md) | R2 bucket, `semag/` layout, upload commands, local R2 testing |
+| [r2-games-bucket.md](docs/tutorials/r2-games-bucket.md) | Clone R2, bucket setup, `semag/` layout, upload commands, local R2 testing |
 | [admin-panel-setup.md](docs/tutorials/admin-panel-setup.md) | Admin panel, credentials, analytics, API endpoints |
 | [add-admin-accounts.md](docs/tutorials/add-admin-accounts.md) | Adding new admin accounts |
 | [docs/README.md](docs/README.md) | Documentation index |

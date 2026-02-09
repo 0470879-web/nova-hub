@@ -632,6 +632,14 @@
 		"imagePath": "/non-semag/games/covers/slice-it-all.png"
 	},
 	{
+		"name": "Slice Master",
+		"directory": "slice-master",
+		"image": "covers/slice-master.webp",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/slice-master/index.html",
+		"imagePath": "/non-semag/games/covers/slice-master.webp"
+	},
+	{
 		"name": "8 Ball Classic",
 		"directory": "8-ball-classic",
 		"image": "covers/8-ball-classic.png",
@@ -7806,5 +7814,13 @@
 		"source": "semag",
 		"gameUrl": "/semag/polytrack/index.html",
 		"imagePath": "/semag/polytrack/cover.jpg"
+	},
+	{
+		"name": "Bubble Shooter  Play on CrazyGames",
+		"directory": "bubble-shooter-play-on-crazygames",
+		"image": "covers/bubble-shooter-play-on-crazygames.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/bubble-shooter-play-on-crazygames/index.html",
+		"imagePath": "/non-semag/games/covers/bubble-shooter-play-on-crazygames.png"
 	}
 ]
