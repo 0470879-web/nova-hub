@@ -6,7 +6,7 @@ export async function onRequest({ params, env }) {
       return new Response("R2 bucket not configured", { status: 503 })
     }
 
-    const object = await env.semag.get(`semag/${key}`)
+    const object = await env.semag.get(`non-semag/${key}`)
 
     if (!object) {
       return new Response("Not found", { status: 404 })
@@ -19,7 +19,8 @@ export async function onRequest({ params, env }) {
       }
     })
   } catch (err) {
-    console.error("Error serving semag file:", err)
+    console.error("Error serving non-semag file:", err)
     return new Response("Error loading file: " + err.message, { status: 500 })
   }
 }
+
