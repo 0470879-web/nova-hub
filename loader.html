@@ -59,6 +59,10 @@
 							<span>↻</span>
 							<span>Reload</span>
 						</button>
+						<button id="openBlankButton" class="game-fullscreen-button" title="Open game in new tab">
+							<span>🔗</span>
+							<span>Open in New Tab</span>
+						</button>
 						<button id="fullscreenButton" class="game-fullscreen-button">
 							<span class="fullscreen-icon">⛶</span>
 							<span>Fullscreen</span>
@@ -282,6 +286,11 @@
 				}
 			});
 			
+			// Open in new tab button
+			document.getElementById("openBlankButton").addEventListener("click", () => {
+				openGameInNewTab();
+			});
+			
 			// Fullscreen button - browser fullscreen API
 			document.getElementById("fullscreenButton").addEventListener("click", () => {
 				toggleFullscreen();
@@ -407,6 +416,83 @@
 						playOverlay.style.pointerEvents = "none";
 					}
 				}, 600);
+			}
+		}
+		
+		function openGameInNewTab() {
+			if (!gameData) {
+				console.error("No game data available");
+				return;
+			}
+			
+			// Get the game URL (same logic as in loadGame)
+			const source = gameData[3] || "semag";
+			let gameUrl;
+			
+			if (gameData[4] && gameData[4].gameUrl) {
+				gameUrl = gameData[4].gameUrl;
+			} else if (source === "non-semag" || source === "Hypackel") {
+				gameUrl = "/" + source + "/" + gameData[0] + "/index.html";
+			} else {
+				gameUrl = GAMES_BASE_URL + "/" + source + "/" + gameData[0] + "/index.html";
+			}
+			
+			// Make URL absolute if it's relative
+			if (gameUrl.startsWith("/")) {
+				gameUrl = window.location.origin + gameUrl;
+			}
+			
+			// Open a controlled about:blank tab and embed the game in an iframe
+			// This keeps the tab title as Nova Hub instead of the game's title.
+			try {
+				const newWindow = window.open("about:blank", "_blank");
+				
+				if (newWindow) {
+					const doc = newWindow.document;
+					doc.open();
+					doc.write(`<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Nova Hub</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<style>
+			html, body {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				background: #000;
+			}
+			iframe {
+				border: 0;
+				width: 100vw;
+				height: 100vh;
+				display: block;
+				background: #000;
+			}
+		</style>
+	</head>
+	<body>
+		<iframe src="${gameUrl}" allow="fullscreen; autoplay" sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+	</body>
+</html>`);
+					doc.close();
+				} else {
+					// Fallback for popup blockers / Safari mobile: open game URL directly
+					const link = document.createElement("a");
+					link.href = gameUrl;
+					link.target = "_blank";
+					link.rel = "noopener noreferrer";
+					link.style.display = "none";
+					document.body.appendChild(link);
+					link.click();
+					document.body.removeChild(link);
+				}
+			} catch (e) {
+				console.error("Error opening game in controlled about:blank tab:", e);
+				window.open(gameUrl, "_blank");
 			}
 		}
 		
