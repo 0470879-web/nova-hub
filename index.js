@@ -152,6 +152,13 @@ app.get('/about', (req, res) => {
   res.sendFile(path.join(__dirname, 'about.html'));
 });
 
+app.get('/bookmarklets', (req, res) => {
+  res.sendFile(path.join(__dirname, 'about.html'));
+});
+app.get('/bookmarklets.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'about.html'));
+});
+
 app.get('/transfer', (req, res) => {
   res.sendFile(path.join(__dirname, 'transfer.html'));
 });
