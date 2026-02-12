@@ -1,5 +1,13 @@
 [
 	{
+		"name": "3D Dash",
+		"directory": "3d-dash",
+		"image": "covers/3d-dash.png",
+		"source": "non-semag",
+		"gameUrl": "/non-semag/games/3d-dash.html",
+		"imagePath": "/non-semag/games/covers/3d-dash.png"
+	},
+	{
 		"name": "Bowmasters",
 		"directory": "bowmasters",
 		"image": "covers/bowmasters.png",
