@@ -20,6 +20,7 @@ const EXCLUDE_DIRS = new Set([
   path.join(ROOT, 'non-semag', 'EscapeRoad'),
   path.join(ROOT, 'non-semag', 'EscapeRoad2'),
   path.join(ROOT, 'non-semag', 'EscapeRoadCity'),
+  path.join(ROOT, 'non-semag', 'gamemonetize-u0nolj2voug1g8cxwpcd1a105r4z8ozq'),
 ]);
 
 const IGNORE = new Set(['node_modules', '.git', 'dist', 'scripts']);
@@ -44,6 +45,10 @@ function copyRecurse(src, dest) {
       copyRecurse(s, d);
     }
   } else {
+    if (stat.size > MAX_BYTES) {
+      console.warn('Skipping file >25 MiB:', path.relative(ROOT, src), `(${(stat.size / 1024 / 1024).toFixed(1)} MiB)`);
+      return;
+    }
     const dir = path.dirname(dest);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.copyFileSync(src, dest);
@@ -80,6 +85,6 @@ ${PAGES.map(p => {
 }).join('\n')}
 </urlset>`;
 fs.writeFileSync(path.join(OUT, 'sitemap.xml'), sitemap);
-console.log('Pages build output written to dist/ (EscapeRoad, EscapeRoad2, EscapeRoadCity excluded).');
+console.log('Pages build output written to dist/ (EscapeRoad*, gamemonetize-u0nolj2voug1g8cxwpcd1a105r4z8ozq excluded; files >25 MiB skipped).');
 console.log('sitemap.xml generated.');
 
