@@ -11,6 +11,7 @@
 		<script src=" https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js "></script>
 
 		<!-- initialize my stuff -->
+		<script src="/js/games-config.js"></script>
 		<script src="/js/all.min.js"></script>
 		<script src="/js/main.js"></script>
 		<script src="/js/gaming-navbar.js"></script>
@@ -86,6 +87,41 @@
 
 		<script>
 		const GAMES_BASE_URL = window.location.origin;
+		// Local dev: no Cloudflare Function to proxy R2, so use public R2 URL for semag so games load.
+		const GAMES_ASSETS_BASE_URL = (window.GAMES_ASSETS_BASE_URL && (location.hostname === "localhost" || location.hostname === "127.0.0.1")) ? window.GAMES_ASSETS_BASE_URL : null;
+
+		// CMG/CrazyGames-style event handling: safe stub so parent never throws.
+		// Cross-origin iframes cannot read parent.cmgGameEvent – they get SecurityError.
+		// Option 1: Same-origin games call parent.cmgGameEvent() and we handle it here.
+		// Option 2: Cross-origin games can use postMessage (we listen below) instead of parent.cmgGameEvent.
+		window.cmgGameEvent = function(event, data) {
+			try {
+				if (typeof window.onCmgGameEvent === 'function') window.onCmgGameEvent(event, data);
+			} catch (e) {
+				// Silently fail
+			}
+		};
+
+		// Option 3: Safe helper for any code that might call parent/top.cmgGameEvent (e.g. from nested context).
+		function safeCmgEvent(eventName, data) {
+			try {
+				if (window.self !== window.top && window.parent.cmgGameEvent) {
+					window.parent.cmgGameEvent(eventName, data);
+				}
+			} catch (e) {
+				// Cross-origin blocked, continue without tracking
+			}
+		}
+		window.safeCmgEvent = safeCmgEvent;
+
+		// Cross-origin games: listen for postMessage so they can send events without touching parent.cmgGameEvent.
+		window.addEventListener('message', function(event) {
+			try {
+				if (event.data && event.data.type === 'cmgGameEvent' && typeof event.data.event === 'string') {
+					window.cmgGameEvent(event.data.event, event.data.data);
+				}
+			} catch (e) {}
+		});
 		
 		let gameData = null;
 		let allGames = [];
@@ -324,6 +360,11 @@
 					? "/" + source + "/" + game[0] + "/" + decodeURIComponent(game[1])
 					: GAMES_BASE_URL + "/" + source + "/" + game[0] + "/" + decodeURIComponent(game[1]);
 			}
+			// Production: same-origin so iframe isn't cross-origin (no SecurityError, audio works). Local dev: use R2 URL for semag so games load when no Function.
+			if (GAMES_ASSETS_BASE_URL && source === "semag") {
+				if (gameUrl.startsWith("/")) gameUrl = GAMES_ASSETS_BASE_URL + gameUrl;
+				if (gameImageUrl.startsWith("/")) gameImageUrl = GAMES_ASSETS_BASE_URL + gameImageUrl;
+			}
 			const gameName = game[2];
 			
 			// Set game info
@@ -351,14 +392,14 @@
 			
 			recommended.forEach(game => {
 				const source = game.source || "semag";
-				// semag uses hardcoded external URL, non-semag uses local paths for local development
-				// Check for custom imagePath first
+				// non-semag = local; semag = R2
 				let gameUrl = game.imagePath;
 				if (!gameUrl) {
 					gameUrl = (source === "non-semag" || source === "Hypackel")
 						? "/" + source + "/" + game.directory + "/" + game.image
 						: GAMES_BASE_URL + "/" + source + "/" + game.directory + "/" + game.image;
 				}
+				if (GAMES_ASSETS_BASE_URL && source === "semag" && gameUrl.startsWith("/")) gameUrl = GAMES_ASSETS_BASE_URL + gameUrl;
 				const gameLink = "/loader.html#" + btoa(encodeURIComponent(JSON.stringify([game.directory, game.image, game.name, source, game])));
 				
 				const gameCard = document.createElement("a");
@@ -437,9 +478,9 @@
 				gameUrl = GAMES_BASE_URL + "/" + source + "/" + gameData[0] + "/index.html";
 			}
 			
-			// Make URL absolute if it's relative
 			if (gameUrl.startsWith("/")) {
-				gameUrl = window.location.origin + gameUrl;
+				const base = (window.GAMES_ASSETS_BASE_URL && (location.hostname === "localhost" || location.hostname === "127.0.0.1") && source === "semag") ? window.GAMES_ASSETS_BASE_URL : window.location.origin;
+				gameUrl = base + gameUrl;
 			}
 			
 			// Open a controlled about:blank tab and embed the game in an iframe

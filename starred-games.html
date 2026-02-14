@@ -19,6 +19,7 @@
 		<script src=" https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js "></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 		
+		<script src="/js/games-config.js"></script>
 		<script src="/js/all.min.js"></script>
 		<script src="/js/games.js"></script>
 		<script src="/js/search.js"></script>
@@ -81,10 +82,16 @@
 				gamelist = starredData;
 				for (let i = 0; i < starredData.length; i++) {
 					const source = starredData[i].source || "semag";
-					// semag uses hardcoded external URL, non-semag uses local paths for local development
-					const imagePath = (source === "non-semag" || source === "Hypackel")
-						? "/" + source + "/" + starredData[i].directory + "/" + starredData[i].image
-						: GAMES_BASE_URL + "/" + source + "/" + starredData[i].directory + "/" + starredData[i].image;
+					// Use imagePath from game if present, else build path; resolve relative from R2
+					let imagePath = starredData[i].imagePath;
+					if (!imagePath) {
+						imagePath = (source === "non-semag" || source === "Hypackel")
+							? "/" + source + "/" + starredData[i].directory + "/" + starredData[i].image
+							: GAMES_BASE_URL + "/" + source + "/" + starredData[i].directory + "/" + starredData[i].image;
+					}
+					if (source === "semag" && imagePath.startsWith("/") && window.GAMES_ASSETS_BASE_URL && (location.hostname === "localhost" || location.hostname === "127.0.0.1")) {
+						imagePath = window.GAMES_ASSETS_BASE_URL + imagePath;
+					}
 					
 					let $element = $("<a>")
 						.attr({

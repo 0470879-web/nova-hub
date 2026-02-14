@@ -44,6 +44,10 @@ function loadGames(data) {
 				? "/" + source + "/" + data[i].directory + "/" + data[i].image
 				: GAMES_BASE_URL + "/" + source + "/" + data[i].directory + "/" + data[i].image;
 		}
+		// Local dev only: semag thumbnails from R2 when no Function to proxy
+		if (source === "semag" && imagePath.startsWith("/") && window.GAMES_ASSETS_BASE_URL && (location.hostname === "localhost" || location.hostname === "127.0.0.1")) {
+			imagePath = window.GAMES_ASSETS_BASE_URL + imagePath;
+		}
 		
 		let $element = $("<a>")
 			.attr({
