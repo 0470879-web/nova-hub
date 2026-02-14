@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<html lang="en-us">
+<head><script type="text/javascript">
+// Nova Hub: ad stubs + site-lock bypass
+var __dg_event_listener={addEventListener:function(){},removeEventListener:function(){}};
+if(typeof gtag==='undefined'){function gtag(){}}
+function AdblockEnabled(){return false;}
+function GameMonetize(typeOrOpts,opts){
+    var o=opts||typeOrOpts||{};
+    if(typeof o==='object'&&o.onEvent){
+        setTimeout(function(){o.onEvent({name:"SDK_READY"});},100);
+        setTimeout(function(){o.onEvent({name:"SDK_GAME_START"});},200);
+    }
+    return{showBanner:function(){},addEventListener:function(e,cb){if(cb)setTimeout(cb,0);},showTag:function(){},gameReady:function(){},gameOver:function(){},happytime:function(){}};
+}
+var sdk_gamemonetize;
+(function(){
+    var oe=window.eval;
+    window.eval=function(c){
+        if(typeof c==='string'){
+            if(c.indexOf('location.hostname')!==-1||c.indexOf('location.host')!==-1)return'html5.gamemonetize.com';
+            if(c.indexOf('location.href')!==-1)return'https://html5.gamemonetize.com/';
+            if(c.indexOf('location.origin')!==-1)return'https://html5.gamemonetize.com';
+        }
+        return oe.call(window,c);
+    };
+})();
+</script>
+<meta charset="utf-8"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>World Conqueror</title>
+<link href="TemplateData/style.css" rel="stylesheet"/>
+<style>
+      @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@200;500&display=swap');	
+      @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@200;500&family=MuseoModerno:wght@600&display=swap');
+
+		html,
+		body {
+			background: #000;
+			width: 100%;
+			height: 100%;
+			overflow: visible;
+			padding: 0;
+			margin: 0;
+		}
+
+		div#gameContainer {
+			background: transparent !important;
+			position: absolute;
+		}
+
+		div#gameContainer canvas {
+			position: absolute;
+		}
+
+		div#gameContainer canvas[data-pixel-art="true"] {
+			position: absolute;
+			image-rendering: optimizeSpeed;
+			image-rendering: -webkit-crisp-edges;
+			image-rendering: -moz-crisp-edges;
+			image-rendering: -o-crisp-edges;
+			image-rendering: crisp-edges;
+			image-rendering: -webkit-optimize-contrast;
+			image-rendering: optimize-contrast;
+			image-rendering: pixelated;
+			-ms-interpolation-mode: nearest-neighbor;
+		}
+	</style>
+</head>
+<body>
+<div id="gameContainer">
+<canvas data-pixel-art="" id="unity-canvas"></canvas>
+<table height="70%" width="100%">
+<tr>
+<td class="height" style="text-align: center; vertical-align: middle;">
+<img height="50" src="logo.png" width="250"/>
+<br/><p id="loading-txt" style="text-align: center; font-family: 'MuseoModerno', cursive;color: white;font-size: 40px;margin-top: 0px;margin-bottom: 0px;">Loading...</p>
+</td>
+</tr>
+</table>
+<script src="Build/wc.loader.js"></script>
+<script>
+			var canvas = document.querySelector("#unity-canvas");
+			var config = {
+				dataUrl: "Build/wc.data.unityweb",
+				frameworkUrl: "Build/wc.framework.js.unityweb",
+				codeUrl: "Build/wc.wasm.unityweb",
+				streamingAssetsUrl: "StreamingAssets",
+				companyName: "FMGames",
+				productName: "World Conqueror",
+				productVersion: "0.1",
+			};
+			var scaleToFit;
+			try {
+				scaleToFit = !!JSON.parse("");
+			} catch (e) {
+				scaleToFit = true;
+			}
+			function progressHandler(progress) {
+				var percent = progress * 100 + '%';
+				canvas.style.background = 'linear-gradient(to right, white, white ' + percent + ', transparent ' + percent + ', transparent) no-repeat center';
+				canvas.style.backgroundSize = '100% 1rem';
+			}
+			function onResize() {
+				var container = canvas.parentElement;
+				var w;
+				var h;
+
+				if (scaleToFit) {
+					w = window.innerWidth;
+					h = window.innerHeight;
+
+					var r = 600 / 350;
+
+					if (w * r > window.innerHeight) {
+						w = Math.min(w, Math.ceil(h / r));
+					}
+					h = Math.floor(w * r);
+				} else {
+					w = 350;
+					h = 600;
+				}
+
+				container.style.width = canvas.style.width = w + "px";
+				container.style.height = canvas.style.height = h + "px";
+				container.style.top = Math.floor((window.innerHeight - h) / 2) + "px";
+				container.style.left = Math.floor((window.innerWidth - w) / 2) + "px";
+			}
+			createUnityInstance(canvas, config, progressHandler).then(function (instance) {
+				canvas = instance.Module.canvas;
+				onResize();
+			});
+			window.addEventListener('resize', onResize);
+			onResize();
+
+
+ if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        container.className = "unity-mobile";
+        config.devicePixelRatio = 1.5;
+      }
+
+		</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Winter Clash 3D</title>
+	<link rel="icon" type="image/x-icon" href="/non-semag/gamemonetize-ya6quof6a1n40xzz3thz9xekh349abp8/images/favicon.ico">
+	<link rel="stylesheet" href="/non-semag/gamemonetize-ya6quof6a1n40xzz3thz9xekh349abp8/css/main.css">
+	<script type="text/javascript">
+		var GAME_ID = 'winter';
+		var WASM_FILE_EXT = 'wasm';
+		var GAME_BASE_PATH = '/non-semag/gamemonetize-ya6quof6a1n40xzz3thz9xekh349abp8/';
+
+		// Stub out ad event listener to prevent errors
+		var __dg_event_listener = {
+			addEventListener: function() {},
+			removeEventListener: function() {}
+		};
+
+		// Stub out gtag if not defined
+		if (typeof gtag === 'undefined') {
+			function gtag() {}
+		}
+
+		// Stub out ad-related globals the WASM checks via eval
+		function AdblockEnabled() { return false; }
+
+		// Bypass domain/site-lock check: WASM uses eval() via _emscripten_run_script_string
+		// to read window.location.hostname and check against allowed domains
+		(function() {
+			var _origEval = window.eval;
+			window.eval = function(code) {
+				if (typeof code === 'string') {
+					// Intercept hostname/host lookups
+					if (code.indexOf('location.hostname') !== -1 || code.indexOf('location.host') !== -1) {
+						return 'clash3d.com';
+					}
+					if (code.indexOf('location.href') !== -1) {
+						return 'https://clash3d.com/';
+					}
+					if (code.indexOf('location.origin') !== -1) {
+						return 'https://clash3d.com';
+					}
+				}
+				return _origEval.call(window, code);
+			};
+		})();
+	</script>
+	<script src="/non-semag/gamemonetize-ya6quof6a1n40xzz3thz9xekh349abp8/js/jquery-3.3.1.min.js"></script>
+	<script src="/non-semag/gamemonetize-ya6quof6a1n40xzz3thz9xekh349abp8/js/main.js"></script>
+	<!-- index.js is loaded dynamically by main.js via LoadScript() -->
+</head>
+<body oncontextmenu="return false;">
+	<div id="viewport">
+		<canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+		<div id="preloader">
+			<div class="meter animate" style="display: none;">
+				<span style="width: 100%;"><span></span></span>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		// Hide preloader once game starts rendering
+		var waitForGame = setInterval(function () {
+			if (typeof GameModule !== 'object')
+				return;
+			// Check if game has started (JS_OnGameplayStarted sets this)
+			var preloader = document.getElementById('preloader');
+			if (preloader) {
+				preloader.style.display = 'none';
+			}
+			clearInterval(waitForGame);
+		}, 500);
+	</script>
+</body>
+</html>

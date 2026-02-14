@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html lang="en-us">
+<head><script type="text/javascript">
+// Nova Hub: ad stubs + site-lock bypass
+var __dg_event_listener={addEventListener:function(){},removeEventListener:function(){}};
+if(typeof gtag==='undefined'){function gtag(){}}
+function AdblockEnabled(){return false;}
+function GameMonetize(typeOrOpts,opts){
+    var o=opts||typeOrOpts||{};
+    if(typeof o==='object'&&o.onEvent){
+        setTimeout(function(){o.onEvent({name:"SDK_READY"});},100);
+        setTimeout(function(){o.onEvent({name:"SDK_GAME_START"});},200);
+    }
+    return{showBanner:function(){},addEventListener:function(e,cb){if(cb)setTimeout(cb,0);},showTag:function(){},gameReady:function(){},gameOver:function(){},happytime:function(){}};
+}
+var sdk_gamemonetize;
+(function(){
+    var oe=window.eval;
+    window.eval=function(c){
+        if(typeof c==='string'){
+            if(c.indexOf('location.hostname')!==-1||c.indexOf('location.host')!==-1)return'html5.gamemonetize.com';
+            if(c.indexOf('location.href')!==-1)return'https://html5.gamemonetize.com/';
+            if(c.indexOf('location.origin')!==-1)return'https://html5.gamemonetize.com';
+        }
+        return oe.call(window,c);
+    };
+})();
+</script>
+<meta charset="utf-8"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Dummy Speed Bridger</title>
+<link href="TemplateData/favicon.ico" rel="shortcut icon"/>
+<link href="TemplateData/style.css" rel="stylesheet"/>
+<style>	
+      @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@200;500&display=swap');	
+      @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@200;500&family=MuseoModerno:wght@600&display=swap');	
+
+      /* 1. FORCE PURPLE BACKGROUND */
+      html, body {
+        background: #2a1b3d !important;
+        background: radial-gradient(circle, #382150 0%, #150d1c 100%) !important;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      /* 2. LOADING COVER (Replaces the old white loader) */
+      #loading-cover {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, #382150 0%, #150d1c 100%) !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+      }
+
+      /* Logo Animation */
+      #loading-logo {
+        max-width: 260px;
+        height: auto;
+        margin-bottom: 30px;
+        animation: logoBounce 2s ease-in-out infinite;
+      }
+
+      /* 3. GLASS LOADING BOX */
+      .loading-container {
+        width: 380px;
+        background-color: rgba(90, 50, 120, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 15px;
+        padding: 20px 25px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        backdrop-filter: blur(5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      }
+
+      .loading-header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        color: #ffffff;
+        font-family: 'Arial Black', Gadget, sans-serif;
+        font-size: 12px;
+        letter-spacing: 1.5px;
+      }
+
+      .progress-track {
+        width: 100%;
+        height: 14px;
+        background: #140d1b; /* Dark track */
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.6);
+      }
+
+      .progress-fill {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(90deg, #5b367e, #7c4dff); /* Purple Gradient */
+        transition: width 0.2s ease-out;
+        box-shadow: 0 0 10px rgba(124, 77, 255, 0.3);
+      }
+
+      /* Animations */
+      @keyframes logoBounce {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(-15px); }
+      }
+
+      #loading-cover.fade-out {
+        animation: fadeOut 500ms ease forwards;
+      }
+
+      @keyframes fadeOut {
+        to { opacity: 0; visibility: hidden; }
+      }
+
+      /* Ensure Unity Canvas fills the screen or container correctly */
+      #unity-container {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+      }
+      
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+</head>
+<body class="dark">
+<div class="unity-desktop" id="unity-container">
+<canvas id="unity-canvas"></canvas>
+</div>
+<div id="loading-cover">
+<img alt="Logo" id="loading-logo" src="logo.png"/>
+<div class="loading-container">
+<div class="loading-header">
+<span>LOADING</span>
+<span id="progress-text">0%</span>
+</div>
+<div class="progress-track">
+<div class="progress-fill" id="progress-fill"></div>
+</div>
+</div>
+</div>
+<div id="unity-fullscreen-button" style="display: none;"></div>
+<script>
+      const hideFullScreenButton = "";
+      const buildUrl = "Build";
+      const loaderUrl = buildUrl + "/nyn.loader.js";
+      const config = {
+        dataUrl: buildUrl + "/nyn.data.unityweb",
+        frameworkUrl: buildUrl + "/nyn.framework.js.unityweb",
+        codeUrl: buildUrl + "/nyn.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "crazygamesfree",
+        productName: "Dummy Speed Bridger",
+        productVersion: "1.16",
+      };
+
+      const container = document.querySelector("#unity-container");
+      const canvas = document.querySelector("#unity-canvas");
+      const loadingCover = document.querySelector("#loading-cover");
+      const fullscreenButton = document.querySelector("#unity-fullscreen-button");
+
+      const canFullscreen = (function() {
+        for (const key of [
+            'exitFullscreen',
+            'webkitExitFullscreen',
+            'webkitCancelFullScreen',
+            'mozCancelFullScreen',
+            'msExitFullscreen',
+          ]) {
+          if (key in document) {
+            return true;
+          }
+        }
+        return false;
+      }());
+
+
+      // Start loading
+      const script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          // --- UPDATED PROGRESS LOGIC ---
+          // This updates the new Glass Bar instead of the old spinner
+          const fill = document.getElementById("progress-fill");
+          const text = document.getElementById("progress-text");
+          if(fill) fill.style.width = (100 * progress) + "%";
+          if(text) text.innerHTML = Math.round(100 * progress) + "%";
+
+        }).then((unityInstance) => {
+          // --- HIDE LOADING SCREEN ---
+          if(loadingCover) {
+            loadingCover.classList.add("fade-out");
+            setTimeout(() => {
+              loadingCover.style.display = "none";
+            }, 550);
+          }
+
+          if (canFullscreen) {
+            if (!hideFullScreenButton) {
+              fullscreenButton.style.display = "";
+            }
+            fullscreenButton.onclick = () => {
+              unityInstance.SetFullscreen(1);
+            };
+          }
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+
+      // Force mobile optimizations if needed
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        container.className = "unity-mobile";
+        config.devicePixelRatio = 1.5;
+      }
+    </script>
+</body>
+</html>

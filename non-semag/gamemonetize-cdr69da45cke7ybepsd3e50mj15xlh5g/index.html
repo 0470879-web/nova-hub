@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html lang="en-us">
+<head><script type="text/javascript">
+// Nova Hub: ad stubs + site-lock bypass
+var __dg_event_listener={addEventListener:function(){},removeEventListener:function(){}};
+if(typeof gtag==='undefined'){function gtag(){}}
+function AdblockEnabled(){return false;}
+function GameMonetize(typeOrOpts,opts){
+    var o=opts||typeOrOpts||{};
+    if(typeof o==='object'&&o.onEvent){
+        setTimeout(function(){o.onEvent({name:"SDK_READY"});},100);
+        setTimeout(function(){o.onEvent({name:"SDK_GAME_START"});},200);
+    }
+    return{showBanner:function(){},addEventListener:function(e,cb){if(cb)setTimeout(cb,0);},showTag:function(){},gameReady:function(){},gameOver:function(){},happytime:function(){}};
+}
+var sdk_gamemonetize;
+(function(){
+    var oe=window.eval;
+    window.eval=function(c){
+        if(typeof c==='string'){
+            if(c.indexOf('location.hostname')!==-1||c.indexOf('location.host')!==-1)return'html5.gamemonetize.com';
+            if(c.indexOf('location.href')!==-1)return'https://html5.gamemonetize.com/';
+            if(c.indexOf('location.origin')!==-1)return'https://html5.gamemonetize.com';
+        }
+        return oe.call(window,c);
+    };
+})();
+</script>
+<meta charset="utf-8"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>Falling Elevator</title>
+<link href="TemplateData/favicon.ico" rel="shortcut icon"/>
+<link href="TemplateData/style.css" rel="stylesheet"/>
+<script src="TemplateData/UnityProgress.javascript"></script>
+<script src="Build/UnityLoader.js"></script>
+<script>
+        var gameInstance = UnityLoader.instantiate("gameContainer", "Build/ExportedGame.json", {onProgress: UnityProgress});
+    </script>
+</head>
+<body>
+<div class="webgl-content">
+<div id="gameContainer" style="width: 600px; height: 960px"></div>
+</div>
+<div class="simmer">template by: <a href="Guerila Games Lab/" target="_blank">GuerilaGamesLab</a></div>
+<script src="TemplateData/responsive.javascript"></script>
+
+</body>
+</html>

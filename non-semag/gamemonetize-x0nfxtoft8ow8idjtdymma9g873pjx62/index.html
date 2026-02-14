@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<html>
+<head><script type="text/javascript">
+// Nova Hub: ad stubs + site-lock bypass
+var __dg_event_listener={addEventListener:function(){},removeEventListener:function(){}};
+if(typeof gtag==='undefined'){function gtag(){}}
+function AdblockEnabled(){return false;}
+function GameMonetize(typeOrOpts,opts){
+    var o=opts||typeOrOpts||{};
+    if(typeof o==='object'&&o.onEvent){
+        setTimeout(function(){o.onEvent({name:"SDK_READY"});},100);
+        setTimeout(function(){o.onEvent({name:"SDK_GAME_START"});},200);
+    }
+    return{showBanner:function(){},addEventListener:function(e,cb){if(cb)setTimeout(cb,0);},showTag:function(){},gameReady:function(){},gameOver:function(){},happytime:function(){}};
+}
+var sdk_gamemonetize;
+(function(){
+    var oe=window.eval;
+    window.eval=function(c){
+        if(typeof c==='string'){
+            if(c.indexOf('location.hostname')!==-1||c.indexOf('location.host')!==-1)return'html5.gamemonetize.com';
+            if(c.indexOf('location.href')!==-1)return'https://html5.gamemonetize.com/';
+            if(c.indexOf('location.origin')!==-1)return'https://html5.gamemonetize.com';
+        }
+        return oe.call(window,c);
+    };
+})();
+</script>
+<meta charset="utf-8"/>
+<title>Happy Farm Familly</title>
+<!--http://www.html5rocks.com/en/mobile/mobifying/-->
+<meta content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1,minimal-ui=true" name="viewport">
+<!--https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="telephone=no" name="format-detection"/>
+<!-- force webkit on 360 -->
+<meta content="webkit" name="renderer">
+<meta content="webkit" name="force-rendering">
+<!-- force edge on IE -->
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<meta content="no" name="msapplication-tap-highlight"/>
+<!-- force full screen on some browser -->
+<meta content="yes" name="full-screen">
+<meta content="true" name="x5-fullscreen"/>
+<meta content="true" name="360-fullscreen"/>
+<!--fix fireball/issues/3568 -->
+<!--<meta name="browsermode" content="application">-->
+<meta content="app" name="x5-page-mode"/>
+<!--<link rel="apple-touch-icon" href=".png" />-->
+<!--<link rel="apple-touch-icon-precomposed" href=".png" />-->
+<link href="style.css" rel="stylesheet" type="text/css"/>
+</meta></meta></meta></meta></meta></head>
+<body>
+<div id="GameDiv">
+<div id="Cocos3dGameContainer">
+<canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
+</div>
+</div>
+<!-- Polyfills bundle. -->
+<script charset="utf-8" src="src/polyfills.bundle.js"> </script>
+<!-- SystemJS support. -->
+<script charset="utf-8" src="src/system.bundle.js"> </script>
+<!-- Import map -->
+<script charset="utf-8" src="src/import-map.json" type="systemjs-importmap"> </script>
+<script>
+    System.import('./index.js').catch(function(err) { console.error(err); })
+</script>
+</body>
+
+<style>
+        html,
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            min-height: 100%;
+            max-height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 0;
+            padding: 0;
+            -webkit-text-size-adjust: none;
+            touch-action: pan-x pan-y;
+        }
+
+        /* @media only screen and (orientation:landscape) {
+			body {
+				transform: rotate(90deg);
+			}
+		} */
+
+        .floating {
+            position: absolute;
+            animation-name: floating;
+            animation-duration: 1.5s;
+            animation-iteration-count: infinite;
+            animation-timing-function: ease-in-out;
+        }
+
+        @keyframes floating {
+            from {
+                transform: translate(0, 0px);
+            }
+            65% {
+                transform: translate(0, 15px);
+            }
+            to {
+                transform: translate(0, -0px);
+            }
+        }
+    </style>
+</html>
