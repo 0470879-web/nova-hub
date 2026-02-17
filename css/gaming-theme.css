@@ -1958,9 +1958,9 @@ body.purple-theme .game-loader-main,
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    bottom: 0 !important;
+    bottom: 110px !important;
     width: 100% !important;
-    height: 100% !important;
+    height: calc(100% - 110px) !important;
     border: none !important;
     background: var(--gaming-bg) !important;
     margin: 0 !important;
@@ -2550,6 +2550,11 @@ body.gaming-theme.fullscreen-mode .game-play-overlay {
         padding: 0.75rem 1rem !important;
         gap: 0.5rem !important;
     }
+    
+    .game-preview-iframe {
+        bottom: 90px !important;
+        height: calc(100% - 90px) !important;
+    }
 }
 
 /* Small mobile styles (< 480px) */
@@ -2610,6 +2615,11 @@ body.gaming-theme.fullscreen-mode .game-play-overlay {
     .game-fullscreen-button {
         padding: 0.5rem 1rem !important;
         font-size: 0.85rem !important;
+    }
+    
+    .game-preview-iframe {
+        bottom: 80px !important;
+        height: calc(100% - 80px) !important;
     }
 }
 
