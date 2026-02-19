@@ -1,3 +1,32 @@
+const MIME_TYPES = {
+  "wasm": "application/wasm",
+  "js": "application/javascript",
+  "html": "text/html",
+  "css": "text/css",
+  "json": "application/json",
+  "png": "image/png",
+  "jpg": "image/jpeg",
+  "jpeg": "image/jpeg",
+  "gif": "image/gif",
+  "svg": "image/svg+xml",
+  "swf": "application/x-shockwave-flash",
+  "mp3": "audio/mpeg",
+  "ogg": "audio/ogg",
+  "wav": "audio/wav",
+  "webp": "image/webp",
+  "xml": "application/xml",
+  "ico": "image/x-icon",
+  "ttf": "font/ttf",
+  "woff": "font/woff",
+  "woff2": "font/woff2",
+};
+
+function getContentType(key, r2ContentType) {
+  if (r2ContentType) return r2ContentType;
+  const ext = key.split(".").pop().toLowerCase();
+  return MIME_TYPES[ext] || "application/octet-stream";
+}
+
 export async function onRequest({ params, env, request }) {
   try {
     const key = params.path.join("/")
@@ -9,8 +38,10 @@ export async function onRequest({ params, env, request }) {
       if (object) {
         return new Response(object.body, {
           headers: {
-            "Content-Type": object.httpMetadata?.contentType || "application/octet-stream",
-            "Cache-Control": "public, max-age=31536000, immutable"
+            "Content-Type": getContentType(key, object.httpMetadata?.contentType),
+            "Cache-Control": "public, max-age=31536000, immutable",
+            "Access-Control-Allow-Origin": "*",
+            "Cross-Origin-Resource-Policy": "cross-origin"
           }
         })
       }

@@ -1,13 +1,28 @@
 /*
-  X-Frame-Options: SAMEORIGIN
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
 
+/*.wasm
+  Content-Type: application/wasm
+  Access-Control-Allow-Origin: *
+  Cross-Origin-Resource-Policy: cross-origin
+
 /*.swf
   Content-Type: application/x-shockwave-flash
+  Access-Control-Allow-Origin: *
+
+/non-semag/*
+  Access-Control-Allow-Origin: *
+  Cross-Origin-Resource-Policy: cross-origin
+
+/semag/*
+  Access-Control-Allow-Origin: *
+  Cross-Origin-Resource-Policy: cross-origin
 
 /sitemap.xml
   Content-Type: application/xml
-  Cache-Control: public, max-age=86400/robots.txt
+  Cache-Control: public, max-age=86400
+
+/robots.txt
   Content-Type: text/plain
   Cache-Control: public, max-age=86400
