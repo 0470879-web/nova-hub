@@ -563,6 +563,7 @@
 				return (
 					document.fullscreenElement ||
 					document.webkitFullscreenElement ||
+					document.webkitCurrentFullScreenElement ||
 					document.mozFullScreenElement ||
 					document.msFullscreenElement ||
 					null
@@ -597,8 +598,16 @@
 				// Give keyboard focus to the game iframe when possible.
 				if (active) {
 					try {
-						if (gameFrame && typeof gameFrame.focus === "function") gameFrame.focus({ preventScroll: true });
-					} catch (e) {}
+						if (gameFrame && typeof gameFrame.focus === "function") {
+							try {
+								gameFrame.focus({ preventScroll: true });
+							} catch (e) {
+								gameFrame.focus();
+							}
+						}
+					} catch (e) {
+						// Ignore focus errors; some browsers disallow focusing sandboxed iframes.
+					}
 				}
 			}
 
@@ -618,6 +627,15 @@
 					}
 					if (element.webkitRequestFullscreen) {
 						element.webkitRequestFullscreen();
+						return true;
+					}
+					if (element.webkitRequestFullScreen) {
+						// Older WebKit API name.
+						if (typeof Element !== "undefined" && typeof Element.ALLOW_KEYBOARD_INPUT !== "undefined") {
+							element.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+						} else {
+							element.webkitRequestFullScreen();
+						}
 						return true;
 					}
 					if (element.mozRequestFullScreen) {
