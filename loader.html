@@ -40,7 +40,7 @@
 		
 		<main class="game-loader-main">
 			<div class="game-preview-container">
-				<iframe id="gameFrame" class="game-preview-iframe" loading="lazy" allow="fullscreen; autoplay" sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+				<iframe id="gameFrame" class="game-preview-iframe" loading="lazy" allowfullscreen allow="fullscreen; autoplay" sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
 				<div class="game-blur-overlay"></div>
 				
 				<!-- Centered Play Button -->
@@ -49,6 +49,11 @@
 						Play Now
 					</button>
 				</div>
+
+				<!-- Always-available exit control (esp. pseudo fullscreen / mobile) -->
+				<button id="exitFullscreenButton" class="game-exit-fullscreen-button" type="button" aria-label="Exit fullscreen" title="Exit fullscreen">
+					X
+				</button>
 				
 				<!-- Bottom Bar -->
 				<div class="game-bottom-bar">
@@ -125,8 +130,8 @@
 		
 		let gameData = null;
 		let allGames = [];
-		let isFullscreen = false;
 		let isPlaying = false;
+		let fullscreenController = null;
 		
 		function parseGameFromHash() {
 			if (document.location.hash) {
@@ -168,8 +173,20 @@
 		function initializeGame() {
 			// Reset playing state
 			isPlaying = false;
-			isFullscreen = false;
-			document.body.classList.remove("fullscreen-mode");
+			// Ensure we exit both native fullscreen and the CSS fallback.
+			if (fullscreenController && typeof fullscreenController.forceExit === "function") {
+				fullscreenController.forceExit();
+			} else {
+				// Best-effort: keep state consistent even before controller init.
+				try {
+					if (document.exitFullscreen) document.exitFullscreen();
+					else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+					else if (document.webkitCancelFullScreen) document.webkitCancelFullScreen();
+					else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+					else if (document.msExitFullscreen) document.msExitFullscreen();
+				} catch (e) {}
+				document.body.classList.remove("fullscreen-mode");
+			}
 			
 			// Clear the iframe src to stop the old game
 			const gameFrame = document.getElementById("gameFrame");
@@ -328,15 +345,8 @@
 			});
 			
 			// Fullscreen button - browser fullscreen API
-			document.getElementById("fullscreenButton").addEventListener("click", () => {
-				toggleFullscreen();
-			});
-			
-			// Listen for fullscreen changes
-			document.addEventListener("fullscreenchange", updateFullscreenState);
-			document.addEventListener("webkitfullscreenchange", updateFullscreenState);
-			document.addEventListener("mozfullscreenchange", updateFullscreenState);
-			document.addEventListener("MSFullscreenChange", updateFullscreenState);
+			fullscreenController = createGameFullscreenController();
+			if (fullscreenController) fullscreenController.init();
 		});
 		
 		function loadGame(game) {
@@ -516,7 +526,7 @@
 		</style>
 	</head>
 	<body>
-		<iframe src="${gameUrl}" allow="fullscreen; autoplay" sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+		<iframe src="${gameUrl}" allowfullscreen allow="fullscreen; autoplay" sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
 	</body>
 </html>`);
 					doc.close();
@@ -537,108 +547,198 @@
 			}
 		}
 		
-		function toggleFullscreen() {
+		// Fullscreen logic (rewritten): native Fullscreen API + CSS fallback.
+		function createGameFullscreenController() {
 			const previewContainer = document.querySelector(".game-preview-container");
-			
-			if (!previewContainer) {
-				return;
-			}
-			
-			// Check if we're currently in fullscreen
-			const isCurrentlyFullscreen = !!(
-				document.fullscreenElement ||
-				document.webkitFullscreenElement ||
-				document.mozFullScreenElement ||
-				document.msFullscreenElement
-			);
-			
-			if (isCurrentlyFullscreen) {
-				// Exit fullscreen
-				exitFullscreen();
-			} else {
-				// Enter fullscreen
-				enterFullscreen(previewContainer);
-			}
-		}
-		
-		function enterFullscreen(element) {
-			// Start game if not already playing
-			if (!isPlaying) {
-				startGame();
-			}
-			
-			// Request fullscreen with cross-browser support
-			if (element.requestFullscreen) {
-				element.requestFullscreen().then(() => {
-					updateFullscreenState();
-				}).catch((err) => {
-					console.error("Error entering fullscreen:", err);
-				});
-			} else if (element.webkitRequestFullscreen) {
-				element.webkitRequestFullscreen();
-				updateFullscreenState();
-			} else if (element.mozRequestFullScreen) {
-				element.mozRequestFullScreen();
-				updateFullscreenState();
-			} else if (element.msRequestFullscreen) {
-				element.msRequestFullscreen();
-				updateFullscreenState();
-			} else {
-				console.warn("Fullscreen API not supported in this browser");
-			}
-		}
-		
-		function exitFullscreen() {
-			if (document.exitFullscreen) {
-				document.exitFullscreen().then(() => {
-					updateFullscreenState();
-				}).catch((err) => {
-					console.error("Error exiting fullscreen:", err);
-				});
-			} else if (document.webkitExitFullscreen) {
-				document.webkitExitFullscreen();
-				updateFullscreenState();
-			} else if (document.mozCancelFullScreen) {
-				document.mozCancelFullScreen();
-				updateFullscreenState();
-			} else if (document.msExitFullscreen) {
-				document.msExitFullscreen();
-				updateFullscreenState();
-			}
-		}
-		
-		function updateFullscreenState() {
-			const isCurrentlyFullscreen = !!(
-				document.fullscreenElement ||
-				document.webkitFullscreenElement ||
-				document.mozFullScreenElement ||
-				document.msFullscreenElement
-			);
-			
-			isFullscreen = isCurrentlyFullscreen;
 			const fullscreenButton = document.getElementById("fullscreenButton");
-			const buttonText = fullscreenButton.querySelector("span:last-child");
-			
-			if (fullscreenButton && buttonText) {
-				if (isCurrentlyFullscreen) {
-					document.body.classList.add("fullscreen-mode");
-					buttonText.textContent = "Exit Fullscreen";
-					fullscreenButton.classList.add("active");
-				} else {
-					document.body.classList.remove("fullscreen-mode");
-					buttonText.textContent = "Fullscreen";
-					fullscreenButton.classList.remove("active");
+			const exitOverlayButton = document.getElementById("exitFullscreenButton");
+			const gameFrame = document.getElementById("gameFrame");
+
+			if (!previewContainer || !fullscreenButton) return null;
+
+			let pseudoActive = false; // CSS-only fullscreen fallback
+			let busy = false;
+
+			function getNativeFullscreenElement() {
+				return (
+					document.fullscreenElement ||
+					document.webkitFullscreenElement ||
+					document.mozFullScreenElement ||
+					document.msFullscreenElement ||
+					null
+				);
+			}
+
+			function isNativeFullscreenActive() {
+				return !!getNativeFullscreenElement();
+			}
+
+			function isFullscreenActive() {
+				return isNativeFullscreenActive() || pseudoActive;
+			}
+
+			function updateButtonUI(active) {
+				const buttonText = fullscreenButton.querySelector("span:last-child");
+				if (buttonText) buttonText.textContent = active ? "Exit Fullscreen" : "Fullscreen";
+				fullscreenButton.classList.toggle("active", active);
+				fullscreenButton.setAttribute("aria-pressed", active ? "true" : "false");
+				fullscreenButton.title = active ? "Exit fullscreen" : "Enter fullscreen";
+			}
+
+			function syncStateFromBrowser() {
+				// If the browser is in native fullscreen, prefer that source of truth.
+				const nativeActive = isNativeFullscreenActive();
+				if (nativeActive) pseudoActive = false;
+
+				const active = nativeActive || pseudoActive;
+				document.body.classList.toggle("fullscreen-mode", active);
+				updateButtonUI(active);
+
+				// Give keyboard focus to the game iframe when possible.
+				if (active) {
+					try {
+						if (gameFrame && typeof gameFrame.focus === "function") gameFrame.focus({ preventScroll: true });
+					} catch (e) {}
 				}
 			}
-		}
-		
-		// Exit fullscreen when pressing ESC (handled by browser, but we update state)
-		document.addEventListener("keydown", (e) => {
-			if (e.key === "Escape") {
-				// Browser handles ESC automatically, just update our state
-				setTimeout(updateFullscreenState, 100);
+
+			async function tryEnterNativeFullscreen() {
+				const element = previewContainer;
+				try {
+					// Some browsers support requestFullscreen(options); others throw if options object is passed.
+					if (element.requestFullscreen) {
+						try {
+							const ret = element.requestFullscreen({ navigationUI: "hide" });
+							if (ret && typeof ret.then === "function") await ret;
+						} catch (e) {
+							const ret = element.requestFullscreen();
+							if (ret && typeof ret.then === "function") await ret;
+						}
+						return true;
+					}
+					if (element.webkitRequestFullscreen) {
+						element.webkitRequestFullscreen();
+						return true;
+					}
+					if (element.mozRequestFullScreen) {
+						element.mozRequestFullScreen();
+						return true;
+					}
+					if (element.msRequestFullscreen) {
+						element.msRequestFullscreen();
+						return true;
+					}
+				} catch (err) {
+					console.warn("Native fullscreen request failed:", err);
+				}
+				return false;
 			}
-		});
+
+			async function tryExitNativeFullscreen() {
+				try {
+					const nativeActive = isNativeFullscreenActive();
+					if (!nativeActive) return;
+
+					let ret;
+					if (document.exitFullscreen) ret = document.exitFullscreen();
+					else if (document.webkitExitFullscreen) ret = document.webkitExitFullscreen();
+					else if (document.webkitCancelFullScreen) ret = document.webkitCancelFullScreen();
+					else if (document.mozCancelFullScreen) ret = document.mozCancelFullScreen();
+					else if (document.msExitFullscreen) ret = document.msExitFullscreen();
+
+					if (ret && typeof ret.then === "function") await ret;
+				} catch (err) {
+					// Ignore – we still update UI via sync.
+					console.warn("Native fullscreen exit failed:", err);
+				}
+			}
+
+			function enterPseudoFullscreen() {
+				pseudoActive = true;
+				// Make sure we're at the top so the fixed fullscreen layout doesn't "start" scrolled.
+				try {
+					window.scrollTo(0, 0);
+				} catch (e) {}
+				syncStateFromBrowser();
+			}
+
+			async function enter() {
+				if (busy) return;
+				busy = true;
+				try {
+					// Fullscreen must be initiated by a user gesture; also start the game in the same gesture.
+					if (!isPlaying) startGame();
+
+					const nativeOk = await tryEnterNativeFullscreen();
+					if (!nativeOk) {
+						enterPseudoFullscreen();
+					} else {
+						// Some WebKit implementations can fail without throwing; if we didn't actually enter,
+						// fall back to CSS pseudo fullscreen so the button still "does something".
+						setTimeout(() => {
+							if (!isNativeFullscreenActive() && !pseudoActive) enterPseudoFullscreen();
+						}, 250);
+					}
+
+					// Some vendor implementations don't fire a promise; ensure UI is in sync next tick.
+					setTimeout(syncStateFromBrowser, 0);
+				} finally {
+					busy = false;
+				}
+			}
+
+			async function exit() {
+				if (busy) return;
+				busy = true;
+				try {
+					pseudoActive = false;
+					await tryExitNativeFullscreen();
+					syncStateFromBrowser();
+				} finally {
+					busy = false;
+				}
+			}
+
+			async function toggle() {
+				if (isFullscreenActive()) return exit();
+				return enter();
+			}
+
+			function onKeyDown(e) {
+				// Native fullscreen already exits via ESC. This is mainly for pseudo fullscreen.
+				if (e.key === "Escape" && pseudoActive) {
+					e.preventDefault();
+					exit();
+				}
+			}
+
+			function init() {
+				fullscreenButton.addEventListener("click", toggle);
+				if (exitOverlayButton) exitOverlayButton.addEventListener("click", exit);
+
+				// Keep UI in sync even if the game/iframe triggers fullscreen by itself.
+				const sync = () => syncStateFromBrowser();
+				document.addEventListener("fullscreenchange", sync);
+				document.addEventListener("webkitfullscreenchange", sync);
+				document.addEventListener("mozfullscreenchange", sync);
+				document.addEventListener("MSFullscreenChange", sync);
+				document.addEventListener("keydown", onKeyDown);
+
+				syncStateFromBrowser();
+			}
+
+			function forceExit() {
+				pseudoActive = false;
+				// Fire-and-forget: exiting fullscreen doesn't require a gesture.
+				tryExitNativeFullscreen();
+				syncStateFromBrowser();
+			}
+
+			return {
+				init,
+				forceExit
+			};
+		}
 		</script>
 	</body>
 </html>
