@@ -1872,7 +1872,9 @@ html body#noscroll.purple-theme {
     padding: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
+    height: 100dvh !important;
     max-height: 100vh !important;
+    max-height: 100dvh !important;
     overflow: hidden !important;
     position: fixed !important;
     top: 0 !important;
@@ -1897,6 +1899,24 @@ html body#noscroll.purple-theme {
         overflow-y: auto !important;
         height: auto !important;
         min-height: 100vh !important;
+        min-height: 100dvh !important;
+    }
+
+    /* In fullscreen, lock it down even on touch devices */
+    body.fullscreen-mode,
+    html body#noscroll.fullscreen-mode {
+        overflow: hidden !important;
+        position: fixed !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        max-height: 100vh !important;
+        max-height: 100dvh !important;
+    }
+    body.fullscreen-mode .game-loader-main {
+        overflow: hidden !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        min-height: 0 !important;
     }
 }
 
@@ -1913,7 +1933,9 @@ body.purple-theme .game-loader-main,
     bottom: 0 !important;
     width: 100% !important;
     height: calc(100vh - 70px) !important;
+    height: calc(100dvh - 70px) !important;
     max-height: calc(100vh - 70px) !important;
+    max-height: calc(100dvh - 70px) !important;
     margin: 0 !important;
     padding: 24px !important;
     padding-right: 0 !important;
@@ -2363,15 +2385,22 @@ body.purple-theme .game-loader-main,
 }
 
 /* Fullscreen Mode - Simple override (theme-agnostic) */
+body.fullscreen-mode {
+    background: #000 !important;
+}
+
 body.fullscreen-mode .game-loader-main {
     top: 0 !important;
     height: 100vh !important;
+    height: 100dvh !important;
     padding: 0 !important;
+    background: #000 !important;
 }
 
 body.fullscreen-mode .game-preview-container {
     width: 100vw !important;
     height: 100vh !important;
+    height: 100dvh !important;
     margin: 0 !important;
     border-radius: 0 !important;
     border: none !important;
@@ -2380,15 +2409,22 @@ body.fullscreen-mode .game-preview-container {
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
+    background: #000 !important;
+    padding:
+        env(safe-area-inset-top, 0px)
+        env(safe-area-inset-right, 0px)
+        env(safe-area-inset-bottom, 0px)
+        env(safe-area-inset-left, 0px) !important;
 }
 
 body.fullscreen-mode .game-preview-iframe {
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
+    top: env(safe-area-inset-top, 0px) !important;
+    left: env(safe-area-inset-left, 0px) !important;
+    right: env(safe-area-inset-right, 0px) !important;
+    bottom: env(safe-area-inset-bottom, 0px) !important;
+    width: calc(100vw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) !important;
+    height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
 }
 
 body.fullscreen-mode .recommended-games-section,
@@ -2407,8 +2443,8 @@ body.fullscreen-mode .game-play-overlay {
 
 body.fullscreen-mode .game-exit-fullscreen-button {
     position: absolute;
-    top: 14px;
-    right: 14px;
+    top: calc(14px + env(safe-area-inset-top, 0px));
+    right: calc(14px + env(safe-area-inset-right, 0px));
     width: 46px;
     height: 46px;
     padding: 0;
@@ -2461,6 +2497,7 @@ body.fullscreen-mode .game-exit-fullscreen-button:active {
         overflow-y: auto !important;
         height: auto !important;
         min-height: calc(100vh - 70px) !important;
+        min-height: calc(100dvh - 70px) !important;
         max-height: none !important;
         position: relative !important;
     }
@@ -2535,6 +2572,7 @@ body.fullscreen-mode .game-exit-fullscreen-button:active {
         overflow-y: auto !important;
         height: auto !important;
         min-height: calc(100vh - 70px) !important;
+        min-height: calc(100dvh - 70px) !important;
     }
     
     .game-preview-container {
