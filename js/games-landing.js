@@ -6,7 +6,8 @@ let gamelist = [];
 function redirectToRandomGame() {
     if (gamelist.length > 0) {
         const randomGame = gamelist[Math.floor(Math.random() * gamelist.length)];
-        const gameData = [randomGame.directory, randomGame.image, randomGame.name];
+        const source = randomGame.source || "semag";
+        const gameData = [randomGame.directory, randomGame.image, randomGame.name, source, randomGame];
         const encoded = btoa(encodeURIComponent(JSON.stringify(gameData)));
         window.location.href = "loader.html#" + encoded;
     } else {
@@ -16,7 +17,8 @@ function redirectToRandomGame() {
             .then(data => {
                 gamelist = data;
                 const randomGame = gamelist[Math.floor(Math.random() * gamelist.length)];
-                const gameData = [randomGame.directory, randomGame.image, randomGame.name];
+                const source = randomGame.source || "semag";
+                const gameData = [randomGame.directory, randomGame.image, randomGame.name, source, randomGame];
                 const encoded = btoa(encodeURIComponent(JSON.stringify(gameData)));
                 window.location.href = "loader.html#" + encoded;
             })

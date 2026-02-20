@@ -21,15 +21,26 @@ const MIME_TYPES = {
   "woff2": "font/woff2",
 };
 
+const PUBLIC_SEMAG_BASE_URL = "https://pub-31ddb721e92142be8b2deee228c36013.r2.dev";
+
 function getContentType(key, r2ContentType) {
   if (r2ContentType) return r2ContentType;
   const ext = key.split(".").pop().toLowerCase();
   return MIME_TYPES[ext] || "application/octet-stream";
 }
 
+function getPathKey(pathParam) {
+  if (Array.isArray(pathParam)) return pathParam.join("/");
+  if (typeof pathParam === "string") return pathParam.replace(/^\/+/, "");
+  return "";
+}
+
 export async function onRequest({ params, env, request }) {
   try {
-    const key = params.path.join("/")
+    const key = getPathKey(params.path);
+    if (!key) {
+      return new Response("Not found", { status: 404 });
+    }
 
     // First, try to get from R2 bucket (if configured)
     if (env.semag) {
@@ -45,6 +56,29 @@ export async function onRequest({ params, env, request }) {
           }
         })
       }
+    }
+
+    // Fallback: public R2 URL (works even if R2 binding is unavailable)
+    const publicBase = (env.GAMES_ASSETS_BASE_URL || PUBLIC_SEMAG_BASE_URL).replace(/\/+$/, "");
+    try {
+      const upstream = await fetch(`${publicBase}/semag/${key}`);
+      if (upstream.ok) {
+        const headers = new Headers(upstream.headers);
+        if (!headers.get("Content-Type")) {
+          headers.set("Content-Type", getContentType(key, null));
+        }
+        if (!headers.get("Cache-Control")) {
+          headers.set("Cache-Control", "public, max-age=31536000, immutable");
+        }
+        headers.set("Access-Control-Allow-Origin", "*");
+        headers.set("Cross-Origin-Resource-Policy", "cross-origin");
+        return new Response(upstream.body, {
+          status: upstream.status,
+          headers,
+        });
+      }
+    } catch (upstreamErr) {
+      console.error("Error fetching semag file from public R2 URL:", upstreamErr);
     }
 
     // If not found in R2, fall back to static assets (local files)

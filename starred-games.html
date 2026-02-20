@@ -85,11 +85,9 @@
 					// Use imagePath from game if present, else build path; resolve relative from R2
 					let imagePath = starredData[i].imagePath;
 					if (!imagePath) {
-						imagePath = (source === "non-semag" || source === "Hypackel")
-							? "/" + source + "/" + starredData[i].directory + "/" + starredData[i].image
-							: GAMES_BASE_URL + "/" + source + "/" + starredData[i].directory + "/" + starredData[i].image;
+						imagePath = "/" + source + "/" + starredData[i].directory + "/" + starredData[i].image;
 					}
-					if (source === "semag" && imagePath.startsWith("/") && window.GAMES_ASSETS_BASE_URL && (location.hostname === "localhost" || location.hostname === "127.0.0.1")) {
+					if (source === "semag" && imagePath.startsWith("/") && window.GAMES_ASSETS_BASE_URL) {
 						imagePath = window.GAMES_ASSETS_BASE_URL + imagePath;
 					}
 					
@@ -97,7 +95,7 @@
 						.attr({
 							class: "game",
 							id: starredData[i].directory,
-							href: "loader.html#" + btoa(encodeURIComponent(JSON.stringify([starredData[i].directory, starredData[i].image, starredData[i].name, source]))),
+							href: "loader.html#" + btoa(encodeURIComponent(JSON.stringify([starredData[i].directory, starredData[i].image, starredData[i].name, source, starredData[i]]))),
 						})
 						.append(
 							$("<img>").prop({

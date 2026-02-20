@@ -36,16 +36,13 @@ function loadGames(data) {
 	gamelist = data;
 	for (let i = 0; i < data.length; i++) {
 		const source = data[i].source || "semag";
-		// semag uses hardcoded external URL, non-semag uses local paths for local development
 		// Check for custom imagePath first (for local favicons, etc.)
 		let imagePath = data[i].imagePath;
 		if (!imagePath) {
-			imagePath = (source === "non-semag" || source === "Hypackel")
-				? "/" + source + "/" + data[i].directory + "/" + data[i].image
-				: GAMES_BASE_URL + "/" + source + "/" + data[i].directory + "/" + data[i].image;
+			imagePath = "/" + source + "/" + data[i].directory + "/" + data[i].image;
 		}
-		// Local dev only: semag thumbnails from R2 when no Function to proxy
-		if (source === "semag" && imagePath.startsWith("/") && window.GAMES_ASSETS_BASE_URL && (location.hostname === "localhost" || location.hostname === "127.0.0.1")) {
+		// semag assets are hosted on R2.
+		if (source === "semag" && imagePath.startsWith("/") && window.GAMES_ASSETS_BASE_URL) {
 			imagePath = window.GAMES_ASSETS_BASE_URL + imagePath;
 		}
 		
@@ -225,7 +222,8 @@ function redirectGame(dir) {
 		}
 	}
 	// Fallback: redirect directly if game not found in list (assumes semag)
-	window.location.href = GAMES_BASE_URL + "/semag/" + dir + "/index.html";
+	const semagBase = window.GAMES_ASSETS_BASE_URL || GAMES_BASE_URL;
+	window.location.href = semagBase + "/semag/" + dir + "/index.html";
 }
 function dynamicSort(property) {
 	var sortOrder = 1;

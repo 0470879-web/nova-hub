@@ -27,9 +27,18 @@ function getContentType(key, r2ContentType) {
   return MIME_TYPES[ext] || "application/octet-stream";
 }
 
+function getPathKey(pathParam) {
+  if (Array.isArray(pathParam)) return pathParam.join("/");
+  if (typeof pathParam === "string") return pathParam.replace(/^\/+/, "");
+  return "";
+}
+
 export async function onRequest({ params, env, request }) {
   try {
-    const key = params.path.join("/")
+    const key = getPathKey(params.path);
+    if (!key) {
+      return new Response("Not found", { status: 404 });
+    }
 
     // First, try to get from R2 bucket (if configured)
     if (env.semag) {

@@ -1,5 +1,11 @@
+function getPathKey(pathParam) {
+  if (Array.isArray(pathParam)) return pathParam.join("/");
+  if (typeof pathParam === "string") return pathParam.replace(/^\/+/, "");
+  return "";
+}
+
 export async function onRequest({ params, env, request }) {
-  const key = (params.path || []).join("/")
+  const key = getPathKey(params.path);
 
   // Main /apps page - serve static apps.html (R2_APPS may not be configured)
   if (!key || key === "") {
