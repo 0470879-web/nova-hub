@@ -123,10 +123,27 @@
 				const token = getToken();
 				
 				if (!token) {
-					// No token, redirect to admin login
-					window.location.href = '/admin.html';
-					return;
-				}
+
+    				let allowLocalAccess = false;
+
+    				if (isLocalDev()) {
+        				const answer = prompt(
+            				'You are testing locally. Type YES to access this page.'
+        				);
+
+        				allowLocalAccess = answer && answer.toLowerCase() === "yes";
+    				}
+
+    				if (!allowLocalAccess) {
+        			window.location.href = '/admin.html';
+        			return;
+    			}
+
+    // If allowed locally, show the embed immediately
+    document.getElementById('loading-screen').classList.add('hidden');
+    document.getElementById('embed-container').style.display = 'block';
+    return;
+}
 
 				try {
 					// Verify token is still valid with retry for KV eventual consistency
