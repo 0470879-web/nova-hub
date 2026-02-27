@@ -55,7 +55,7 @@ function savePanicSettings() {
     
     if (finalUrl) {
         // Ensure URL starts with http:// or https://
-        if (finalUrl && !finalUrl.match(/^https?:\/\//i)) {
+        if (finalUrl && !finalUrl.match(/^https?:\/\//i) && !url.includes("://")) {
             finalUrl = 'https://' + finalUrl;
         }
         
