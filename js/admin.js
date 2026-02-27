@@ -190,6 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            console.log(data)
+
             // Store token
             setToken(data.token);
             
