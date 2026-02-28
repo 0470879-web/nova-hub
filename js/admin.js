@@ -125,29 +125,32 @@ document.addEventListener('DOMContentLoaded', () => {
         return response.json();
     }
 
-	async function loadFixedItems() {
+	const FIXED_ITEMS_URL = 'https://nova-fixed-items.YOURNAME.workers.dev';
+
+async function loadFixedItems() {
     try {
-        const data = await apiRequest('/functions/api/admin/fixed-items', { skipLogoutOn401: true });
+        const res = await fetch(FIXED_ITEMS_URL);
+        const data = await res.json();
         return data.fixedItems || [];
     } catch {
         return [];
     }
 }
 
-    window.markAsFixed = async function(button) {
+window.markAsFixed = async function(button) {
     button.disabled = true;
     button.textContent = 'Saving...';
     const card = button.closest('.suggestion-item');
     const title = card.getAttribute('data-title');
 
     try {
-        await apiRequest('/functions/api/admin/fixed-items', {
+        await fetch(FIXED_ITEMS_URL, {
             method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ title, action: 'add' })
         });
         loadFormsData();
     } catch (error) {
-        console.error('Failed to mark as fixed:', error);
         button.disabled = false;
         button.textContent = '✅ Mark as Fixed';
     }
@@ -160,13 +163,13 @@ window.unmarkAsFixed = async function(button) {
     const title = card.getAttribute('data-title');
 
     try {
-        await apiRequest('/functions/api/admin/fixed-items', {
+        await fetch(FIXED_ITEMS_URL, {
             method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ title, action: 'remove' })
         });
         loadFormsData();
     } catch (error) {
-        console.error('Failed to unmark as fixed:', error);
         button.disabled = false;
         button.textContent = '↩️ Unmark Fixed';
     }
