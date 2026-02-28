@@ -611,26 +611,52 @@ window.unmarkAsFixed = async function(button) {
         } else {
             document.getElementById('forms-game-requests-list').innerHTML = '<p>No game requests from forms yet.</p>';
         }
+
+		if (data['Feature suggestions']?.responses) {
+			displayFormsData('forms-suggestions-list', data['Feature suggestions'].responses, 'feature', fixedItems)
+		} else {
+            document.getElementById('forms-suggestions-list').innerHTML = '<p>No suggestions from forms yet.</p>';
+        }
     } catch (error) {
         console.error('Failed to load forms data:', error);
         document.getElementById('forms-bug-reports-list').innerHTML = '<p>Failed to load bug reports from forms.</p>';
         document.getElementById('forms-game-requests-list').innerHTML = '<p>Failed to load game requests from forms.</p>';
+		document.getElementById('forms-suggestions-list').innerHTML = '<p>Failed to load suggestions from forms.</p>';
     }
 }
 function buildCardHTML(response, index, type, isFixed) {
-    const typeIcon = type === 'bug' ? '🐛' : '🎮';
-    const typeLabel = type === 'bug' ? 'Bug Report' : 'Game Request';
+	const icons = {
+  bug: '🐛',
+  game: '🎮',
+  feature: '✨'
+};
+
+	const labels = {
+		bug: 'Bug Report',
+		game: 'Game Request',
+		feature: 'Feature Request'
+	};
+
+	const titles = {
+		bug: response['what glitch is it'] || 'Bug Report',
+		game: response['What game would you like me to add? BE SPECIFIC'] || 'Game Request',
+		feature: response['what type of feature?'] || 'Feature suggestion'
+	};
+
+	const emails = {
+		bug: response['email so I might get back to you (optional)'] || '',
+		game: response['your email so i might reach back to you if I fixed the problem NOT GARUNTEED(optional)'] || '',
+		feature: response['your email so I might get back (optional)'] || ''
+	};
+    const typeIcon = icons[type] || '❓';
+    const typeLabel = labels[type] || 'Unknown'
     const timestamp = response.Timestamp ? new Date(response.Timestamp).toLocaleString() : 'Unknown date';
 
-    let title = type === 'bug'
-        ? (response['what glitch is it'] || 'Bug Report')
-        : (response['What game would you like me to add? BE SPECIFIC'] || 'Game Request');
+    let title = titles[type] || 'Unknown title'
 
     let description = type === 'bug' ? (response['Tell me about the glitch'] || '') : '';
     let steps = type === 'bug' ? (response['How do you get the glitch, (step 1, step 2, step 3 etc)'] || '') : '';
-    let email = type === 'bug'
-        ? (response['email so I might get back to you (optional)'] || '')
-        : (response['your email so i might reach back to you if I fixed the problem NOT GARUNTEED(optional)'] || '');
+    let email = emails[type] || 'email not provided';
 
     if (Array.isArray(email)) email = email.join(', ');
     email = String(email || '');
