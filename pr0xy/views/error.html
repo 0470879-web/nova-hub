@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <base href="/" />
+    <base href="{{route}}{{/}}" />
     <title>{{mask}}{{Nova-Hub | Error}}</title>
     <meta itemprop="http-status" content="404" />
     <!--HEAD-CONTENT-->
@@ -33,7 +33,7 @@
         {{mask}}{{Need help? Check the}} <a href="{{route}}{{/questions}}">FAQ</a> {{mask}}{{or try again in a few minutes.}}
       </div>
       <div class="error-actions">
-        <a href="/" onclick="location.reload(); return false;">> RELOAD</a>
+        <a href="{{route}}{{/}}" onclick="location.reload(); return false;">> RELOAD</a>
       </div>
     </div>
     <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
