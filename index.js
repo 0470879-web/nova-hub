@@ -1365,7 +1365,7 @@ server.listen(port, () => {
   console.log(`OPENAI_API_KEY: ${process.env.OPENAI_API_KEY ? '✓ Set' : '✗ Not set'}`);
   console.log('-----------------------------------\n');
 
-  // Start Holy Unblocker (pr0xy) so /pr0xy works with one process
+  // Start Holy Unblocker (pr0xy) so /pr0xy works
   if (fs.existsSync(path.join(pr0xyDir, 'backend.js'))) {
     const pr0xyChild = spawn(process.execPath, ['backend.js'], {
       cwd: pr0xyDir,

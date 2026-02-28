@@ -4,6 +4,7 @@
   "scripts": {
     "start": "node index.js",
     "build": "node scripts/pages-build.js",
+    "postinstall": "node scripts/install-pr0xy.js",
     "dev": "npx serve --yes",
     "dev:r2": "npm run build && npx wrangler pages dev dist --r2=semag"
   },
