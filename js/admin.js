@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return response.json();
     }
 
-	const FIXED_ITEMS_URL = 'https://nova-fixed-items.YOURNAME.workers.dev';
+	const FIXED_ITEMS_URL = 'https://novaadminfixed.jaidenkumar14-469.workers.dev';
 
 async function loadFixedItems() {
     try {
