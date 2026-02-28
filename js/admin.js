@@ -125,29 +125,51 @@ document.addEventListener('DOMContentLoaded', () => {
         return response.json();
     }
 
-    window.markAsFixed = function(button) {
-    const card = button.closest('.suggestion-item');
-    const fixedContainer = document.getElementById('forms-fixed-list');
-
-    // Clone the card, remove the fix button from the clone
-    const clone = card.cloneNode(true);
-    clone.querySelector('.fix-btn').remove();
-
-    // Add a "Fixed" badge to the clone
-    const badge = document.createElement('span');
-    badge.textContent = '✅ Fixed';
-    badge.style.cssText = 'background:#22c55e;color:white;padding:3px 10px;border-radius:12px;font-size:0.8rem;';
-    clone.querySelector('.suggestion-header').appendChild(badge);
-
-    // Clear placeholder text if present
-    if (fixedContainer.querySelector('p')) {
-        fixedContainer.innerHTML = '';
+	async function loadFixedItems() {
+    try {
+        const data = await apiRequest('/api/admin/fixed-items', { skipLogoutOn401: true });
+        return data.fixedItems || [];
+    } catch {
+        return [];
     }
+}
 
-    fixedContainer.prepend(clone);
+    window.markAsFixed = async function(button) {
+    button.disabled = true;
+    button.textContent = 'Saving...';
+    const card = button.closest('.suggestion-item');
+    const title = card.getAttribute('data-title');
 
-    // Remove original card
-    card.remove();
+    try {
+        await apiRequest('/api/admin/fixed-items', {
+            method: 'POST',
+            body: JSON.stringify({ title, action: 'add' })
+        });
+        loadFormsData();
+    } catch (error) {
+        console.error('Failed to mark as fixed:', error);
+        button.disabled = false;
+        button.textContent = '✅ Mark as Fixed';
+    }
+}
+
+window.unmarkAsFixed = async function(button) {
+    button.disabled = true;
+    button.textContent = 'Saving...';
+    const card = button.closest('.suggestion-item');
+    const title = card.getAttribute('data-title');
+
+    try {
+        await apiRequest('/api/admin/fixed-items', {
+            method: 'POST',
+            body: JSON.stringify({ title, action: 'remove' })
+        });
+        loadFormsData();
+    } catch (error) {
+        console.error('Failed to unmark as fixed:', error);
+        button.disabled = false;
+        button.textContent = '↩️ Unmark Fixed';
+    }
 }
 
     // Initialize - check if already logged in
@@ -566,98 +588,113 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load Google Forms data
     async function loadFormsData() {
-        const formsUrl = 'https://script.google.com/macros/s/AKfycbzYrrrgW8M1uK2gNifn5KBW8SJPzE9P-W7C51ocZHAQBpKkJnMl7ISzuyd_qpF8DZdjpA/exec';
-        
-        try {
-            const response = await fetch(formsUrl);
-            const data = await response.json();
-            
-            // Display Bug Reports
-            if (data['Bug Reports'] && data['Bug Reports'].responses) {
-                displayFormsData('forms-bug-reports-list', data['Bug Reports'].responses, 'bug');
-            } else {
-                document.getElementById('forms-bug-reports-list').innerHTML = '<p>No bug reports from forms yet.</p>';
-            }
-            
-            // Display Game Requests
-            if (data['Game Requests'] && data['Game Requests'].responses) {
-                displayFormsData('forms-game-requests-list', data['Game Requests'].responses, 'game');
-            } else {
-                document.getElementById('forms-game-requests-list').innerHTML = '<p>No game requests from forms yet.</p>';
-            }
-        } catch (error) {
-            console.error('Failed to load forms data:', error);
-            document.getElementById('forms-bug-reports-list').innerHTML = '<p>Failed to load bug reports from forms.</p>';
-            document.getElementById('forms-game-requests-list').innerHTML = '<p>Failed to load game requests from forms.</p>';
-        }
-    }
+    const formsUrl = 'https://script.google.com/macros/s/AKfycbzYrrrgW8M1uK2gNifn5KBW8SJPzE9P-W7C51ocZHAQBpKkJnMl7ISzuyd_qpF8DZdjpA/exec';
+    
+    try {
+        const [response, fixedItems] = await Promise.all([fetch(formsUrl), loadFixedItems()]);
+        const data = await response.json();
 
+        const fixedContainer = document.getElementById('forms-fixed-list');
+        if (fixedContainer) fixedContainer.innerHTML = '<p>No fixed issues yet.</p>';
+
+        if (data['Bug Reports']?.responses) {
+            displayFormsData('forms-bug-reports-list', data['Bug Reports'].responses, 'bug', fixedItems);
+        } else {
+            document.getElementById('forms-bug-reports-list').innerHTML = '<p>No bug reports from forms yet.</p>';
+        }
+
+        if (data['Game Requests']?.responses) {
+            displayFormsData('forms-game-requests-list', data['Game Requests'].responses, 'game', fixedItems);
+        } else {
+            document.getElementById('forms-game-requests-list').innerHTML = '<p>No game requests from forms yet.</p>';
+        }
+    } catch (error) {
+        console.error('Failed to load forms data:', error);
+        document.getElementById('forms-bug-reports-list').innerHTML = '<p>Failed to load bug reports from forms.</p>';
+        document.getElementById('forms-game-requests-list').innerHTML = '<p>Failed to load game requests from forms.</p>';
+    }
+}
+function buildCardHTML(response, index, type, isFixed) {
+    const typeIcon = type === 'bug' ? '🐛' : '🎮';
+    const typeLabel = type === 'bug' ? 'Bug Report' : 'Game Request';
+    const timestamp = response.Timestamp ? new Date(response.Timestamp).toLocaleString() : 'Unknown date';
+
+    let title = type === 'bug'
+        ? (response['what glitch is it'] || 'Bug Report')
+        : (response['What game would you like me to add? BE SPECIFIC'] || 'Game Request');
+
+    let description = type === 'bug' ? (response['Tell me about the glitch'] || '') : '';
+    let steps = type === 'bug' ? (response['How do you get the glitch, (step 1, step 2, step 3 etc)'] || '') : '';
+    let email = type === 'bug'
+        ? (response['email so I might get back to you (optional)'] || '')
+        : (response['your email so i might reach back to you if I fixed the problem NOT GARUNTEED(optional)'] || '');
+
+    if (Array.isArray(email)) email = email.join(', ');
+    email = String(email || '');
+
+    const encodedTitle = encodeURIComponent(title);
+    const esc = s => String(s).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    const actionBtn = isFixed
+        ? `<button class="fix-btn" style="background:#ef4444;margin-top:10px;" onclick="window.unmarkAsFixed(this)">↩️ Unmark Fixed</button>
+           <span style="background:#22c55e;color:white;padding:3px 10px;border-radius:12px;font-size:0.8rem;margin-left:8px;">✅ Fixed</span>`
+        : `<button class="fix-btn" onclick="window.markAsFixed(this)">✅ Mark as Fixed</button>`;
+
+    return `
+        <div class="suggestion-item" data-index="${index}" data-type="${type}" data-title="${encodedTitle}">
+            <div class="suggestion-header">
+                <span class="suggestion-type">${typeIcon} ${typeLabel}</span>
+                <span class="suggestion-date">${timestamp}</span>
+            </div>
+            <div class="suggestion-title">${esc(title)}</div>
+            ${description ? `<div class="suggestion-description">${esc(description)}</div>` : ''}
+            ${steps ? `<div class="suggestion-steps"><strong>Steps to reproduce:</strong> ${esc(steps)}</div>` : ''}
+            <div class="suggestion-meta">
+                <span class="suggestion-email">${email ? `Email: ${esc(email)}` : 'Email: Not provided'}</span>
+            </div>
+            ${actionBtn}
+        </div>
+    `;
+}
+	
     // Display forms data
-    function displayFormsData(containerId, responses, type) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        
-        if (!responses || responses.length === 0) {
-            container.innerHTML = '<p>No ' + (type === 'bug' ? 'bug reports' : 'game requests') + ' from forms yet.</p>';
-            return;
-        }
+    function displayFormsData(containerId, responses, type, fixedItems = []) {
+    const container = document.getElementById(containerId);
+    const fixedContainer = document.getElementById('forms-fixed-list');
+    if (!container) return;
 
-        // Sort responses by timestamp (newest first)
-        const sortedResponses = [...responses].sort((a, b) => {
-            const dateA = a.Timestamp ? new Date(a.Timestamp).getTime() : 0;
-            const dateB = b.Timestamp ? new Date(b.Timestamp).getTime() : 0;
-            return dateB - dateA; // Descending order (newest first)
+    const sortedResponses = [...responses].sort((a, b) => new Date(b.Timestamp || 0) - new Date(a.Timestamp || 0));
+
+    const active = [];
+    const fixed = [];
+
+    sortedResponses.forEach(r => {
+        const title = encodeURIComponent(
+            type === 'bug'
+                ? (r['what glitch is it'] || 'Bug Report')
+                : (r['What game would you like me to add? BE SPECIFIC'] || 'Game Request')
+        );
+        fixedItems.includes(title) ? fixed.push(r) : active.push(r);
+    });
+
+    container.innerHTML = active.length
+        ? active.map((r, i) => buildCardHTML(r, i, type, false)).join('')
+        : `<p>No ${type === 'bug' ? 'bug reports' : 'game requests'} from forms yet.</p>`;
+
+    if (fixedContainer) {
+        fixed.forEach((r, i) => {
+            const encodedTitle = encodeURIComponent(
+                type === 'bug'
+                    ? (r['what glitch is it'] || 'Bug Report')
+                    : (r['What game would you like me to add? BE SPECIFIC'] || 'Game Request')
+            );
+            if (!fixedContainer.querySelector(`[data-title="${encodedTitle}"]`)) {
+                if (fixedContainer.querySelector('p')) fixedContainer.innerHTML = '';
+                fixedContainer.insertAdjacentHTML('beforeend', buildCardHTML(r, i, type, true));
+            }
         });
-
-        container.innerHTML = sortedResponses.map((response, index) => {
-            const timestamp = response.Timestamp ? new Date(response.Timestamp).toLocaleString() : 'Unknown date';
-            const typeIcon = type === 'bug' ? '🐛' : '🎮';
-            const typeLabel = type === 'bug' ? 'Bug Report' : 'Game Request';
-            
-            // Get the main fields based on type
-            let title = '';
-            let description = '';
-            let steps = '';
-            let email = '';
-            
-            if (type === 'bug') {
-                title = response['what glitch is it'] || 'Bug Report';
-                description = response['Tell me about the glitch'] || 'No description provided.';
-                steps = response['How do you get the glitch, (step 1, step 2, step 3 etc)'] || '';
-                email = response['email so I might get back to you (optional)'] || '';
-            } else {
-                title = response['What game would you like me to add? BE SPECIFIC'] || 'Game Request';
-                email = response['your email so i might reach back to you if I fixed the problem NOT GARUNTEED(optional)'] || '';
-            }
-
-            // Normalize email to a string to avoid "email.replace is not a function" errors
-            if (Array.isArray(email)) {
-                email = email.join(', ');
-            } else if (email == null) {
-                email = '';
-            } else if (typeof email !== 'string') {
-                email = String(email);
-            }
-            
-            return `
-                <div class="suggestion-item" data-index="${index}" data-type="${type}" data-title="${encodeURIComponent(title)}">
-                    <div class="suggestion-header">
-                        <span class="suggestion-type">${typeIcon} ${typeLabel}</span>
-                        <span class="suggestion-date">${timestamp}</span>
-                    </div>
-                    <div class="suggestion-title">${(title || 'Untitled').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
-                    ${description ? `<div class="suggestion-description">${description.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>` : ''}
-                    ${steps ? `<div class="suggestion-steps"><strong>Steps to reproduce:</strong> ${steps.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>` : ''}
-                    <div class="suggestion-meta">
-                        ${email
-                            ? `<span class="suggestion-email">Email: ${email.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`
-                            : '<span class="suggestion-email">Email: Not provided</span>'}
-                    </div>
-                    <button class="fix-btn" onclick="markAsFixed(this)">✅ Mark as Fixed</button>
-                </div>
-            `;
-        }).join('');
     }
+}
 
     // Setup refresh forms button
     const refreshFormsBtn = document.getElementById('refresh-forms-btn');
