@@ -110,6 +110,31 @@ document.addEventListener('DOMContentLoaded', () => {
         return response.json();
     }
 
+    function markAsFixed(button) {
+    const card = button.closest('.suggestion-item');
+    const fixedContainer = document.getElementById('forms-fixed-list');
+
+    // Clone the card, remove the fix button from the clone
+    const clone = card.cloneNode(true);
+    clone.querySelector('.fix-btn').remove();
+
+    // Add a "Fixed" badge to the clone
+    const badge = document.createElement('span');
+    badge.textContent = '✅ Fixed';
+    badge.style.cssText = 'background:#22c55e;color:white;padding:3px 10px;border-radius:12px;font-size:0.8rem;';
+    clone.querySelector('.suggestion-header').appendChild(badge);
+
+    // Clear placeholder text if present
+    if (fixedContainer.querySelector('p')) {
+        fixedContainer.innerHTML = '';
+    }
+
+    fixedContainer.prepend(clone);
+
+    // Remove original card
+    card.remove();
+}
+
     // Initialize - check if already logged in
     async function init() {
         const token = getToken();
@@ -605,19 +630,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             return `
-                <div class="suggestion-item" data-index="${index}">
+                <div class="suggestion-item" data-index="${index}" data-type="${type}" data-title="${encodeURIComponent(title)}">
                     <div class="suggestion-header">
                         <span class="suggestion-type">${typeIcon} ${typeLabel}</span>
                         <span class="suggestion-date">${timestamp}</span>
                     </div>
                     <div class="suggestion-title">${(title || 'Untitled').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
-                    ${description ? `<div class="suggestion-description">${(description || 'No description provided.').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>` : ''}
+                    ${description ? `<div class="suggestion-description">${description.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>` : ''}
                     ${steps ? `<div class="suggestion-steps"><strong>Steps to reproduce:</strong> ${steps.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>` : ''}
                     <div class="suggestion-meta">
                         ${email
                             ? `<span class="suggestion-email">Email: ${email.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`
                             : '<span class="suggestion-email">Email: Not provided</span>'}
                     </div>
+                    <button class="fix-btn" onclick="markAsFixed(this)">✅ Mark as Fixed</button>
                 </div>
             `;
         }).join('');
