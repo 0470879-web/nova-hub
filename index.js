@@ -140,11 +140,18 @@ app.post('/api/submit-suggestion', (req, res) => {
 
 // Proxy /pr0xy to Holy Unblocker with WebSocket support (required for proxy to work)
 const PR0XY_PORT = process.env.PR0XY_PORT || 3002;
+// Redirect /pr0xy (no trailing slash) to /pr0xy/ so Holy Unblocker gets the correct path
+app.get('/pr0xy', (req, res) => res.redirect(301, '/pr0xy/'));
 const pr0xyProxy = createProxyMiddleware({
   target: 'http://127.0.0.1:' + PR0XY_PORT,
   changeOrigin: true,
   ws: true,
-  pathRewrite: { '^/': '/pr0xy/' }
+  pathRewrite: (path, req) => {
+    // When mounted at /pr0xy, req.url is '' for /pr0xy and '/' for /pr0xy/
+    // Holy Unblocker expects /pr0xy/ for the index - so both must become /pr0xy/
+    const p = path || '/';
+    return (p === '/' || p === '') ? '/pr0xy/' : '/pr0xy' + (p.startsWith('/') ? p : '/' + p);
+  }
 });
 app.use('/pr0xy', pr0xyProxy);
 
