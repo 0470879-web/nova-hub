@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return response.json();
     }
 
-    function markAsFixed(button) {
+    window.markAsFixed = function(button) {
     const card = button.closest('.suggestion-item');
     const fixedContainer = document.getElementById('forms-fixed-list');
 
