@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return
     			}
             showLogin();
+		}
 
         const headers = {
             'Content-Type': 'application/json',
