@@ -47,14 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function isLocalDev() {
-				return window.location.protocol === "file:" ||
-					   window.location.hostname === 'localhost' || 
-					   window.location.hostname === '127.0.0.1' || 
-					   window.location.port === '3000' ||
-					   window.location.hostname.includes('localhost');
-			}
-
     // Get stored token
     function getToken() {
         return localStorage.getItem('nova_admin_token');
@@ -370,12 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Skip API call in local development
-            if (isLocalDev()) {
-                statusDiv.textContent = 'Password change is not available in local development. This feature will work when deployed to Cloudflare.';
-                statusDiv.style.color = '#ffaa00';
-                statusDiv.style.display = 'block';
-                return;
-            }
+
 
             try {
                 const response = await apiRequest('/api/admin/change-password', {
@@ -407,12 +394,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Check if running in local development
     function isLocalDev() {
-        return window.location.hostname === 'localhost' || 
-               window.location.hostname === '127.0.0.1' || 
-               window.location.port === '3000' ||
-               window.location.hostname.includes('localhost');
-    }
-
+				return window.location.protocol === "file:" ||
+					   window.location.hostname === 'localhost' || 
+					   window.location.hostname === '127.0.0.1' || 
+					   window.location.port === '3000' ||
+					   window.location.hostname.includes('localhost');
+			}
     // Load terminal text
     async function loadTerminalText() {
         // Skip API call in local development to avoid 404 errors
