@@ -656,7 +656,7 @@ function buildCardHTML(response, index, type, isFixed) {
 
     let description = type === 'bug' ? (response['Tell me about the glitch'] || '') : '';
     let steps = type === 'bug' ? (response['How do you get the glitch, (step 1, step 2, step 3 etc)'] || '') : '';
-    let email = emails[type] || 'email not provided';
+    let email = emails[type] || 'Email: Not provided';
 
     if (Array.isArray(email)) email = email.join(', ');
     email = String(email || '');
