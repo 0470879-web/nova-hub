@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="version" content="{{version}}" />
+    <title>{{mask}}{{Nova-Hub}}</title>
+    <meta name="description" content="Nova-Hub - Secure web proxy service" />
+    <meta property="og:image" content="{{route}}{{assets/img/hero.webp}}" />
+    <meta name="msapplication-TileColor" content="#00ff41" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <!--HEAD-CONTENT-->
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/csel.js}}{{inline}}" defer></script>
+    <script src="{{route}}{{assets/js/common.js}}{{inline}}" defer></script>
+    }}
+    <link rel="manifest" href="{{route}}{{manifest.json}}" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+
+      .nova-landing {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        position: relative;
+      }
+
+      .nova-grid-bg {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background:
+          linear-gradient(rgba(0,255,65,0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,255,65,0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .nova-glow-orb {
+        position: fixed;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(0,255,65,0.06) 0%, transparent 70%);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 0;
+        animation: orbPulse 4s ease-in-out infinite;
+      }
+
+      @keyframes orbPulse {
+        0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+        50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+      }
+
+      .nova-title-block {
+        text-align: center;
+        margin-bottom: 50px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .nova-ascii {
+        font-family: 'JetBrains Mono', monospace;
+        color: #00ff41;
+        font-size: 11px;
+        line-height: 1.2;
+        white-space: pre;
+        text-shadow: 0 0 20px rgba(0,255,65,0.4);
+        margin-bottom: 15px;
+        animation: flicker 0.1s infinite alternate;
+        animation-delay: 3s;
+        animation-iteration-count: 6;
+      }
+
+      @keyframes flicker {
+        0% { opacity: 1; }
+        100% { opacity: 0.85; }
+      }
+
+      .nova-subtitle {
+        font-family: 'JetBrains Mono', monospace;
+        color: #555;
+        font-size: 14px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+      }
+
+      .nova-terminal {
+        width: 100%;
+        max-width: 750px;
+        background: #050505;
+        border: 1px solid rgba(0,255,65,0.15);
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 0 40px rgba(0,255,65,0.05), inset 0 0 60px rgba(0,0,0,0.5);
+      }
+
+      .nova-term-bar {
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+        background: #0a0a0a;
+        border-bottom: 1px solid rgba(0,255,65,0.1);
+        gap: 8px;
+      }
+
+      .nova-term-dot {
+        width: 10px; height: 10px; border-radius: 50%;
+      }
+      .nova-term-dot.r { background: #ff3b30; }
+      .nova-term-dot.y { background: #ff9500; }
+      .nova-term-dot.g { background: #00ff41; }
+
+      .nova-term-title {
+        flex: 1;
+        text-align: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: #444;
+        letter-spacing: 1px;
+      }
+
+      .nova-term-body {
+        padding: 24px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        line-height: 1.8;
+        min-height: 280px;
+        position: relative;
+      }
+
+      .nova-term-body .line {
+        opacity: 0;
+        animation: typeLine 0.3s forwards;
+      }
+
+      @keyframes typeLine {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .nova-term-body .prompt { color: #00ff41; }
+      .nova-term-body .cmd { color: #c0c0c0; }
+      .nova-term-body .flag { color: #33ff66; }
+      .nova-term-body .out { color: #555; }
+      .nova-term-body .success { color: #00ff41; }
+      .nova-term-body .warn { color: #ff9500; }
+      .nova-term-body .link { color: #00ff41; cursor: pointer; text-decoration: underline; }
+      .nova-term-body .link:hover { color: #33ff66; text-shadow: 0 0 8px rgba(0,255,65,0.4); }
+
+      .nova-input-line {
+        display: flex;
+        align-items: center;
+        margin-top: 12px;
+      }
+
+      .nova-input-line .prompt { margin-right: 8px; }
+
+      #nova-cmd-input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: #c0c0c0;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        caret-color: #00ff41;
+      }
+
+      .nova-cursor-blink {
+        display: inline-block;
+        width: 8px;
+        height: 16px;
+        background: #00ff41;
+        animation: cursorBlink 1s step-end infinite;
+        vertical-align: text-bottom;
+        margin-left: 2px;
+      }
+
+      @keyframes cursorBlink {
+        0%, 50% { opacity: 1; }
+        51%, 100% { opacity: 0; }
+      }
+
+      .nova-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 40px;
+        position: relative;
+        z-index: 1;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .nova-btn {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        padding: 14px 30px;
+        background: transparent;
+        color: #00ff41;
+        border: 1px solid rgba(0,255,65,0.3);
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nova-btn::before {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%; width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(0,255,65,0.1), transparent);
+        transition: left 0.5s ease;
+      }
+
+      .nova-btn:hover {
+        border-color: #00ff41;
+        box-shadow: 0 0 20px rgba(0,255,65,0.15), inset 0 0 20px rgba(0,255,65,0.05);
+        color: #33ff66;
+      }
+
+      .nova-btn:hover::before { left: 100%; }
+
+      .nova-btn-primary {
+        background: rgba(0,255,65,0.08);
+        border-color: #00ff41;
+      }
+
+      .nova-features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        max-width: 950px;
+        width: 100%;
+        margin-top: 80px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .nova-feature {
+        padding: 25px;
+        border: 1px solid rgba(0,255,65,0.08);
+        border-radius: 6px;
+        background: rgba(5,5,5,0.8);
+        transition: all 0.3s ease;
+      }
+
+      .nova-feature:hover {
+        border-color: rgba(0,255,65,0.25);
+        box-shadow: 0 0 25px rgba(0,255,65,0.05);
+        transform: translateY(-2px);
+      }
+
+      .nova-feature-icon {
+        color: #00ff41;
+        font-size: 20px;
+        margin-bottom: 12px;
+        text-shadow: 0 0 10px rgba(0,255,65,0.3);
+      }
+
+      .nova-feature h3 {
+        font-family: 'JetBrains Mono', monospace;
+        color: #c0c0c0;
+        font-size: 15px;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+
+      .nova-feature p {
+        color: #555;
+        font-size: 13px;
+        line-height: 1.6;
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      .nova-status-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #050505;
+        border-top: 1px solid rgba(0,255,65,0.1);
+        padding: 6px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: #444;
+        z-index: 10;
+        box-sizing: border-box;
+      }
+
+      .nova-status-bar .status-dot {
+        display: inline-block;
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: #00ff41;
+        margin-right: 6px;
+        box-shadow: 0 0 6px rgba(0,255,65,0.5);
+        animation: statusPulse 2s ease-in-out infinite;
+      }
+
+      @keyframes statusPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+      }
+
+      .nova-stats {
+        display: flex;
+        gap: 20px;
+        max-width: 950px;
+        width: 100%;
+        margin-top: 40px;
+        position: relative;
+        z-index: 1;
+        justify-content: center;
+      }
+
+      .nova-stat {
+        text-align: center;
+        padding: 20px 30px;
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      .nova-stat-num {
+        font-size: 32px;
+        font-weight: 700;
+        color: #00ff41;
+        text-shadow: 0 0 15px rgba(0,255,65,0.3);
+      }
+
+      .nova-stat-label {
+        font-size: 11px;
+        color: #444;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-top: 5px;
+      }
+
+      .nova-section-title {
+        font-family: 'JetBrains Mono', monospace;
+        color: #333;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        margin-top: 80px;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .nova-section-title span {
+        color: #00ff41;
+      }
+
+      @media (max-width: 600px) {
+        .nova-ascii { font-size: 7px; }
+        .nova-term-body { padding: 16px; font-size: 12px; }
+        .nova-features { grid-template-columns: 1fr; }
+        .nova-stats { flex-direction: column; align-items: center; }
+        .nova-actions { flex-direction: column; align-items: center; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <!--ANTI-EXFIL-->
+    <div
+      id="header"
+      class="fullwidth"
+      role="navigation"
+      aria-label="Main navigation"
+    >
+      <!--HEADER-->
+    </div>
+
+    <div id="mainbody" class="fullwidth">
+      <div class="nova-grid-bg"></div>
+      <div class="nova-glow-orb"></div>
+
+      <div class="nova-landing">
+        <div class="nova-title-block">
+          <div class="nova-ascii" id="ascii-art">
+ _   _                        _   _       _
+| \ | | _____   ____ _       | | | |_   _| |__
+|  \| |/ _ \ \ / / _` |______| |_| | | | | '_ \
+| |\  | (_) \ V / (_| |______|  _  | |_| | |_) |
+|_| \_|\___/ \_/ \__,_|      |_| |_|\__,_|_.__/
+          </div>
+          <div class="nova-subtitle">{{mask}}{{secure proxy terminal}}</div>
+        </div>
+
+        <div class="nova-terminal" id="nova-term">
+          <div class="nova-term-bar">
+            <div class="nova-term-dot r"></div>
+            <div class="nova-term-dot y"></div>
+            <div class="nova-term-dot g"></div>
+            <div class="nova-term-title">nova-hub@proxy:~</div>
+          </div>
+          <div class="nova-term-body" id="term-output">
+            <!-- Lines rendered by JS -->
+          </div>
+        </div>
+
+        <div class="nova-actions">
+          <a class="nova-btn nova-btn-primary" href="{{route}}{{/browsing}}">
+            > {{mask}}{{Launch Proxy}}}
+          </a>
+          <a class="nova-btn" href="{{route}}{{/youtube}}">
+            > {{mask}}{{YouTube}}}
+          </a>
+          <a class="nova-btn" href="{{route}}{{/apps}}">
+            > {{mask}}{{Applications}}}
+          </a>
+        </div>
+
+        <div class="nova-stats">
+          <div class="nova-stat">
+            <div class="nova-stat-num" id="stat-uptime">99.9%</div>
+            <div class="nova-stat-label">Uptime</div>
+          </div>
+          <div class="nova-stat">
+            <div class="nova-stat-num">&lt;50ms</div>
+            <div class="nova-stat-label">Latency</div>
+          </div>
+          <div class="nova-stat">
+            <div class="nova-stat-num">256-bit</div>
+            <div class="nova-stat-label">Encryption</div>
+          </div>
+        </div>
+
+        <div class="nova-section-title">// <span>capabilities</span></div>
+
+        <div class="nova-features">
+          <div class="nova-feature">
+            <div class="nova-feature-icon"><i class="fas fa-shield-alt"></i></div>
+            <h3>{{mask}}{{Bypass Any Filter}}</h3>
+            <p>{{mask}}{{Circumvents network filters, firewalls, chrome extensions, and government censorship. Client-side or network-based -- it doesn't matter.}}</p>
+          </div>
+          <div class="nova-feature">
+            <div class="nova-feature-icon"><i class="fas fa-bolt"></i></div>
+            <h3>{{mask}}{{Zero Trace}}</h3>
+            <p>{{mask}}{{No logs. No data collection. No cookies tracked. Open source and fully transparent. Self-host for maximum control.}}</p>
+          </div>
+          <div class="nova-feature">
+            <div class="nova-feature-icon"><i class="fas fa-user-secret"></i></div>
+            <h3>{{mask}}{{Tor Built-In}}</h3>
+            <p>{{mask}}{{Access onion sites directly from any browser. SOCKS5 proxy layering and regional bypass supported out of the box.}}</p>
+          </div>
+          <div class="nova-feature">
+            <div class="nova-feature-icon"><i class="fas fa-code"></i></div>
+            <h3>{{mask}}{{Open Source}}</h3>
+            <p>{{mask}}{{Fork it. Host it. Own it. Full source available on GitHub. Built on Scramjet, Ultraviolet, and Wisp.}}</p>
+          </div>
+          <div class="nova-feature">
+            <div class="nova-feature-icon"><i class="fas fa-lock"></i></div>
+            <h3>{{mask}}{{Encrypted Transport}}</h3>
+            <p>{{mask}}{{TLS inside WebAssembly via Epoxy and Libcurl transports. Your traffic stays encrypted end to end.}}</p>
+          </div>
+          <div class="nova-feature">
+            <div class="nova-feature-icon"><i class="fas fa-terminal"></i></div>
+            <h3>{{mask}}{{Easy Deploy}}</h3>
+            <p>{{mask}}{{One command setup. Node.js + Fastify backend. Docker ready. Deploy anywhere in minutes.}}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="nova-status-bar">
+        <div><span class="status-dot"></span> SYSTEMS OPERATIONAL</div>
+        <div>v{{version}} // NODE v20.x // FASTIFY v5.4</div>
+        <div>{{mask}}{{NOVA-HUB}}</div>
+      </div>
+    </div>
+
+    <div id="footer" class="fullwidth">
+      <!--FOOTER-->
+    </div>
+
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <script>
+    (function() {
+      var lines = [
+        { type: 'prompt', text: '> nova-hub --init' },
+        { type: 'out', text: '[info] Loading Nova-Hub v{{version}}...' },
+        { type: 'out', text: '[info] Initializing proxy engines...' },
+        { type: 'success', text: '[ok] Scramjet ............. loaded' },
+        { type: 'success', text: '[ok] Ultraviolet ......... loaded' },
+        { type: 'success', text: '[ok] Wisp Protocol ....... active' },
+        { type: 'success', text: '[ok] Epoxy Transport ..... ready' },
+        { type: 'out', text: '[info] Establishing secure tunnel...' },
+        { type: 'success', text: '[ok] TLS handshake complete' },
+        { type: 'success', text: '[ok] All systems operational' },
+        { type: 'out', text: '' },
+        { type: 'prompt', text: '> status --verbose' },
+        { type: 'out', text: 'Proxy:     ONLINE     | Encryption: AES-256' },
+        { type: 'out', text: 'Filters:   BYPASSED   | Latency:    <50ms' },
+        { type: 'out', text: 'Logging:   DISABLED   | Tracking:   NONE' },
+        { type: 'out', text: '' },
+        { type: 'warn', text: 'Ready. Type "help" or click Launch Proxy to begin.' },
+      ];
+
+      var output = document.getElementById('term-output');
+      var delay = 0;
+
+      lines.forEach(function(line, i) {
+        delay += (line.type === 'prompt' ? 400 : 120) + Math.random() * 80;
+        setTimeout(function() {
+          var el = document.createElement('div');
+          el.className = 'line';
+          el.style.animationDelay = '0s';
+          if (line.type === 'prompt') {
+            el.innerHTML = '<span class="prompt">' + line.text + '</span>';
+          } else {
+            el.className = 'line ' + line.type;
+            el.textContent = line.text;
+          }
+          output.appendChild(el);
+          output.scrollTop = output.scrollHeight;
+
+          if (i === lines.length - 1) {
+            setTimeout(function() {
+              var inputLine = document.createElement('div');
+              inputLine.className = 'nova-input-line';
+              inputLine.innerHTML = '<span class="prompt">> </span>' +
+                '<input type="text" id="nova-cmd-input" spellcheck="false" autocomplete="off" placeholder="type a command...">';
+              output.appendChild(inputLine);
+              var input = document.getElementById('nova-cmd-input');
+              input.focus();
+              input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                  handleCommand(input.value.trim().toLowerCase());
+                  input.value = '';
+                }
+              });
+            }, 300);
+          }
+        }, delay);
+      });
+
+      function handleCommand(cmd) {
+        var result = '';
+        addLine('prompt', '> ' + cmd);
+
+        if (cmd === 'help') {
+          result = [
+            'Available commands:',
+            '  help       - Show this message',
+            '  proxy      - Launch web proxy',
+            '  status     - System status',
+            '  clear      - Clear terminal',
+            '  about      - About Nova-Hub',
+            '  whoami     - Current session info',
+          ];
+          result.forEach(function(l) { addLine('out', l); });
+        } else if (cmd === 'proxy' || cmd === 'browse' || cmd === 'start') {
+          addLine('success', '[ok] Redirecting to proxy...');
+          setTimeout(function() {
+            window.location.href = document.querySelector('.nova-btn-primary').href;
+          }, 500);
+        } else if (cmd === 'status') {
+          addLine('success', '[ok] All systems operational');
+          addLine('out', 'Uptime: 99.9% | Active proxies: 3 | Encryption: ON');
+        } else if (cmd === 'clear') {
+          output.innerHTML = '';
+          var inputLine = document.createElement('div');
+          inputLine.className = 'nova-input-line';
+          inputLine.innerHTML = '<span class="prompt">> </span>' +
+            '<input type="text" id="nova-cmd-input" spellcheck="false" autocomplete="off" placeholder="type a command...">';
+          output.appendChild(inputLine);
+          var input = document.getElementById('nova-cmd-input');
+          input.focus();
+          input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+              handleCommand(input.value.trim().toLowerCase());
+              input.value = '';
+            }
+          });
+          return;
+        } else if (cmd === 'about') {
+          addLine('out', 'Nova-Hub - Secure Web Proxy Service');
+          addLine('out', 'Built on Scramjet, Ultraviolet, and Wisp');
+          addLine('out', 'Open source. No logs. No tracking.');
+        } else if (cmd === 'whoami') {
+          addLine('out', 'session: anonymous');
+          addLine('out', 'ip: [redacted]');
+          addLine('out', 'tracking: disabled');
+          addLine('success', 'You are invisible.');
+        } else if (cmd === '') {
+          return;
+        } else {
+          addLine('warn', 'Unknown command: ' + cmd + '. Type "help" for options.');
+        }
+
+        var old = document.getElementById('nova-cmd-input');
+        if (old) old.parentElement.remove();
+        var inputLine = document.createElement('div');
+        inputLine.className = 'nova-input-line';
+        inputLine.innerHTML = '<span class="prompt">> </span>' +
+          '<input type="text" id="nova-cmd-input" spellcheck="false" autocomplete="off" placeholder="type a command...">';
+        output.appendChild(inputLine);
+        var input = document.getElementById('nova-cmd-input');
+        input.focus();
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            handleCommand(input.value.trim().toLowerCase());
+            input.value = '';
+          }
+        });
+        output.scrollTop = output.scrollHeight;
+      }
+
+      function addLine(type, text) {
+        var old = document.getElementById('nova-cmd-input');
+        var parent = old ? old.parentElement : null;
+        var el = document.createElement('div');
+        el.className = 'line ' + type;
+        if (type === 'prompt') {
+          el.innerHTML = '<span class="prompt">' + text + '</span>';
+        } else {
+          el.textContent = text;
+        }
+        if (parent) {
+          output.insertBefore(el, parent);
+        } else {
+          output.appendChild(el);
+        }
+      }
+    })();
+    </script>
+  </body>
+</html>

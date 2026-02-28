@@ -1,0 +1,112 @@
+<div class="faq-center" style="text-align:center;margin-bottom:20px;">
+  <h2 style="font-family:'JetBrains Mono',monospace;color:#00ff41;font-size:22px;text-shadow:0 0 15px rgba(0,255,65,0.2);">// {{mask}}{{faq}}</h2>
+</div>
+<div class="faq-box" style="margin-bottom:20px;">
+  <input
+    class="faq-search"
+    type="text"
+    onkeyup="var a=document.querySelectorAll('#faqs>div');for(var i=0;i<a.length;i++)a[i].style.display=a[i].firstElementChild.textContent.toUpperCase().indexOf(this.value.toUpperCase())!=-1?'block':'none'"
+    autocomplete="off"
+    spellcheck="false"
+    placeholder="> search faq..."
+    style="width:100%;padding:10px 14px;background:#050505;border:1px solid rgba(0,255,65,0.15);border-radius:4px;color:#c0c0c0;font-family:'JetBrains Mono',monospace;font-size:13px;box-sizing:border-box;outline:none;"
+  />
+</div>
+<div class="box-clear text-center textm" style="margin-bottom:30px;">
+  <h2 class="bigtitle" style="font-family:'JetBrains Mono',monospace;color:#00cc33;font-size:16px;">Icon Information</h2>
+  <h4 style="font-family:'JetBrains Mono',monospace;color:#555;font-size:13px;">{{mask}}{{How to find the Icon URL of a Site}}</h4>
+  <p style="font-family:'JetBrains Mono',monospace;color:#444;font-size:12px;">
+    {{mask}}{{Go to the website you want an icon from, then use this bookmarklet:}}
+  </p>
+  <div id="bks-parent" style="margin:12px 0;">
+    <a id="iconfinder" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#00ff41;border:1px solid rgba(0,255,65,0.25);padding:8px 18px;border-radius:4px;text-decoration:none;display:inline-block;">Find Icon URL</a>
+  </div>
+  <script>
+    document.getElementById('iconfinder').href = "javascript:alert((Array.from(document.head.querySelectorAll(\"link[rel*='icon']\")).slice(-1)[0]||0).href||location.origin+'{{route}}{{/favicon.ico}}')";
+  </script>
+  <p style="font-family:'JetBrains Mono',monospace;color:#444;font-size:12px;">
+    {{mask}}{{Copy the URL and enter it in the Icon URL field in Settings.}}
+  </p>
+</div>
+<div id="faqs" class="faq" style="max-width:700px;margin:0 auto;">
+  <div class="faq-text" style="padding:15px 0;border-bottom:1px solid rgba(0,255,65,0.04);">
+    <h3 style="font-family:'JetBrains Mono',monospace;color:#00ff41;font-size:13px;margin-bottom:6px;">
+      <strong>{{mask}}{{Getting "Network Error" or Site Error?}}</strong>
+    </h3>
+    <p style="font-family:'JetBrains Mono',monospace;color:#555;font-size:12px;line-height:1.6;">
+      {{mask}}{{Hit Refresh or reload the page. This typically happens the first time you use the proxy.}}
+    </p>
+  </div>
+  <div class="faq-text" style="padding:15px 0;border-bottom:1px solid rgba(0,255,65,0.04);">
+    <h3 style="font-family:'JetBrains Mono',monospace;color:#00ff41;font-size:13px;margin-bottom:6px;">
+      <strong>{{mask}}{{Problems logging in or being detected as a bot?}}</strong>
+    </h3>
+    <p style="font-family:'JetBrains Mono',monospace;color:#555;font-size:12px;line-height:1.6;">
+      {{mask}}{{During peak traffic, multiple users share IPs. Swap regions via Region Selection or enable Tor routing in Settings.}}
+    </p>
+  </div>
+  <div class="faq-text" style="padding:15px 0;border-bottom:1px solid rgba(0,255,65,0.04);">
+    <h3 style="font-family:'JetBrains Mono',monospace;color:#00ff41;font-size:13px;margin-bottom:6px;">
+      <strong>{{mask}}{{CDN or domain cannot be reached?}}</strong>
+    </h3>
+    <p style="font-family:'JetBrains Mono',monospace;color:#555;font-size:12px;line-height:1.6;">
+      {{mask}}{{Reload the page. If it persists, use the browser's back button and try again from the proxy page.}}
+    </p>
+  </div>
+  <div class="faq-text" style="padding:15px 0;border-bottom:1px solid rgba(0,255,65,0.04);">
+    <h3 style="font-family:'JetBrains Mono',monospace;color:#00ff41;font-size:13px;margin-bottom:6px;">
+      <strong>{{mask}}{{Site loading partially or blank?}}</strong>
+    </h3>
+    <p style="font-family:'JetBrains Mono',monospace;color:#555;font-size:12px;line-height:1.6;">
+      {{mask}}{{Not all sites are supported. Try different proxy engines to see which one supports your site.}}
+    </p>
+  </div>
+  <div class="faq-text" style="padding:15px 0;border-bottom:1px solid rgba(0,255,65,0.04);">
+    <h3 style="font-family:'JetBrains Mono',monospace;color:#00ff41;font-size:13px;margin-bottom:6px;">
+      <strong>IDB Database error?</strong>
+    </h3>
+    <p style="font-family:'JetBrains Mono',monospace;color:#555;font-size:12px;line-height:1.6;">
+      {{mask}}{{Click the lock icon in your address bar, then "Clear Site Data" to reset the IndexedDB database.}}
+    </p>
+  </div>
+  <div class="faq-text" style="padding:15px 0;border-bottom:1px solid rgba(0,255,65,0.04);">
+    <h3 style="font-family:'JetBrains Mono',monospace;color:#00ff41;font-size:13px;margin-bottom:6px;">
+      <strong>{{mask}}{{Is Discord supported?}}</strong>
+    </h3>
+    <p style="font-family:'JetBrains Mono',monospace;color:#555;font-size:12px;line-height:1.6;">
+      {{mask}}{{Yes. Avoid using your main account on public proxy instances.}}
+    </p>
+  </div>
+  <div class="faq-text" style="padding:15px 0;border-bottom:1px solid rgba(0,255,65,0.04);">
+    <h3 style="font-family:'JetBrains Mono',monospace;color:#00ff41;font-size:13px;margin-bottom:6px;">
+      <strong>{{mask}}{{YouTube videos not working?}}</strong>
+    </h3>
+    <p style="font-family:'JetBrains Mono',monospace;color:#555;font-size:12px;line-height:1.6;">
+      {{mask}}{{Reload the page. If it persists during peak hours, try enabling Tor routing.}}
+    </p>
+  </div>
+  <div class="faq-text" style="padding:15px 0;border-bottom:1px solid rgba(0,255,65,0.04);">
+    <h3 style="font-family:'JetBrains Mono',monospace;color:#00ff41;font-size:13px;margin-bottom:6px;">
+      <strong>{{mask}}{{Is it safe to login to sites?}}</strong>
+    </h3>
+    <p style="font-family:'JetBrains Mono',monospace;color:#555;font-size:12px;line-height:1.6;">
+      {{mask}}{{Yes, but avoid personal accounts on public instances. Self-hosting gives you full control.}}
+    </p>
+  </div>
+  <div class="faq-text" style="padding:15px 0;border-bottom:1px solid rgba(0,255,65,0.04);">
+    <h3 style="font-family:'JetBrains Mono',monospace;color:#00ff41;font-size:13px;margin-bottom:6px;">
+      <strong>{{mask}}{{CAPTCHA errors?}}</strong>
+    </h3>
+    <p style="font-family:'JetBrains Mono',monospace;color:#555;font-size:12px;line-height:1.6;">
+      {{mask}}{{Scramjet is very fast which can trigger CAPTCHA loops. Solve them slowly and keep trying.}}
+    </p>
+  </div>
+  <div class="faq-text" style="padding:15px 0;">
+    <h3 style="font-family:'JetBrains Mono',monospace;color:#00ff41;font-size:13px;margin-bottom:6px;">
+      <strong>{{mask}}{{YouTube page won't load or video is white?}}</strong>
+    </h3>
+    <p style="font-family:'JetBrains Mono',monospace;color:#555;font-size:12px;line-height:1.6;">
+      {{mask}}{{Reload the page normally, or right-click and select "Reload Frame" if using Stealth Mode.}}
+    </p>
+  </div>
+</div>

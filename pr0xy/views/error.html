@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <base href="/" />
+    <title>{{mask}}{{Nova-Hub | Error}}</title>
+    <meta itemprop="http-status" content="404" />
+    <!--HEAD-CONTENT-->
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/csel.js}}{{inline}}" defer></script>
+    }}
+    <style>
+      body { margin: 0; padding: 0; color: #c0c0c0; background-color: #000; font-family: 'JetBrains Mono', 'Source Code Pro', 'Courier New', monospace; background-image: radial-gradient(circle, rgba(0,255,65,0.01) 1px, transparent 1px); background-size: 20px 20px; display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; }
+      .error-container { max-width: 500px; padding: 40px 30px; }
+      .error-code { color: #00ff41; font-size: 72px; font-weight: 700; line-height: 1; margin-bottom: 10px; text-shadow: 0 0 30px rgba(0,255,65,0.3); }
+      .error-title { color: #333; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 30px; }
+      .error-msg { color: #444; font-size: 13px; line-height: 1.7; margin-bottom: 10px; }
+      .error-hint { color: #333; font-size: 12px; margin-top: 25px; padding: 12px 16px; border-left: 2px solid rgba(0,255,65,0.2); text-align: left; }
+      .error-hint a { color: #00ff41; }
+      .error-actions { margin-top: 30px; }
+      .error-actions a { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #00ff41; border: 1px solid rgba(0,255,65,0.25); padding: 10px 24px; border-radius: 4px; text-decoration: none; transition: all 0.3s; letter-spacing: 1px; }
+      .error-actions a:hover { background: rgba(0,255,65,0.08); box-shadow: 0 0 15px rgba(0,255,65,0.1); }
+    </style>
+  </head>
+  <body>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <!--ANTI-EXFIL-->
+    <div class="error-container">
+      <div class="error-code">404</div>
+      <div class="error-title">{{mask}}{{connection failed}}</div>
+      <p class="error-msg">{{mask}}{{Something went wrong. Reload the page or press Ctrl+R to fix most issues.}}</p>
+      <p class="error-msg">{{mask}}{{If this persists, the server may be under maintenance.}}</p>
+      <div class="error-hint">
+        {{mask}}{{Need help? Check the}} <a href="{{route}}{{/questions}}">FAQ</a> {{mask}}{{or try again in a few minutes.}}
+      </div>
+      <div class="error-actions">
+        <a href="/" onclick="location.reload(); return false;">> RELOAD</a>
+      </div>
+    </div>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+  </body>
+</html>

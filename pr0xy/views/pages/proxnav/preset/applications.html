@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{mask}}{{Nova-Hub | Applications}}</title>
+    <!--HEAD-CONTENT-->
+    <script src="{{route}}{{/scram/scramjet.all.js}}" defer data-module></script>
+    <script src="{{route}}{{/baremux/index.js}}" defer data-module></script>
+    {{inline}}{{
+    <script src="{{route}}{{/assets/js/register-sw.js}}{{inline}}" defer></script>
+    }}
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/csel.js}}{{inline}}" defer></script>
+    <script src="{{route}}{{assets/js/common.js}}{{inline}}" defer></script>
+    }}
+    <style>
+      .nova-proxy-page { max-width: 700px; margin: 0 auto; padding: 80px 20px 120px; text-align: center; }
+      .nova-engine-name { font-family: 'JetBrains Mono', monospace; color: #00ff41; font-size: 32px; font-weight: 700; margin-bottom: 6px; text-shadow: 0 0 20px rgba(0,255,65,0.25); }
+      .nova-engine-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; display: inline-block; padding: 3px 10px; border-radius: 3px; background: rgba(0,255,65,0.12); color: #00ff41; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
+      .nova-engine-desc { font-family: 'JetBrains Mono', monospace; color: #555; font-size: 13px; line-height: 1.7; margin-bottom: 35px; }
+      .nova-engine-desc a { color: #00ff41; }
+      .nova-app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+      .nova-app-btn { font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 16px 12px; background: #050505; color: #c0c0c0; border: 1px solid rgba(0,255,65,0.1); border-radius: 6px; cursor: pointer; text-decoration: none; transition: all 0.3s; display: block; text-align: center; }
+      .nova-app-btn:hover { border-color: #00ff41; color: #00ff41; background: rgba(0,255,65,0.05); box-shadow: 0 0 15px rgba(0,255,65,0.08); transform: translateY(-2px); }
+    </style>
+  </head>
+  <body>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <!--ANTI-EXFIL-->
+    <div id="header" class="fullwidth"><!--HEADER--></div>
+    <div id="mainbody" class="fullwidth">
+      <div class="nova-proxy-page">
+        <div class="nova-engine-name">{{mask}}{{Applications}}</div>
+        <div class="nova-engine-tag">proxied presets</div>
+        <div class="nova-engine-desc">
+          {{mask}}{{Access popular platforms through a secure tunnel. Avoid logging in with primary accounts on public instances.}}<br><br>
+          {{mask}}{{Enable Tor routing or swap regions in Settings if you have issues. Disable ads for GeForce NOW.}} View the <a href="{{route}}{{/questions}}">FAQ</a> {{mask}}{{for help.}}
+        </div>
+        <div class="nova-app-grid">
+          <a href="#" id="pr-cg" class="nova-app-btn pr-go2">{{mask}}{{> ChatGPT}}</a>
+          <a href="#" id="pr-dc" class="nova-app-btn pr-go2">{{mask}}{{> Discord}}</a>
+          <a href="#" id="pr-gf" class="nova-app-btn pr-go2">{{mask}}{{> GeForce NOW}}</a>
+          <a href="#" id="pr-sp" class="nova-app-btn pr-go2">{{mask}}{{> Spotify}}</a>
+          <a href="#" id="pr-tc" class="nova-app-btn pr-go2">{{mask}}{{> Twitch}}</a>
+          <a href="#" id="pr-tt" class="nova-app-btn pr-go2">{{mask}}{{> TikTok}}</a>
+          <a href="#" id="pr-ha" class="nova-app-btn pr-go2">{{mask}}{{> HiAnime}}</a>
+          <a href="#" id="pr-tw" class="nova-app-btn pr-go2">{{mask}}{{> Twitter}}</a>
+          <a href="#" id="pr-ig" class="nova-app-btn pr-go2">{{mask}}{{> Instagram}}</a>
+          <a href="#" id="pr-rt" class="nova-app-btn pr-go2">{{mask}}{{> Reddit}}</a>
+          <a href="#" id="pr-wa" class="nova-app-btn pr-go2">{{mask}}{{> Wikipedia}}</a>
+          <a href="#" id="pr-ng" class="nova-app-btn pr-go2">{{mask}}{{> Newgrounds}}</a>
+        </div>
+        <!--PROXNAV-SETTINGS-->
+      </div>
+    </div>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <div id="footer" class="fullwidth"><!--FOOTER--></div>
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/card.js}}{{inline}}"></script>
+    }}
+  </body>
+</html>

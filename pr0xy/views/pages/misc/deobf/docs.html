@@ -1,0 +1,67 @@
+<div style="font-family:'JetBrains Mono',monospace;color:#c0c0c0;line-height:1.7;">
+<h1 style="color:#00ff41;font-size:22px;text-shadow:0 0 15px rgba(0,255,65,0.2);">// {{mask}}{{Nova-Hub (v6.x.x)}}</h1>
+<br />
+<p style="color:#555;font-size:13px;">
+  {{mask}}{{Read below for information if the official site is blocked or for obtaining more links.}}
+</p>
+<br />
+<h3 style="color:#00cc33;font-size:14px;">{{mask}}{{GitHub Codespaces}}</h3>
+<details style="color:#555;font-size:12px;">
+  <summary style="color:#00ff41;cursor:pointer;">{{mask}}{{Setup Instructions}}</summary>
+  <br />
+  - {{mask}}{{Fork this repository to your GitHub account}}<br />
+  - {{mask}}{{Head to the official}} <a href="{{route}}{{/codespaces}}" style="color:#00ff41;">Codespaces</a> website<br />
+  - Select <strong>New Codespaces</strong> and find your fork<br />
+  - Ensure the branch is set to <code style="color:#00ff41;background:#0a0a0a;padding:2px 6px;border-radius:3px;">master</code><br />
+  - Select <strong>Create Codespace</strong><br />
+  - Type <code style="color:#00ff41;background:#0a0a0a;padding:2px 6px;border-radius:3px;">npm run fresh-install</code> and <code style="color:#00ff41;background:#0a0a0a;padding:2px 6px;border-radius:3px;">npm start</code><br />
+  - Click "Make public" on the popup, then access via the ports tab<br />
+</details>
+<br />
+<h2 style="color:#00cc33;font-size:16px;">How to Setup</h2>
+<h4 style="color:#666;font-size:12px;">{{mask}}{{Recommended: switch to a production released branch (e.g. v6.x_production)}}</h4>
+<h3 style="color:#00cc33;font-size:14px;">Terminal</h3>
+<pre style="background:#050505;border:1px solid rgba(0,255,65,0.1);border-radius:6px;padding:16px;color:#00ff41;font-size:12px;overflow-x:auto;"><code>{{mask}}{{git clone --recurse-submodules https://github.com/titaniumnetwork-dev/Holy-Unblocker.git}}
+
+{{mask}}{{cd Holy-Unblocker}}
+
+{{mask}}{{git submodule init}}
+
+npm run fresh-install
+
+npm start
+
+{{mask}}{{# Subsequent uses:}}
+npm restart
+
+{{mask}}{{# Build errors:}}
+npm run build
+
+{{mask}}{{# Service errors:}}
+npm run{{mask}}{{ proxy-validator}}
+</code></pre>
+<br />
+<h3 style="color:#00cc33;font-size:14px;">Configuration</h3>
+<p style="color:#555;font-size:12px;">
+  {{mask}}{{Default address is}} <code style="color:#00ff41;background:#0a0a0a;padding:2px 6px;border-radius:3px;">http://localhost:8080</code>. Modify in <code style="color:#00ff41;background:#0a0a0a;padding:2px 6px;border-radius:3px;">./ecosystem.config.js</code>. Additional config at <code style="color:#00ff41;background:#0a0a0a;padding:2px 6px;border-radius:3px;">./config.json</code>.
+</p>
+<br />
+<h4 style="color:#00cc33;font-size:13px;">{{mask}}{{Tor/Onion Routing Setup}}</h4>
+<p style="color:#555;font-size:12px;">
+  {{mask}}{{Install Tor:}} <a href="{{route}}{{/tr}}" style="color:#00ff41;">{{mask}}{{https://tb-manual.torproject.org/installation/}}</a>
+</p>
+<br />
+<h4 style="color:#00cc33;font-size:13px;">{{mask}}{{Proxy Configuration}}</h4>
+<p style="color:#555;font-size:12px;">
+  {{mask}}{{Proxy settings are in}} <code style="color:#00ff41;background:#0a0a0a;padding:2px 6px;border-radius:3px;">{{mask}}{{./views/assets/js/register-sw.js}}</code>.
+</p>
+<ul style="color:#555;font-size:12px;padding-left:20px;">
+  <li><code style="color:#00ff41;">{{mask}}{{stockSW}}</code>: {{mask}}{{Default service worker config for Ultraviolet}}</li>
+  <li><code style="color:#00ff41;">{{mask}}{{blacklistSW}}</code>: {{mask}}{{Modified version with blacklisting and adblocking}}</li>
+  <li><code style="color:#00ff41;">{{mask}}{{proxyUrl}}</code>: {{mask}}{{SOCKS5 protocol URL, defaults to Tor port}}</li>
+  <li><code style="color:#00ff41;">{{mask}}{{transports}}</code>: {{mask}}{{Transport ports for Bare-Mux and Wisp}}</li>
+  <li><code style="color:#00ff41;">{{mask}}{{wispUrl}}</code>: {{mask}}{{Pathname for Wisp}}</li>
+  <li><code style="color:#00ff41;">{{mask}}{{defaultMode}}</code>: {{mask}}{{Default transport selection}}</li>
+  <li><code style="color:#00ff41;">{{mask}}{{ScramjetController}}</code>: {{mask}}{{Scramjet prefix and file locations}}</li>
+</ul>
+</div>

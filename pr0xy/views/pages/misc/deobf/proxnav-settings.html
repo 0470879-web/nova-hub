@@ -1,0 +1,50 @@
+<div id="settings-panel" class="pr-settings" style="background:#050505;border:1px solid rgba(0,255,65,0.1);border-radius:6px;padding:18px;margin-top:25px;font-family:'JetBrains Mono',monospace;text-align:left;">
+  <div class="advanced-settings"></div>
+  <label style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,255,65,0.04);font-size:12px;color:#888;">
+    {{mask}}{{Tor Browsing}}
+    <select class="useonion" style="background:#0a0a0a;border:1px solid rgba(0,255,65,0.12);border-radius:3px;color:#c0c0c0;font-family:inherit;font-size:11px;padding:4px 8px;outline:none;">
+      <option>Off</option>
+      <option>Enabled</option>
+    </select>
+  </label>
+  <label style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,255,65,0.04);font-size:12px;color:#888;">
+    Hide Ads
+    <select class="hideads" style="background:#0a0a0a;border:1px solid rgba(0,255,65,0.12);border-radius:3px;color:#c0c0c0;font-family:inherit;font-size:11px;padding:4px 8px;outline:none;">
+      <option>Off</option>
+      <option selected>Enabled</option>
+    </select>
+  </label>
+  <label style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,255,65,0.04);font-size:12px;color:#888;">
+    Region
+    <select class="region-list" style="background:#0a0a0a;border:1px solid rgba(0,255,65,0.12);border-radius:3px;color:#c0c0c0;font-family:inherit;font-size:11px;padding:4px 8px;outline:none;">
+      <option value="off">Off</option>
+      <option value="eu">Sweden</option>
+      <option value="jp">Japan</option>
+    </select>
+  </label>
+  <div class="wisp-box" style="margin-top:12px;">
+    <p style="color:#00cc33;font-size:10px;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;">{{mask}}{{Wisp Transport}}</p>
+    <table class="transport-table {{wisp-transport}}-list" style="width:100%;font-size:12px;">
+      <tr>
+        <td class="transport-label" style="padding:6px 0;">
+          <label style="color:#888;">
+            {{mask}}{{Libcurl}} <span class="default-badge" style="font-size:9px;padding:1px 6px;background:rgba(0,255,65,0.1);color:#00ff41;border-radius:2px;margin-left:4px;">{{mask}}{{Firefox}}</span>
+          </label>
+        </td>
+        <td class="transport-radio" style="text-align:right;padding:6px 0;">
+          <input type="radio" name="{{wisp-transport}}-2" value="{{libcurl}}" checked />
+        </td>
+      </tr>
+      <tr>
+        <td class="transport-label" style="padding:6px 0;">
+          <label style="color:#888;">
+            {{mask}}{{Epoxy}} <span class="alt-badge" style="font-size:9px;padding:1px 6px;background:rgba(255,149,0,0.1);color:#ff9500;border-radius:2px;margin-left:4px;">{{mask}}{{Chromium}}</span>
+          </label>
+        </td>
+        <td class="transport-radio" style="text-align:right;padding:6px 0;">
+          <input type="radio" name="{{wisp-transport}}-2" value="{{epoxy}}" />
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

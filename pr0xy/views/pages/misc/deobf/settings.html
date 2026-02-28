@@ -1,0 +1,71 @@
+<div class="settings-content" style="background:#050505;border:1px solid rgba(0,255,65,0.1);border-radius:8px;padding:0;font-family:'JetBrains Mono',monospace;color:#c0c0c0;">
+  <div class="settings-header" style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid rgba(0,255,65,0.08);">
+    <p class="cseltitle-main" style="color:#00ff41;font-size:14px;margin:0;letter-spacing:1px;">// Settings</p>
+    <i class="far fa-times-circle close-settings-btn" style="color:#444;cursor:pointer;font-size:16px;"></i>
+  </div>
+  <div class="settings-content-body" style="display:flex;gap:20px;padding:18px;flex-wrap:wrap;">
+    <div class="csel-container-left" style="flex:1;min-width:200px;">
+      <p class="cseltitle" style="color:#00cc33;font-size:11px;margin:0 0 8px;text-transform:uppercase;letter-spacing:1px;">{{mask}}{{Browser Tab Cloak}}</p>
+      <form id="titleform" class="cloakform" style="margin-bottom:6px;">
+        <input type="text" placeholder="> tab title..." spellcheck="false" style="width:100%;padding:8px 10px;background:#0a0a0a;border:1px solid rgba(0,255,65,0.12);border-radius:4px;color:#c0c0c0;font-family:inherit;font-size:12px;box-sizing:border-box;outline:none;" />
+        <input type="submit" value="Apply" style="margin-top:4px;padding:6px 14px;background:transparent;border:1px solid rgba(0,255,65,0.2);color:#00ff41;font-family:inherit;font-size:11px;border-radius:3px;cursor:pointer;" />
+      </form>
+      <form id="iconform" class="cloakform" style="margin-bottom:10px;">
+        <input type="text" placeholder="> icon url..." spellcheck="false" style="width:100%;padding:8px 10px;background:#0a0a0a;border:1px solid rgba(0,255,65,0.12);border-radius:4px;color:#c0c0c0;font-family:inherit;font-size:12px;box-sizing:border-box;outline:none;" />
+        <input type="submit" value="Apply" style="margin-top:4px;padding:6px 14px;background:transparent;border:1px solid rgba(0,255,65,0.2);color:#00ff41;font-family:inherit;font-size:11px;border-radius:3px;cursor:pointer;" />
+      </form>
+      <a href="{{route}}{{/questions}}" style="color:#00ff41;font-size:11px;">{{mask}}{{Find Icon URL}}</a>
+      <p class="cseltitle" style="color:#00cc33;font-size:11px;margin:15px 0 8px;text-transform:uppercase;letter-spacing:1px;">{{mask}}{{Wisp Transport}}</p>
+      <div class="radio-group {{wisp-transport}}-list" style="font-size:12px;">
+        <label style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(0,255,65,0.04);">
+          <p style="margin:0;">{{mask}}{{Libcurl}} <span class="default-badge" style="font-size:9px;padding:1px 6px;background:rgba(0,255,65,0.1);color:#00ff41;border-radius:2px;margin-left:6px;">{{mask}}{{Firefox}}</span></p>
+          <input type="radio" name="{{wisp-transport}}" value="{{libcurl}}" checked />
+        </label>
+        <label style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
+          <p style="margin:0;">{{mask}}{{Epoxy}} <span class="alt-badge" style="font-size:9px;padding:1px 6px;background:rgba(255,149,0,0.1);color:#ff9500;border-radius:2px;margin-left:6px;">{{mask}}{{Chromium}}</span></p>
+          <input type="radio" name="{{wisp-transport}}" value="{{epoxy}}" />
+        </label>
+      </div>
+      <p class="cseltitle" style="color:#00cc33;font-size:11px;margin:15px 0 8px;text-transform:uppercase;letter-spacing:1px;">Advanced</p>
+      <div class="radio-group" style="font-size:12px;">
+        <label style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(0,255,65,0.04);">
+          <p style="margin:0;">Hide Ads</p>
+          <input type="checkbox" class="switch hideads" checked />
+        </label>
+        <label style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(0,255,65,0.04);">
+          <p style="margin:0;">{{mask}}{{Enable Tor}}</p>
+          <input type="checkbox" class="switch useonion" />
+        </label>
+        <label style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
+          <p style="margin:0;">Autocomplete</p>
+          <input type="checkbox" class="switch useac" checked />
+        </label>
+      </div>
+    </div>
+    <div class="settings-right-column" style="flex:1;min-width:180px;">
+      <p class="cseltitle" style="color:#00cc33;font-size:11px;margin:0 0 8px;text-transform:uppercase;letter-spacing:1px;">Search Engine</p>
+      <select class="search-engine-list" style="width:100%;padding:8px 10px;background:#0a0a0a;border:1px solid rgba(0,255,65,0.12);border-radius:4px;color:#c0c0c0;font-family:inherit;font-size:12px;outline:none;">
+        <option>{{DuckDuckGo}}</option>
+        <option>{{Google}}</option>
+        <option>{{Bing}}</option>
+        <option>{{Brave}}</option>
+        <option>{{Startpage}}</option>
+      </select>
+      <p class="cseltitle" style="color:#00cc33;font-size:11px;margin:15px 0 8px;text-transform:uppercase;letter-spacing:1px;">Icon Presets</p>
+      <select id="icon-list" style="width:100%;padding:8px 10px;background:#0a0a0a;border:1px solid rgba(0,255,65,0.12);border-radius:4px;color:#c0c0c0;font-family:inherit;font-size:12px;outline:none;">
+        <option></option>
+        <option>{{Google}}</option>
+        <option>{{Bing}}</option>
+        <option>{{Google}} Drive</option>
+        <option>Gmail</option>
+      </select>
+      <p class="cseltitle" style="color:#00cc33;font-size:11px;margin:15px 0 8px;text-transform:uppercase;letter-spacing:1px;">{{mask}}{{Devtools}}</p>
+      <div class="radio-group" style="font-size:12px;">
+        <label style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
+          <p style="margin:0;">{{mask}}{{Eruda}} <span class="alt-badge" style="font-size:9px;padding:1px 6px;background:rgba(100,100,100,0.15);color:#666;border-radius:2px;margin-left:6px;">CTRL+SHIFT+I</span></p>
+          <input type="checkbox" class="switch eruda" />
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <title>{{mask}}{{Scramjet Error}}</title>
+    <meta itemprop="http-status" content="404" />
+    <!--HEAD-CONTENT-->
+    <style>
+      *, body { color: #c0c0c0; background-color: #000; font-family: 'JetBrains Mono', 'Source Code Pro', monospace; background-image: radial-gradient(circle, rgba(0,255,65,0.01) 1px, transparent 1px); background-size: 20px 20px; }
+      body, html { display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; flex-direction: column; }
+      .error-wrap { max-width: 600px; padding: 40px 30px; text-align: center; }
+      h1 { color: #00ff41; font-size: 36px; font-weight: 700; text-shadow: 0 0 20px rgba(0,255,65,0.3); margin-bottom: 10px; }
+      code { color: #555; font-size: 13px; }
+      code b { color: #888; }
+      h2 { color: #444; font-size: 14px; font-weight: 400; margin: 15px 0; }
+      button { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: transparent; color: #00ff41; border: 1px solid rgba(0,255,65,0.25); padding: 10px 30px; border-radius: 4px; cursor: pointer; transition: all 0.3s; margin: 15px 5px; letter-spacing: 1px; }
+      button:hover { background: rgba(0,255,65,0.08); box-shadow: 0 0 12px rgba(0,255,65,0.1); }
+      textarea { width: 100%; max-width: 500px; background: #050505; border: 1px solid rgba(0,255,65,0.1); border-radius: 6px; color: #555; font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 14px; box-sizing: border-box; resize: none; outline: none; margin: 10px 0; }
+      #troubleshooting { text-align: left; max-width: 500px; margin: 15px auto; }
+      #troubleshooting ul { padding-left: 20px; }
+      #troubleshooting li { color: #444; font-size: 12px; margin-bottom: 6px; line-height: 1.5; }
+      #troubleshooting li a { color: #00ff41; }
+      .footer-txt { color: #222; font-size: 11px; margin-top: 20px; }
+      #errorTrace-wrapper { position: relative; }
+      #copy-button { position: absolute; top: 14px; right: 12px; padding: 4px 10px; font-size: 10px; opacity: 0; transition: opacity 0.3s; }
+      #errorTrace-wrapper:hover #copy-button { opacity: 1; }
+    </style>
+  </head>
+  <body>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <!--ANTI-EXFIL-->
+    <div class="error-wrap">
+      <h1 id="errorTitle">{{mask}}{{// connection_error}}</h1>
+      <code>Failed to load: <b id="fetchedURL"></b></code>
+      <h2>{{mask}}{{Reloading the page usually fixes this.}}</h2>
+      <button id="reload">> RELOAD</button>
+      <div id="errorTrace-wrapper">
+        <textarea id="errorTrace" cols="40" rows="8" readonly></textarea>
+        <button id="copy-button">COPY</button>
+      </div>
+      <div id="troubleshooting">
+        <ul>
+          <li>{{mask}}{{Reload the page -- this is a known proxy issue}}</li>
+          <li>{{mask}}{{For IDB Database errors, clear site data via the lock icon in your address bar}}</li>
+          <li>{{mask}}{{Clear cache with Ctrl+Shift+R}}</li>
+          <li>{{mask}}{{Verify the URL is correct}}</li>
+          <li>{{mask}}{{Try a different proxy engine in Settings}}</li>
+          <li>{{mask}}{{Check the}} <a href="{{route}}{{/github/scramjet}}" target="_blank">{{mask}}{{Scramjet GitHub}}</a> {{mask}}{{for known issues}}</li>
+        </ul>
+      </div>
+      <p class="footer-txt">{{mask}}{{Nova-Hub // Scramjet v1.0.2}}</p>
+    </div>
+    <script src="{{src}}"></script>
+  </body>
+</html>

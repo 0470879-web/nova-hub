@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{mask}}{{Nova-Hub | Error}}</title>
+    <meta itemprop="http-status" content="404" />
+    <!--HEAD-CONTENT-->
+    <style>
+      *, body { color: #c0c0c0; background-color: #000; font-family: 'JetBrains Mono', 'Source Code Pro', monospace; background-image: radial-gradient(circle, rgba(0,255,65,0.01) 1px, transparent 1px); background-size: 20px 20px; }
+      body, html { display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; flex-direction: column; }
+      .error-wrap { max-width: 600px; padding: 40px 30px; text-align: center; }
+      h1 { color: #00ff41; font-size: 36px; font-weight: 700; text-shadow: 0 0 20px rgba(0,255,65,0.3); margin-bottom: 10px; }
+      code { color: #555; font-size: 13px; }
+      code b { color: #888; }
+      button { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: transparent; color: #00ff41; border: 1px solid rgba(0,255,65,0.25); padding: 10px 30px; border-radius: 4px; cursor: pointer; transition: all 0.3s; margin: 15px 5px; letter-spacing: 1px; }
+      button:hover { background: rgba(0,255,65,0.08); box-shadow: 0 0 12px rgba(0,255,65,0.1); }
+      textarea { width: 100%; max-width: 500px; background: #050505; border: 1px solid rgba(0,255,65,0.1); border-radius: 6px; color: #555; font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 14px; box-sizing: border-box; resize: none; outline: none; margin: 10px 0; }
+      .error-list { text-align: left; max-width: 500px; margin: 15px auto; list-style: none; padding: 0; }
+      .error-list li { color: #444; font-size: 12px; padding: 8px 12px; border-left: 2px solid rgba(0,255,65,0.08); margin-bottom: 4px; }
+      .footer-txt { color: #222; font-size: 11px; margin-top: 20px; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <!--ANTI-EXFIL-->
+    <div class="error-wrap">
+      <h1>{{mask}}{{// network_error}}</h1>
+      <code>Failed to load: <b id="fetchedURL"></b></code>
+      <br><br>
+      <button id="reload">> RELOAD</button>
+      <br>
+      <textarea id="errorTrace" cols="40" rows="8" readonly></textarea>
+      <ul class="error-list">
+        <li>{{mask}}{{Verify the URL is correct}}</li>
+        <li>{{mask}}{{Clear cache via Ctrl+Shift+R}}</li>
+        <li>{{mask}}{{Server may be under maintenance -- wait and retry}}</li>
+        <li>{{mask}}{{Check the FAQ for site-specific issues}}</li>
+      </ul>
+      <p class="footer-txt">{{mask}}{{Nova-Hub // Ultraviolet v}}<span id="uvVersion"></span></p>
+    </div>
+    <script src="{{src}}"></script>
+  </body>
+</html>

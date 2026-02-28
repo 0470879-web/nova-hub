@@ -1,0 +1,10 @@
+{
+  "title": "Nova-Hub",
+  "host": "0.0.0.0",
+  "pathname": "/pr0xy",
+  "minifyScripts": false,
+  "randomizeIdentifiers": false,
+  "production": false,
+  "disguiseFiles": false,
+  "usingSEO": false
+}

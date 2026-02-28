@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{mask}}{{Nova-Hub | Scramjet}}</title>
+    <!--HEAD-CONTENT-->
+    <script src="{{route}}{{/scram/scramjet.all.js}}" defer data-module></script>
+    <script src="{{route}}{{/baremux/index.js}}" defer data-module></script>
+    {{inline}}{{
+    <script src="{{route}}{{/assets/js/register-sw.js}}{{inline}}" defer></script>
+    }}
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/csel.js}}{{inline}}" defer></script>
+    <script src="{{route}}{{assets/js/common.js}}{{inline}}" defer></script>
+    }}
+    <style>
+      .nova-proxy-page { max-width: 650px; margin: 0 auto; padding: 80px 20px 120px; text-align: center; }
+      .nova-engine-name { font-family: 'JetBrains Mono', monospace; color: #00ff41; font-size: 32px; font-weight: 700; margin-bottom: 6px; text-shadow: 0 0 20px rgba(0,255,65,0.25); }
+      .nova-engine-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; display: inline-block; padding: 3px 10px; border-radius: 3px; background: rgba(0,255,65,0.12); color: #00ff41; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
+      .nova-engine-desc { font-family: 'JetBrains Mono', monospace; color: #555; font-size: 13px; line-height: 1.7; margin-bottom: 35px; text-align: left; }
+      .nova-engine-desc a { color: #00ff41; }
+      .nova-search-wrap { position: relative; margin-bottom: 20px; }
+      .nova-search-wrap input[type="text"] { width: 100%; padding: 14px 18px; background: #050505; border: 1px solid rgba(0,255,65,0.2); border-radius: 6px; color: #c0c0c0; font-family: 'JetBrains Mono', monospace; font-size: 14px; box-sizing: border-box; outline: none; transition: border-color 0.3s, box-shadow 0.3s; }
+      .nova-search-wrap input[type="text"]:focus { border-color: #00ff41; box-shadow: 0 0 15px rgba(0,255,65,0.1); }
+      .nova-search-wrap input[type="text"]::placeholder { color: #333; }
+      .nova-search-actions { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
+      .nova-search-actions select, .nova-search-actions a { font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 10px 20px; background: transparent; color: #00ff41; border: 1px solid rgba(0,255,65,0.25); border-radius: 4px; cursor: pointer; text-decoration: none; transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+      .nova-search-actions select { color: #c0c0c0; -webkit-appearance: none; }
+      .nova-search-actions a:hover, .nova-search-actions select:hover { border-color: #00ff41; background: rgba(0,255,65,0.08); box-shadow: 0 0 12px rgba(0,255,65,0.1); }
+    </style>
+  </head>
+  <body>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <!--ANTI-EXFIL-->
+    <div id="header" class="fullwidth"><!--HEADER--></div>
+    <div id="mainbody" class="fullwidth">
+      <div class="nova-proxy-page">
+        <div class="nova-engine-name">{{mask}}{{Scramjet}}</div>
+        <div class="nova-engine-tag">recommended engine</div>
+        <div class="nova-engine-desc">
+          {{mask}}{{High-performance proxy designed to evade internet censorship. Supports Discord, YouTube, GeForce NOW, Twitter and more. For CAPTCHA challenges, solve them slowly.}}<br><br>
+          {{mask}}{{Enable Tor routing in Settings if you have login issues.}} View the <a href="{{route}}{{/questions}}">FAQ</a> {{mask}}{{for help.}}
+        </div>
+        <div id="pr-sj">
+          <div class="nova-search-wrap">
+            <div class="search-box">
+              <input type="text" spellcheck="false" autocomplete="off" placeholder="> enter url or search query..." id="search-input" />
+              <ul id="autocomplete"></ul>
+            </div>
+          </div>
+          <div class="nova-search-actions">
+            <select class="search-engine-list">
+              <option>{{DuckDuckGo}}</option>
+              <option>{{Brave}}</option>
+              <option>{{Startpage}}</option>
+              <option>{{Google}}</option>
+              <option>{{Bing}}</option>
+            </select>
+            <a href="#" id="search-btn">CONNECT</a>
+          </div>
+        </div>
+        <!--PROXNAV-SETTINGS-->
+      </div>
+    </div>
+    <div id="footer" class="fullwidth"><!--FOOTER--></div>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+  </body>
+</html>

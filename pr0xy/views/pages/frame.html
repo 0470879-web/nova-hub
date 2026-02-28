@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{mask}}{{Nova-Hub}}</title>
+    <!--HEAD-CONTENT-->
+    <script src="{{route}}{{/scram/scramjet.all.js}}" defer data-module></script>
+    <script src="{{route}}{{/baremux/index.js}}" defer data-module></script>
+    <script src="{{route}}{{/uv/uv.bundle.js}}" defer data-module></script>
+    <script src="{{route}}{{/uv/uv.config.js}}" defer data-module></script>
+    {{inline}}{{
+    <script src="{{route}}{{/assets/js/register-sw.js}}{{inline}}" defer></script>
+    <script src="{{route}}{{assets/js/csel.js}}{{inline}}" defer></script>
+    <script src="{{route}}{{assets/js/common.js}}{{inline}}" defer></script>
+    }}
+    <style>
+      .loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; z-index: 9998; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+      .loader-active { opacity: 1; pointer-events: all; }
+      .loader-w { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+      .loader-w::before { content: ''; width: 30px; height: 30px; border: 2px solid rgba(0,255,65,0.1); border-top-color: #00ff41; border-radius: 50%; animation: loader-spin 0.8s linear infinite; }
+      .loader-w::after { content: 'ESTABLISHING CONNECTION...'; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #333; letter-spacing: 2px; animation: loader-pulse 1.5s ease-in-out infinite; }
+      @keyframes loader-spin { to { transform: rotate(360deg); } }
+      @keyframes loader-pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+      .omnibar { position: fixed; top: 0; left: 0; right: 0; height: 48px; background: #050505; border-bottom: 1px solid rgba(0,255,65,0.1); display: flex; align-items: center; gap: 6px; padding: 0 10px; z-index: 9999; font-family: 'JetBrains Mono', monospace; transition: transform 0.3s ease; }
+      .omnibar-hidden { transform: translateY(-100%); }
+      .omnibar .logo { width: 22px; height: 22px; background: url('{{route}}{{/assets/img/logo.png}}') center/contain no-repeat; flex-shrink: 0; }
+      .omnibar button { background: transparent; border: 1px solid rgba(0,255,65,0.1); color: #555; width: 32px; height: 32px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+      .omnibar button:hover { color: #00ff41; border-color: rgba(0,255,65,0.3); }
+      .omnibar .search-box { flex: 1; position: relative; }
+      .omnibar .search-box input { width: 100%; padding: 8px 14px; background: #0a0a0a; border: 1px solid rgba(0,255,65,0.12); border-radius: 4px; color: #c0c0c0; font-family: 'JetBrains Mono', monospace; font-size: 12px; box-sizing: border-box; outline: none; transition: border-color 0.3s; }
+      .omnibar .search-box input:focus { border-color: rgba(0,255,65,0.4); }
+      .omnibar .search-box input::placeholder { color: #333; }
+      .omnibar .dropdown-parent > a { color: #555; font-size: 14px; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; }
+      .omnibar .dropdown-parent > a:hover { color: #00ff41; }
+      .omnibar .dropdown-settings { position: absolute; top: 48px; right: 0; background: #0a0a0a; border: 1px solid rgba(0,255,65,0.15); border-radius: 6px; min-width: 320px; display: none; z-index: 10000; }
+      .omnibar .dropdown-parent:focus-within .dropdown-settings { display: block; }
+      #omnibar-toggle { background: transparent; border: 1px solid rgba(0,255,65,0.1); }
+      .omnibar-s { position: fixed; top: 6px; right: 10px; z-index: 9999; opacity: 0.4; }
+      .omnibar-s:hover { opacity: 1; }
+      #frame { position: fixed; top: 48px; left: 0; right: 0; bottom: 0; width: 100%; height: calc(100% - 48px); border: none; background: #000; }
+      .omnibar-hidden ~ #frame { top: 0; height: 100%; }
+    </style>
+  </head>
+  <body style="margin:0;padding:0;background:#000;overflow:hidden;">
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <!--ANTI-EXFIL-->
+    <div class="loader loader-active">
+      <div class="loader-w"></div>
+    </div>
+    <div class="omnibar" id="pr-sj">
+      <a class="logo" href="{{route}}{{/browsing}}" role="img" aria-label="Nova-Hub Logo"></a>
+      <button title="Back"><i class="fas fa-arrow-left"></i></button>
+      <button title="Forward"><i class="fas fa-arrow-right"></i></button>
+      <button title="Refresh"><i class="fas fa-redo-alt"></i></button>
+      <div class="search-box">
+        <input class="glowbutton" id="search-input" type="text" placeholder="> type a url or search..." spellcheck="false" autocomplete="off" />
+        <ul id="autocomplete"></ul>
+      </div>
+      <div title="Settings" class="dropdown-parent">
+        <a href="#" tabindex="0"><i class="fas fa-cog" aria-hidden="true"></i></a>
+        <div class="dropdown-settings" tabindex="0" role="menu" aria-label="Settings menu">
+          <div id="csel"><!--SETTINGS--></div>
+        </div>
+      </div>
+      <button id="omnibar-toggle" title="Hide Bar"><i class="fas fa-chevron-up"></i></button>
+    </div>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <iframe id="frame" allow="fullscreen" autofocus></iframe>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <script>
+      const windowFrame = document.getElementById('frame');
+      const omnibar = document.getElementById('pr-sj');
+      const toggle = document.getElementById('omnibar-toggle');
+      const backArrow = omnibar.querySelector("[title='Back' i]");
+      const forwardArrow = omnibar.querySelector("[title='Forward' i]");
+      const reloadArrow = omnibar.querySelector("[title='Refresh' i]");
+      let hidden = false;
+
+      toggle.addEventListener('click', () => {
+        hidden = !hidden;
+        omnibar.classList.toggle('omnibar-hidden', hidden);
+        toggle.classList.toggle('omnibar-s', hidden);
+        toggle.innerHTML = '<i class="fas fa-chevron-' + (hidden ? 'down' : 'up') + '"></i>';
+        (hidden ? document.body : omnibar).appendChild(toggle);
+        toggle.title = hidden ? 'Show Bar' : 'Hide Bar';
+      });
+
+      backArrow.addEventListener('click', () => { history.back(); });
+      forwardArrow.addEventListener('click', () => { history.forward(); });
+      reloadArrow.addEventListener('click', () => { windowFrame.contentWindow.location.reload(); });
+
+      let statusObject = { isLoading: true, timesErrored: 0 };
+
+      const loaderTimeout = (timeout) => {
+        statusObject.isLoading = true;
+        setTimeout(() => {
+          if (statusObject.isLoading)
+            loader.classList.toggle('loader-active', false);
+        }, timeout);
+      };
+
+      const errorRefresh = () => {
+        const shouldRefresh =
+          statusObject.timesErrored <= 5 &&
+          windowFrame.contentWindow.document.head.querySelector(
+            "meta[itemprop='http-status'][content='404']"
+          );
+        if (shouldRefresh) {
+          statusObject.timesErrored++;
+          windowFrame.contentWindow.location.reload();
+        } else statusObject.timesErrored = 0;
+        return shouldRefresh;
+      };
+
+      const loader = document.getElementsByClassName('loader')[0];
+      const updateLoader = () => {
+        if (windowFrame.contentWindow.location.href === 'about:blank') return;
+        statusObject.isLoading = windowFrame.contentWindow.document.readyState === 'loading';
+        if (!statusObject.isLoading && errorRefresh()) {
+          statusObject.isLoading = true;
+          return;
+        }
+        loader.classList.toggle('loader-active', statusObject.isLoading);
+        if (statusObject.isLoading) loaderTimeout(5000);
+      };
+
+      const loadHandler = () => {
+        setTimeout(() => {
+          windowFrame.contentWindow.addEventListener('beforeunload', () => {
+            loader.classList.toggle('loader-active', true);
+            loaderTimeout(3000);
+          });
+          windowFrame.contentWindow.addEventListener('unload', loadHandler);
+          windowFrame.contentWindow.addEventListener('readystatechange', updateLoader);
+          updateLoader();
+        });
+      };
+
+      windowFrame.addEventListener('load', updateLoader);
+      loadHandler();
+    </script>
+  </body>
+</html>

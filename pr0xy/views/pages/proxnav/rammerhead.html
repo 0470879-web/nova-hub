@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{mask}}{{Nova-Hub | Rammerhead}}</title>
+    <!--HEAD-CONTENT-->
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/csel.js}}{{inline}}" defer></script>
+    <script src="{{route}}{{assets/js/common.js}}{{inline}}" defer></script>
+    }}
+    <style>
+      .nova-proxy-page { max-width: 650px; margin: 0 auto; padding: 80px 20px 120px; text-align: center; }
+      .nova-engine-name { font-family: 'JetBrains Mono', monospace; color: #00ff41; font-size: 32px; font-weight: 700; margin-bottom: 6px; text-shadow: 0 0 20px rgba(0,255,65,0.25); }
+      .nova-engine-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; display: inline-block; padding: 3px 10px; border-radius: 3px; background: rgba(100,100,100,0.2); color: #666; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
+      .nova-engine-desc { font-family: 'JetBrains Mono', monospace; color: #555; font-size: 13px; line-height: 1.7; margin-bottom: 35px; text-align: left; }
+      .nova-engine-desc a { color: #00ff41; }
+      .nova-search-wrap { position: relative; margin-bottom: 20px; }
+      .nova-search-wrap input[type="text"] { width: 100%; padding: 14px 18px; background: #050505; border: 1px solid rgba(0,255,65,0.2); border-radius: 6px; color: #c0c0c0; font-family: 'JetBrains Mono', monospace; font-size: 14px; box-sizing: border-box; outline: none; transition: border-color 0.3s, box-shadow 0.3s; }
+      .nova-search-wrap input[type="text"]:focus { border-color: #00ff41; box-shadow: 0 0 15px rgba(0,255,65,0.1); }
+      .nova-search-wrap input[type="text"]::placeholder { color: #333; }
+      .nova-search-actions { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
+      .nova-search-actions a { font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 10px 24px; background: transparent; color: #00ff41; border: 1px solid rgba(0,255,65,0.25); border-radius: 4px; cursor: pointer; text-decoration: none; transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+      .nova-search-actions a:hover { border-color: #00ff41; background: rgba(0,255,65,0.08); box-shadow: 0 0 12px rgba(0,255,65,0.1); }
+      .nova-warn { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #ff9500; padding: 10px 14px; border-left: 2px solid rgba(255,149,0,0.3); background: rgba(255,149,0,0.03); text-align: left; margin-top: 25px; }
+    </style>
+  </head>
+  <body>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <!--ANTI-EXFIL-->
+    <div id="header" class="fullwidth"><!--HEADER--></div>
+    <div id="mainbody" class="fullwidth">
+      <div class="nova-proxy-page">
+        <div class="nova-engine-name">{{mask}}{{Rammerhead}}</div>
+        <div class="nova-engine-tag">alternative engine</div>
+        <div class="nova-engine-desc">
+          {{mask}}{{Session-based web proxy. Supports Discord, YouTube and more. Less secure than other engines -- use as a last resort.}}<br><br>
+          {{mask}}{{Do NOT share Rammerhead session links. Treat every session as private.}}
+        </div>
+        <div id="pr-rh">
+          <div class="nova-search-wrap">
+            <div class="search-box">
+              <input type="text" spellcheck="false" autocomplete="off" placeholder="> enter url or search query..." />
+              <ul id="autocomplete"></ul>
+            </div>
+          </div>
+          <div class="nova-search-actions">
+            <a href="#" class="pr-go1">{{mask}}{{CONNECT}}</a>
+          </div>
+        </div>
+        <div class="nova-warn">{{mask}}{{Warning: Rammerhead has known security leaks. Do not use for sensitive activities.}}</div>
+      </div>
+    </div>
+    <div id="footer" class="fullwidth"><!--FOOTER--></div>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/card.js}}{{inline}}"></script>
+    }}
+  </body>
+</html>

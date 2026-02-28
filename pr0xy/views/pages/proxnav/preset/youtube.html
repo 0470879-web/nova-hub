@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{mask}}{{Nova-Hub | YouTube}}</title>
+    <!--HEAD-CONTENT-->
+    <script src="{{route}}{{/scram/scramjet.all.js}}" defer data-module></script>
+    <script src="{{route}}{{/baremux/index.js}}" defer data-module></script>
+    <script src="{{route}}{{/epoxy/index.js}}" defer data-module></script>
+    <script src="{{route}}{{/uv/uv.bundle.js}}" defer data-module></script>
+    <script src="{{route}}{{/uv/uv.config.js}}" defer data-module></script>
+    {{inline}}{{
+    <script src="{{route}}{{/assets/js/register-sw.js}}{{inline}}" defer></script>
+    }}
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/csel.js}}{{inline}}" defer></script>
+    <script src="{{route}}{{assets/js/common.js}}{{inline}}" defer></script>
+    }}
+    <style>
+      .nova-proxy-page { max-width: 650px; margin: 0 auto; padding: 80px 20px 120px; text-align: center; }
+      .nova-engine-name { font-family: 'JetBrains Mono', monospace; color: #00ff41; font-size: 32px; font-weight: 700; margin-bottom: 6px; text-shadow: 0 0 20px rgba(0,255,65,0.25); }
+      .nova-engine-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; display: inline-block; padding: 3px 10px; border-radius: 3px; background: rgba(255,59,48,0.12); color: #ff3b30; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
+      .nova-engine-desc { font-family: 'JetBrains Mono', monospace; color: #555; font-size: 13px; line-height: 1.7; margin-bottom: 35px; }
+      .nova-engine-desc a { color: #00ff41; }
+      .nova-app-grid { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+      .nova-app-btn { font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 14px 28px; background: #050505; color: #c0c0c0; border: 1px solid rgba(0,255,65,0.15); border-radius: 6px; cursor: pointer; text-decoration: none; transition: all 0.3s; }
+      .nova-app-btn:hover { border-color: #00ff41; color: #00ff41; background: rgba(0,255,65,0.05); box-shadow: 0 0 15px rgba(0,255,65,0.08); transform: translateY(-2px); }
+    </style>
+  </head>
+  <body>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <!--ANTI-EXFIL-->
+    <div id="header" class="fullwidth"><!--HEADER--></div>
+    <div id="mainbody" class="fullwidth">
+      <div class="nova-proxy-page">
+        <div class="nova-engine-name">{{mask}}{{YouTube}}</div>
+        <div class="nova-engine-tag">proxied preset</div>
+        <div class="nova-engine-desc">
+          {{mask}}{{Access YouTube through a secure proxy tunnel. Avoid logging in with primary accounts on public instances.}}<br><br>
+          {{mask}}{{Enable Tor routing or swap regions in Settings if you have issues.}} View the <a href="{{route}}{{/questions}}">FAQ</a> {{mask}}{{for help.}}
+        </div>
+        <div class="nova-app-grid">
+          <a href="#" id="pr-yt" class="nova-app-btn pr-go2">{{mask}}{{> YouTube}}</a>
+          <a href="#" id="pr-iv" class="nova-app-btn pr-go2">{{mask}}{{> Invidious}}</a>
+        </div>
+        <!--PROXNAV-SETTINGS-->
+      </div>
+    </div>
+    <div id="footer" class="fullwidth"><!--FOOTER--></div>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/card.js}}{{inline}}"></script>
+    }}
+  </body>
+</html>

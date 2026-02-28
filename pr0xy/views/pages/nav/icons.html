@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{mask}}{{Nova-Hub | Icons}}</title>
+    <!--HEAD-CONTENT-->
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/csel.js}}{{inline}}" defer></script>
+    <script src="{{route}}{{assets/js/common.js}}{{inline}}" defer></script>
+    }}
+    <style>
+      .nova-page { max-width: 600px; margin: 0 auto; padding: 80px 20px 120px; text-align: center; }
+      .nova-page-title { font-family: 'JetBrains Mono', monospace; color: #00ff41; font-size: 28px; margin-bottom: 8px; text-shadow: 0 0 15px rgba(0,255,65,0.3); }
+      .nova-page p { font-family: 'JetBrains Mono', monospace; color: #555; font-size: 13px; line-height: 1.7; margin-bottom: 15px; }
+      .nova-icon-btn { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #00ff41; border: 1px solid rgba(0,255,65,0.25); padding: 10px 24px; border-radius: 4px; text-decoration: none; transition: all 0.3s; margin: 15px 0; }
+      .nova-icon-btn:hover { background: rgba(0,255,65,0.08); box-shadow: 0 0 12px rgba(0,255,65,0.1); }
+    </style>
+  </head>
+  <body>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <!--ANTI-EXFIL-->
+    <div id="header" class="fullwidth"><!--HEADER--></div>
+    <div id="mainbody" class="fullwidth">
+      <div class="nova-page">
+        <div class="nova-page-title">// {{mask}}{{icon_finder}}</div>
+        <p>{{mask}}{{Go to the website you want an icon from, then use this bookmarklet:}}</p>
+        <div id="bks-parent">
+          <a id="iconfinder" class="nova-icon-btn">> Find Icon URL</a>
+        </div>
+        <script>
+          document.getElementById('iconfinder').href = "javascript:alert((Array.from(document.head.querySelectorAll(\"link[rel*='icon']\")).slice(-1)[0]||0).href||location.origin+'{{route}}{{/favicon.ico}}')";
+        </script>
+        <p>{{mask}}{{Copy the URL and paste it into the Icon URL field in Settings.}}</p>
+      </div>
+    </div>
+    <div id="footer" class="fullwidth"><!--FOOTER--></div>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+  </body>
+</html>

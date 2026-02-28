@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{mask}}{{Nova-Hub | Web Proxies}}</title>
+    <!--HEAD-CONTENT-->
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/backdrop.css" />
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css" />
+    <script src="https://unpkg.com/@popperjs/core@2" defer data-module></script>
+    <script src="https://unpkg.com/tippy.js@6" defer></script>
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/csel.js}}{{inline}}" defer></script>
+    <script src="{{route}}{{assets/js/common.js}}{{inline}}" defer></script>
+    }}
+    <style>
+      .nova-page { max-width: 800px; margin: 0 auto; padding: 80px 20px 120px; }
+      .nova-page-title { font-family: 'JetBrains Mono', 'Source Code Pro', monospace; color: #00ff41; font-size: 28px; margin-bottom: 8px; text-shadow: 0 0 15px rgba(0,255,65,0.3); }
+      .nova-page-sub { font-family: 'JetBrains Mono', monospace; color: #444; font-size: 13px; margin-bottom: 40px; letter-spacing: 1px; }
+      .nova-page p { font-family: 'JetBrains Mono', monospace; color: #666; font-size: 13px; line-height: 1.7; margin-bottom: 15px; }
+      .nova-proxy-card { background: #050505; border: 1px solid rgba(0,255,65,0.1); border-radius: 6px; padding: 25px; margin-bottom: 16px; transition: all 0.3s ease; cursor: pointer; text-decoration: none; display: block; }
+      .nova-proxy-card:hover { border-color: rgba(0,255,65,0.3); box-shadow: 0 0 20px rgba(0,255,65,0.05); transform: translateX(4px); }
+      .nova-proxy-card h3 { font-family: 'JetBrains Mono', monospace; color: #00ff41; font-size: 16px; margin-bottom: 6px; }
+      .nova-proxy-card .tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 2px 8px; border-radius: 3px; margin-left: 8px; text-transform: uppercase; letter-spacing: 1px; }
+      .nova-proxy-card .tag-rec { background: rgba(0,255,65,0.15); color: #00ff41; }
+      .nova-proxy-card .tag-fb { background: rgba(255,149,0,0.15); color: #ff9500; }
+      .nova-proxy-card .tag-alt { background: rgba(100,100,100,0.2); color: #666; }
+      .nova-proxy-card p { color: #555; margin: 0; }
+      .nova-proxy-card .arrow { float: right; color: #333; font-size: 18px; transition: color 0.3s; }
+      .nova-proxy-card:hover .arrow { color: #00ff41; }
+      .nova-divider { border: none; border-top: 1px solid rgba(0,255,65,0.06); margin: 30px 0; }
+      .nova-tip { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #333; padding: 12px 16px; border-left: 2px solid rgba(0,255,65,0.3); background: rgba(0,255,65,0.02); margin-bottom: 30px; }
+      .nova-tip span { color: #00ff41; }
+    </style>
+  </head>
+  <body>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <!--ANTI-EXFIL-->
+    <div id="header" class="fullwidth"><!--HEADER--></div>
+    <div id="mainbody" class="fullwidth">
+      <div class="nova-page">
+        <div class="nova-page-title">// {{mask}}{{select_proxy}}</div>
+        <div class="nova-page-sub">{{mask}}{{choose your engine to start browsing}}</div>
+        <div class="nova-tip"><span>[tip]</span> {{mask}}{{Nova-Hub features built-in adblock and Tor routing. Enable them in Settings.}}</div>
+        <a href="{{route}}{{/scramjet}}" class="nova-proxy-card">
+          <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+          <h3>{{mask}}{{Scramjet}} <span class="tag tag-rec">recommended</span></h3>
+          <p>{{mask}}{{Fastest engine. CAPTCHA support, Discord, YouTube, GeForce NOW. Best overall experience.}}</p>
+        </a>
+        <a href="{{route}}{{/ultraviolet}}" class="nova-proxy-card">
+          <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+          <h3>{{mask}}{{Ultraviolet}} <span class="tag tag-fb">fallback</span></h3>
+          <p>{{mask}}{{Legacy engine with CAPTCHA integration. Use if Scramjet doesn't support your site.}}</p>
+        </a>
+        <a href="{{route}}{{/rammerhead}}" class="nova-proxy-card">
+          <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+          <h3>{{mask}}{{Rammerhead}} <span class="tag tag-alt">alternative</span></h3>
+          <p>{{mask}}{{Session-based proxy. Less secure but can work as a last resort.}}</p>
+        </a>
+        <hr class="nova-divider">
+        <p>{{mask}}{{Each proxy has different strengths. Scramjet is recommended for most sites. Switch to Ultraviolet for CAPTCHA-heavy sites.}}</p>
+      </div>
+    </div>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <div id="footer" class="fullwidth"><!--FOOTER--></div>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+  </body>
+</html>
