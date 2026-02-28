@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	async function loadFixedItems() {
     try {
-        const data = await apiRequest('/api/admin/fixed-items', { skipLogoutOn401: true });
+        const data = await apiRequest('/functions/api/admin/fixed-items', { skipLogoutOn401: true });
         return data.fixedItems || [];
     } catch {
         return [];
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = card.getAttribute('data-title');
 
     try {
-        await apiRequest('/api/admin/fixed-items', {
+        await apiRequest('/functions/api/admin/fixed-items', {
             method: 'POST',
             body: JSON.stringify({ title, action: 'add' })
         });
@@ -160,7 +160,7 @@ window.unmarkAsFixed = async function(button) {
     const title = card.getAttribute('data-title');
 
     try {
-        await apiRequest('/api/admin/fixed-items', {
+        await apiRequest('/functions/api/admin/fixed-items', {
             method: 'POST',
             body: JSON.stringify({ title, action: 'remove' })
         });
