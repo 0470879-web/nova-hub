@@ -1,10 +1,547 @@
+<!DOCTYPE html>
+<html class="sl-theme-dark" lang="en">
+  <head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1196675595992085"
+     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1196675595992085"
+     crossorigin="anonymous"></script>
+      <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4FXX69YKTS"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const selects = document.querySelectorAll('select');
-    selects.forEach(select => {
-      select.addEventListener('click', function() {
-        this.classList.toggle('open');
-      });
-    });
-  });
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-4FXX69YKTS');
 </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1196675595992085" crossorigin="anonymous"></script>
+    <!-- initialize theme vars
+    https://coolors.co/10002b-240046-3c096c-5a189a-7b2cbf-9d4edd-c77dff-e0aaff -->
+
+    <!-- initialize externals -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src=" https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js "></script>
+    
+
+
+
+    <!-- initialize my stuff -->
+    <script src="/js/all.min.js"></script>
+    <script src="/js/main.js"></script>
+		<script src="/js/widget.js"></script>
+<script src="/js/themes.js"></script>
+    <script src="/js/cloaks.js"></script>
+    <script src="/js/themes.js"></script>
+
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/css/gaming-theme.css" />
+<script src="/js/gaming-navbar.js"></script>
+<script>
+// Panic Button Functionality - Auto-save on change
+function savePanicSettings() {
+    const panicUrl = document.getElementById('panicUrl').value.trim();
+    const panicPreset = document.getElementById('panicPreset').value;
+    const panicEnabled = document.getElementById('panicEnabled').checked;
+    
+    // Use preset if selected, otherwise use custom URL
+    let finalUrl = panicPreset || panicUrl;
+    
+    if (!finalUrl && panicEnabled) {
+        // Don't show alert on auto-save, just prevent enabling without URL
+        document.getElementById('panicEnabled').checked = false;
+        return;
+    }
+    
+    if (finalUrl) {
+        // Ensure URL starts with http:// or https://
+        if (finalUrl && !finalUrl.match(/^https?:\/\//i) && !url.includes("://")) {
+            finalUrl = 'https://' + finalUrl;
+        }
+        
+        // Save to cookie instead of localStorage
+        setCookie('novahub.panicUrl', finalUrl);
+        // Also save to legacy panicurl cookie for backwards compatibility
+        setCookie('panicurl', finalUrl);
+        // Migration: remove from localStorage if it exists
+        if (localStorage.getItem('novahub.panicUrl')) {
+            localStorage.removeItem('novahub.panicUrl');
+        }
+    }
+    
+    setCookie('novahub.panicEnabled', panicEnabled ? 'true' : 'false');
+    // Migration: remove from localStorage if it exists
+    if (localStorage.getItem('novahub.panicEnabled')) {
+        localStorage.removeItem('novahub.panicEnabled');
+    }
+    
+    // Show/hide panic button (from gaming-navbar.js)
+    if (typeof window.updatePanicButton === 'function') {
+        window.updatePanicButton();
+    } else if (typeof updatePanicButton === 'function') {
+        updatePanicButton();
+    }
+}
+
+// getCookie helper function
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+}
+
+// Load saved settings on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Load saved URL - Migration: check localStorage first, then cookie
+    let savedUrl = localStorage.getItem('novahub.panicUrl');
+    if (savedUrl) {
+        setCookie('novahub.panicUrl', savedUrl);
+        setCookie('panicurl', savedUrl);
+        localStorage.removeItem('novahub.panicUrl');
+    } else {
+        savedUrl = getCookie('novahub.panicUrl') || getCookie('panicurl') || '';
+    }
+    if (savedUrl) {
+        document.getElementById('panicUrl').value = savedUrl;
+        // Check if it matches any preset
+        const presetSelect = document.getElementById('panicPreset');
+        for (let i = 0; i < presetSelect.options.length; i++) {
+            if (presetSelect.options[i].value === savedUrl) {
+                presetSelect.value = savedUrl;
+                break;
+            }
+        }
+    }
+    
+    // Load enabled state - Migration: check localStorage first, then cookie
+    let enabled = localStorage.getItem('novahub.panicEnabled') === 'true';
+    if (enabled) {
+        setCookie('novahub.panicEnabled', 'true');
+        localStorage.removeItem('novahub.panicEnabled');
+    } else {
+        enabled = getCookie('novahub.panicEnabled') === 'true';
+    }
+    document.getElementById('panicEnabled').checked = enabled;
+    
+    // Update panic button visibility (will be called from gaming-navbar.js)
+    if (typeof window.updatePanicButton === 'function') {
+        window.updatePanicButton();
+    } else if (typeof updatePanicButton === 'function') {
+        updatePanicButton();
+    }
+    
+    // Handle preset selection - auto-save
+    document.getElementById('panicPreset').addEventListener('change', function() {
+        if (this.value) {
+            document.getElementById('panicUrl').value = this.value;
+        }
+        savePanicSettings();
+    });
+    
+    // Auto-save on URL input change (with debounce)
+    let urlTimeout;
+    document.getElementById('panicUrl').addEventListener('input', function() {
+        clearTimeout(urlTimeout);
+        urlTimeout = setTimeout(function() {
+            savePanicSettings();
+        }, 500); // Wait 500ms after user stops typing
+    });
+    
+    // Auto-save on URL blur (when user leaves the field)
+    document.getElementById('panicUrl').addEventListener('blur', function() {
+        clearTimeout(urlTimeout);
+        savePanicSettings();
+    });
+    
+    // Auto-save on checkbox change
+    document.getElementById('panicEnabled').addEventListener('change', function() {
+        savePanicSettings();
+    });
+    
+    // Tab Cloak Functionality - Auto-save on change
+    function saveTabCloak() {
+        const presetSelect = document.getElementById('cloakPreset');
+        const presetValue = presetSelect.value;
+        const customName = document.getElementById('cloakTabName').value.trim();
+        const customIcon = localStorage.getItem('novahub.cloakCustomIcon'); // Base64 data URL
+        
+        let tabName = '';
+        let iconUrl = '';
+        
+        if (presetValue && presetValue !== 'custom') {
+            // Use preset
+            const selectedOption = presetSelect.options[presetSelect.selectedIndex];
+            tabName = selectedOption.getAttribute('data-name');
+            iconUrl = selectedOption.getAttribute('data-icon');
+        } else if (presetValue === 'custom' && (customName || customIcon)) {
+            // Use custom
+            tabName = customName;
+            iconUrl = customIcon || '';
+        }
+        
+        if (tabName || iconUrl) {
+            // Save to localStorage and cookies for compatibility
+            if (tabName) {
+                localStorage.setItem('novahub.cloakTabName', tabName);
+                document.cookie = `tabname=${tabName}; path=/`;
+            }
+            if (iconUrl) {
+                localStorage.setItem('novahub.cloakIconUrl', iconUrl);
+                document.cookie = `tabicon=${iconUrl}; path=/`;
+            }
+            
+            // Apply the cloak immediately
+            if (typeof setCloak === 'function') {
+                setCloak(tabName, iconUrl);
+            }
+            
+            // Update preview
+            updateCloakPreview(tabName, iconUrl);
+        }
+    }
+    
+    function clearTabCloak() {
+        localStorage.removeItem('novahub.cloakTabName');
+        localStorage.removeItem('novahub.cloakIconUrl');
+        localStorage.removeItem('novahub.cloakCustomIcon');
+        document.cookie = 'tabname=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie = 'tabicon=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        
+        // Clear form
+        document.getElementById('cloakPreset').value = '';
+        document.getElementById('cloakTabName').value = '';
+        document.getElementById('cloakIconUpload').value = '';
+        document.getElementById('customCloakGroup').style.display = 'none';
+        document.getElementById('customIconGroup').style.display = 'none';
+        document.getElementById('currentCloakPreview').style.display = 'none';
+        
+        // Restore original title and icon (Nova Hub parrot/owl favicon)
+        // Remove all existing icon links
+        while (document.querySelector("link[rel~='icon']")) {
+            document.querySelector("link[rel~='icon']").remove();
+        }
+        while (document.querySelector("link[rel~='shortcut icon']")) {
+            document.querySelector("link[rel~='shortcut icon']").remove();
+        }
+        
+        // Create new icon link with Nova Hub favicon
+        const link = document.createElement("link");
+        link.rel = "icon";
+        link.href = '/nova-favicon.ico';
+        document.head.appendChild(link);
+        
+        // Restore original title
+        document.title = 'Settings | Nova Hub';
+    }
+    
+    function updateCloakPreview(tabName, iconUrl) {
+        const preview = document.getElementById('currentCloakPreview');
+        const previewText = document.getElementById('currentCloakText');
+        
+        if (tabName || iconUrl) {
+            preview.style.display = 'block';
+            let previewHTML = '';
+            if (tabName) {
+                previewHTML += `<strong>Tab Name:</strong> ${tabName}<br>`;
+            }
+            if (iconUrl) {
+                previewHTML += `<strong>Icon:</strong> ${iconUrl.length > 50 ? iconUrl.substring(0, 50) + '...' : iconUrl}`;
+            }
+            previewText.innerHTML = previewHTML;
+        } else {
+            preview.style.display = 'none';
+        }
+    }
+    
+    // Load saved cloak settings
+    const savedTabName = localStorage.getItem('novahub.cloakTabName') || getCookie('tabname') || '';
+    const savedIconUrl = localStorage.getItem('novahub.cloakIconUrl') || getCookie('tabicon') || '';
+    const savedCustomIcon = localStorage.getItem('novahub.cloakCustomIcon') || '';
+    
+    if (savedTabName || savedIconUrl) {
+        // Check if it matches a preset
+        const presetSelect = document.getElementById('cloakPreset');
+        let foundPreset = false;
+        
+        for (let i = 0; i < presetSelect.options.length; i++) {
+            const option = presetSelect.options[i];
+            if (option.value && option.value !== 'custom') {
+                if (option.getAttribute('data-name') === savedTabName && option.getAttribute('data-icon') === savedIconUrl) {
+                    presetSelect.value = option.value;
+                    foundPreset = true;
+                    break;
+                }
+            }
+        }
+        
+        if (!foundPreset && (savedTabName || savedCustomIcon)) {
+            // It's a custom cloak
+            presetSelect.value = 'custom';
+            document.getElementById('cloakTabName').value = savedTabName;
+            if (savedCustomIcon) {
+                // Show that custom icon is set
+            }
+            document.getElementById('customCloakGroup').style.display = 'block';
+            document.getElementById('customIconGroup').style.display = 'block';
+        }
+        
+        updateCloakPreview(savedTabName, savedIconUrl || savedCustomIcon);
+        
+        // Apply the saved cloak on page load
+        if (typeof setCloak === 'function') {
+            setCloak(savedTabName, savedIconUrl || savedCustomIcon);
+        }
+    }
+    
+    // Handle preset selection
+    document.getElementById('cloakPreset').addEventListener('change', function() {
+        const value = this.value;
+        if (value === 'custom') {
+            document.getElementById('customCloakGroup').style.display = 'block';
+            document.getElementById('customIconGroup').style.display = 'block';
+        } else if (value) {
+            document.getElementById('customCloakGroup').style.display = 'none';
+            document.getElementById('customIconGroup').style.display = 'none';
+            saveTabCloak();
+        } else {
+            document.getElementById('customCloakGroup').style.display = 'none';
+            document.getElementById('customIconGroup').style.display = 'none';
+        }
+    });
+    
+    // Handle custom tab name input
+    let nameTimeout;
+    document.getElementById('cloakTabName').addEventListener('input', function() {
+        clearTimeout(nameTimeout);
+        nameTimeout = setTimeout(function() {
+            saveTabCloak();
+        }, 500);
+    });
+    
+    document.getElementById('cloakTabName').addEventListener('blur', function() {
+        clearTimeout(nameTimeout);
+        saveTabCloak();
+    });
+    
+    // Handle icon file upload
+    document.getElementById('cloakIconUpload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const dataUrl = event.target.result;
+                localStorage.setItem('novahub.cloakCustomIcon', dataUrl);
+                saveTabCloak();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Clear cloak button
+    document.getElementById('clearCloakBtn').addEventListener('click', function() {
+        clearTabCloak();
+    });
+    
+    // Open in About Blank button
+    document.getElementById('openAboutBlankBtn').addEventListener('click', function() {
+        // Open a new window with about:blank
+        const newWin = window.open('about:blank', '_blank');
+        
+        if (newWin) {
+            // Write the full HTML of the current site to the new window
+            newWin.document.write(`
+                <!DOCTYPE html>
+                <html>
+                    <head>
+    <meta charset="UTF-8">
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Nova Hub</title>
+                        <style>
+                            * { margin: 0; padding: 0; border: none; }
+                            body, iframe { height: 100vh; width: 100vw; }
+                            iframe { height: 100vh; width: 100vw; border: none; }
+                        </style>
+                    </head>
+                    <body>
+                        <iframe id="novaHubFrame" src="${window.location.origin}" style="border: none; width: 100%; height: 100%;"></iframe>
+                    </body>
+                </html>
+            `);
+            newWin.document.close();
+        } else {
+            alert('Please allow pop-ups for this site to use the About Blank feature.');
+        }
+    });
+    
+    // Theme Selection Functionality
+    const themeSelect = document.getElementById('themeSelect');
+    if (themeSelect) {
+        // Load saved theme on page load
+        const savedTheme = localStorage.getItem('novahub.theme') || 'code';
+        themeSelect.value = savedTheme;
+        
+        // Apply theme when selection changes
+        themeSelect.addEventListener('change', function() {
+            const selectedTheme = this.value;
+            if (typeof setTheme === 'function') {
+                setTheme(selectedTheme);
+            } else if (typeof window.setTheme === 'function') {
+                window.setTheme(selectedTheme);
+            } else {
+                // Fallback if setTheme is not available
+                localStorage.setItem('novahub.theme', selectedTheme);
+                location.reload();
+            }
+        });
+    }
+});
+</script>
+
+    <title>Settings | Nova Hub - Panic Button, Tab Cloak, Themes</title>
+    <meta name="description" content="Customize Nova Hub. Panic button, tab cloaking, themes. Make the site look like Google, Classroom, or Docs." />
+    <link rel="canonical" href="https://nova-labs.pages.dev/settings.html" />
+    <link rel="icon" href="/nova-favicon.ico" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1196675595992085" crossorigin="anonymous"></script>
+
+    <!-- toastify -->
+    <script></script>
+  </head>
+
+  <body class="gaming-theme settings-page">
+ 	<header style="display: none;">
+			<a href="/index.html">Home</a>
+			<a href="/bookmarklets.html">Bookmarklets</a>
+			<a href="/projects.html">Games</a>
+			<a href="/apps.html">Apps</a>
+			<a href="/settings.html">Settings</a>
+			<a href="/other.html">Other</a>
+			<a id="blank" href="#">Open Blank</a>
+      <a href="/u/" class="usericon"><img src="/img/user.svg"></a>
+
+		</header>
+
+    <main>
+      <h1>⚙️ Settings</h1>
+      
+      <!-- Panic Button Section -->
+      <section class="settings-section">
+        <h2>🚨 Panic Button</h2>
+        <p class="section-description">Quickly redirect to a safe website when needed</p>
+        <form action="javascript:void(0);" class="settings-form" id="panicForm">
+          <div class="form-group">
+            <label for="panicUrl">Panic URL</label>
+            <input type="text" id="panicUrl" name="panicUrl" placeholder="https://example.com" />
+          </div>
+          <div class="form-group">
+            <label for="panicPreset">Or select a preset</label>
+            <select id="panicPreset">
+              <option value="">Select a preset...</option>
+              <option value="https://ixl.com">IXL</option>
+			  <option value="ixl://">IXL App</option>
+              <option value="https://bigideasmath.com">Big Ideas Math</option>
+              <option value="https://google.com">Google</option>
+              <option value="https://classroom.google.com">Google Classroom</option>
+              <option value="https://docs.google.com">Google Docs</option>
+              <option value="https://canvas.instructure.com">Canvas</option>
+              <option value="https://desmos.com">Desmos</option>
+			  <option value="schoology://">Schoology</option>
+			  <option value="notability://">Notability</option>
+            </select>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="panicEnabled" name="panicEnabled">
+            <label for="panicEnabled">
+              <span class="checkbox-label-text">Enable Panic Button</span>
+              <span class="checkbox-description">Show panic button in bottom right corner</span>
+            </label>
+          </div>
+          <p class="section-description auto-save-indicator">Settings are saved automatically</p>
+      </form>
+      </section>
+      
+      <!-- Tab Cloak Section -->
+      <section class="settings-section">
+        <h2>🔒 Tab Cloak</h2>
+        <p class="section-description">Disguise the tab name and icon to look like another website</p>
+        <form action="javascript:void(0);" class="settings-form" id="cloakForm">
+          <div class="form-group">
+            <label for="cloakPreset">Select a preset</label>
+            <select id="cloakPreset">
+              <option value="">Select a preset...</option>
+              <option value="google" data-name="Google" data-icon="https://www.google.com/favicon.ico">Google</option>
+              <option value="classroom" data-name="Google Classroom" data-icon="https://ssl.gstatic.com/classroom/favicon.png">Google Classroom</option>
+              <option value="docs" data-name="Google Docs" data-icon="https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico">Google Docs</option>
+              <option value="canvas" data-name="Canvas" data-icon="https://www.instructure.com/favicon.ico">Canvas</option>
+              <option value="ixl" data-name="IXL" data-icon="https://www.ixl.com/favicon.ico">IXL</option>
+              <option value="bigideasmath" data-name="Big Ideas Math" data-icon="https://www.bigideasmath.com/favicon.ico">Big Ideas Math</option>
+              <option value="desmos" data-name="Desmos" data-icon="https://www.desmos.com/favicon.ico">Desmos</option>
+              <option value="khan" data-name="Khan Academy" data-icon="https://www.khanacademy.org/favicon.ico">Khan Academy</option>
+              <option value="custom" data-name="" data-icon="">Custom</option>
+            </select>
+          </div>
+          <div class="form-group" id="customCloakGroup" style="display: none;">
+            <label for="cloakTabName">Custom Tab Name</label>
+            <input type="text" id="cloakTabName" name="cloakTabName" placeholder="e.g., My School Portal" />
+      </div>
+          <div class="form-group" id="customIconGroup" style="display: none;">
+            <label for="cloakIconUpload">Custom Tab Icon</label>
+            <input type="file" id="cloakIconUpload" name="cloakIconUpload" accept="image/*" />
+            <p class="form-hint">Upload an image file (PNG, ICO, or other image format)</p>
+      </div>
+          <div id="currentCloakPreview">
+            <p>Current Cloak:</p>
+            <p id="currentCloakText"></p>
+      </div>
+          <div class="form-actions">
+            <button type="button" id="clearCloakBtn" class="submit btn-clear">Clear Cloak</button>
+      </div>
+          <p class="section-description auto-save-indicator">Settings are saved automatically</p>
+        </form>
+      </section>
+      
+      <!-- Theme Selection Section -->
+      <section class="settings-section">
+        <h2>🎨 Theme</h2>
+        <p class="section-description">Choose your preferred theme</p>
+        <form action="javascript:void(0);" class="settings-form" id="themeForm">
+          <div class="form-group">
+            <label for="themeSelect">Select Theme</label>
+            <select id="themeSelect" name="themeSelect">
+              <option value="code">Code (Green on Black)</option>
+              <option value="ocean">Ocean (Blue & Teal)</option>
+              <option value="sunset">Sunset (Orange & Red)</option>
+              <option value="purple">Purple (Purple & Violet)</option>
+            </select>
+          </div>
+          <p class="section-description auto-save-indicator">Theme changes are applied immediately</p>
+        </form>
+      </section>
+      
+      <!-- Open in About Blank Section -->
+      <section class="settings-section">
+        <h2>🔓 Open in About Blank</h2>
+        <p class="section-description">Open the site in a new tab with about:blank as the URL for better privacy</p>
+        <div class="form-actions">
+          <button type="button" id="openAboutBlankBtn" class="submit">Open in About Blank</button>
+      </div>
+        <p class="section-description" style="margin-top: 1rem; font-size: 0.85rem; color: var(--gaming-text-dim);">
+          This will open Nova Hub in a new window with about:blank as the URL, making it harder for monitoring systems to see what site you're visiting.
+        </p>
+      </section>
+    </main>
+    
+    <!-- Panic Button (shown when enabled) - will be created/updated by gaming-navbar.js -->
+<br>
+    <footer>
+      <a href="https://gitlab.com/skysthelimit.dev/selenite">Source</a>
+      <a href="https://discord.gg/7jyufnwJNf">Discord</a>
+      <a href="/suggest.html">Suggestions & Bugs</a>
+      <a href="/about.html">About</a>
+        
+    </footer>
+
+  </body>
+</html>
