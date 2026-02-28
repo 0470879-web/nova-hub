@@ -639,8 +639,7 @@ function buildCardHTML(response, index, type, isFixed) {
     const esc = s => String(s).replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
     const actionBtn = isFixed
-        ? `<button class="fix-btn" style="background:#ef4444;margin-top:10px;" onclick="window.unmarkAsFixed(this)">↩️ Unmark Fixed</button>
-           <span style="background:#22c55e;color:white;padding:3px 10px;border-radius:12px;font-size:0.8rem;margin-left:8px;">✅ Fixed</span>`
+        ? `<button class="fix-btn" style="background:#ef4444;margin-top:10px;" onclick="window.unmarkAsFixed(this)">↩️ Unmark Fixed</button>`
         : `<button class="fix-btn" onclick="window.markAsFixed(this)">✅ Mark as Fixed</button>`;
 
     return `
