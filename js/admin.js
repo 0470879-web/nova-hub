@@ -47,6 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function isLocalDev() {
+				return window.location.protocol === "file:" ||
+					   window.location.hostname === 'localhost' || 
+					   window.location.hostname === '127.0.0.1' || 
+					   window.location.port === '3000' ||
+					   window.location.hostname.includes('localhost');
+			}
+
     // Get stored token
     function getToken() {
         return localStorage.getItem('nova_admin_token');
@@ -66,8 +74,22 @@ document.addEventListener('DOMContentLoaded', () => {
     async function apiRequest(url, options = {}) {
         const token = getToken();
         if (!token) {
-            throw new Error('Not authenticated');
-        }
+
+    				let allowLocalAccess = false;
+
+    				if (isLocalDev()) {
+        				const answer = prompt(
+            				'You are testing locally. Type YES to access this page.'
+        				);
+
+        				allowLocalAccess = answer && answer.toLowerCase() === "yes";
+    				}
+
+    				if (!allowLocalAccess) {
+        			throw new Error('Not authenticated');
+                    return
+    			}
+            showLogin();
 
         const headers = {
             'Content-Type': 'application/json',
