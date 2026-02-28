@@ -4,8 +4,10 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const http = require('http');
 const crypto = require('crypto');
-const { exec } = require('child_process');
+const { exec, spawn } = require('child_process');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const util = require('util');
 const execPromise = util.promisify(exec);
 
@@ -134,6 +136,22 @@ app.post('/api/submit-suggestion', (req, res) => {
     console.error('Error in submit-suggestion endpoint:', error);
     res.status(500).json({ success: false, message: 'Internal server error: ' + error.message });
   }
+});
+
+// Proxy /pr0xy to Holy Unblocker with WebSocket support (required for proxy to work)
+const PR0XY_PORT = process.env.PR0XY_PORT || 3002;
+const pr0xyProxy = createProxyMiddleware({
+  target: 'http://127.0.0.1:' + PR0XY_PORT,
+  changeOrigin: true,
+  ws: true,
+  pathRewrite: { '^/': '/pr0xy/' }
+});
+app.use('/pr0xy', pr0xyProxy);
+
+// Redirect /proxy and /proxy/* to /pr0xy
+app.use('/proxy', (req, res) => {
+  const rest = (req.url || '/');
+  res.redirect(302, '/pr0xy' + (rest === '/' ? '/' : rest));
 });
 
 // Static file serving (must be after API routes)
@@ -1334,11 +1352,32 @@ app.get('*', (req, res) => {
   res.status(404).sendFile(path.join(__dirname, '404.html'));
 });
 
-app.listen(port, () => {
+const pr0xyDir = path.join(__dirname, 'pr0xy');
+
+const server = http.createServer(app);
+server.on('upgrade', pr0xyProxy.upgrade);
+
+server.listen(port, () => {
   console.log(`Nova Hub is running on port ${port}`);
   console.log('\n--- Environment Variables Status ---');
   console.log(`GITHUB_TOKEN: ${process.env.GITHUB_TOKEN ? '✓ Set' : '✗ Not set'}`);
   console.log(`GITLAB_TOKEN: ${process.env.GITLAB_TOKEN ? '✓ Set' : '✗ Not set'}`);
   console.log(`OPENAI_API_KEY: ${process.env.OPENAI_API_KEY ? '✓ Set' : '✗ Not set'}`);
   console.log('-----------------------------------\n');
+
+  // Start Holy Unblocker (pr0xy) so /pr0xy works with one process
+  if (fs.existsSync(path.join(pr0xyDir, 'backend.js'))) {
+    const pr0xyChild = spawn(process.execPath, ['backend.js'], {
+      cwd: pr0xyDir,
+      stdio: 'inherit',
+      env: { ...process.env, PORT: String(PR0XY_PORT) }
+    });
+    pr0xyChild.on('error', (err) => console.error('Pr0xy start error:', err));
+    pr0xyChild.on('exit', (code) => code != null && code !== 0 && console.error('Pr0xy exited with code', code));
+    const killPr0xy = () => { try { pr0xyChild.kill(); } catch (_) {} };
+    process.on('exit', killPr0xy);
+    process.on('SIGINT', killPr0xy);
+    process.on('SIGTERM', killPr0xy);
+    console.log(`Unblocker (pr0xy) starting on port ${PR0XY_PORT}...`);
+  }
 });
