@@ -118,48 +118,42 @@ body.purple-theme html {
     background-image: none !important;
 }
 
+body.gaming-theme .fix-btn,
+body.gaming-theme main .fix-btn,
+body.ocean-theme .fix-btn,
+body.ocean-theme main .fix-btn,
+body.sunset-theme .fix-btn,
+body.sunset-theme main .fix-btn,
+body.purple-theme .fix-btn,
+body.purple-theme main .fix-btn {
+  padding: 1rem 2rem !important;
+  background: rgba(0, 255, 0, 0.1) !important;
+  border: 2px solid var(--gaming-accent) !important;
+  color: var(--gaming-accent) !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-family: 'Rajdhani', sans-serif !important;
+  font-size: 1.1rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.5px !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+  margin-top: 10px !important;
+}
+
+body.gaming-theme main .fix-btn.unmark,
+body.ocean-theme main .fix-btn.unmark,
+body.sunset-theme main .fix-btn.unmark,
+body.purple-theme main .fix-btn.unmark {
+  background: rgba(239, 68, 68, 0.1) !important;
+  border-color: #ef4444 !important;
+  color: #ef4444 !important;
+}
+
 /* Hide old header/footer when gaming navbar is present */
 body:has(.gaming-navbar) header,
 body:has(.gaming-navbar) footer {
     display: none !important;
-}
-
-body.gaming-theme .fix-btn,
-body.ocean-theme .fix-btn,
-body.sunset-theme .fix-btn,
-body.purple-theme .fix-btn {
-  padding: 1rem 2rem;
-  background: rgba(0, 255, 0, 0.1);
-  border: 2px solid var(--gaming-accent);
-  color: var(--gaming-accent);
-  border-radius: 8px;
-  font-weight: 600;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  margin-top: 10px;
-  position: relative;
-  overflow: hidden;
-}
-
-body.gaming-theme .fix-btn.unmark,
-body.ocean-theme .fix-btn.unmark,
-body.sunset-theme .fix-btn.unmark,
-body.purple-theme .fix-btn.unmark {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: #ef4444;
-  color: #ef4444;
-}
-
-body.gaming-theme .fix-btn:hover,
-body.ocean-theme .fix-btn:hover,
-body.sunset-theme .fix-btn:hover,
-body.purple-theme .fix-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 30px var(--gaming-glow);
 }
 
 /* Gaming Navbar */
