@@ -3325,9 +3325,19 @@ body.purple-theme .fix-btn.unmark {
   color: #ef4444 !important;
 }
 
+body.gaming-theme .fix-btn.unmark:hover,
+body.ocean-theme .fix-btn.unmark:hover,
+body.sunset-theme .fix-btn.unmark:hover,
+body.purple-theme .fix-btn.unmark:hover {
+  color: #fff !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 0 30px rgba(239, 68, 68, 0.6) !important;
+}
+
 body.gaming-theme .fix-btn.unmark::before,
 body.ocean-theme .fix-btn.unmark::before,
 body.sunset-theme .fix-btn.unmark::before,
 body.purple-theme .fix-btn.unmark::before {
   background: #ef4444 !important;
+  z-index: -1 !important;
 }
