@@ -385,6 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Apply theme when selection changes
         themeSelect.addEventListener('change', function() {
             const selectedTheme = this.value;
+			themeSelect.value = selectedTheme
             if (typeof setTheme === 'function') {
                 setTheme(selectedTheme);
             } else if (typeof window.setTheme === 'function') {
