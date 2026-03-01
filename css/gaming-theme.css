@@ -2859,7 +2859,7 @@ body.fullscreen-mode .game-exit-fullscreen-button:active {
 
 .logout-button {
     position: fixed;
-    top: 20px;
+    top: 15px !important;
     right: 20px;
     padding: 0.75rem 1.5rem;
     background: rgba(255, 0, 0, 0.2);
@@ -2873,7 +2873,8 @@ body.fullscreen-mode .game-exit-fullscreen-button:active {
     letter-spacing: 1px;
     cursor: pointer;
     transition: all 0.3s ease;
-    z-index: 1000;
+    z-index: 1001;
+    transform: translateY(0);
 }
 
 .logout-button:hover {
