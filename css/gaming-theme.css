@@ -124,6 +124,44 @@ body:has(.gaming-navbar) footer {
     display: none !important;
 }
 
+body.gaming-theme .fix-btn,
+body.ocean-theme .fix-btn,
+body.sunset-theme .fix-btn,
+body.purple-theme .fix-btn {
+  padding: 1rem 2rem;
+  background: rgba(0, 255, 0, 0.1);
+  border: 2px solid var(--gaming-accent);
+  color: var(--gaming-accent);
+  border-radius: 8px;
+  font-weight: 600;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  margin-top: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+body.gaming-theme .fix-btn.unmark,
+body.ocean-theme .fix-btn.unmark,
+body.sunset-theme .fix-btn.unmark,
+body.purple-theme .fix-btn.unmark {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+body.gaming-theme .fix-btn:hover,
+body.ocean-theme .fix-btn:hover,
+body.sunset-theme .fix-btn:hover,
+body.purple-theme .fix-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 30px var(--gaming-glow);
+}
+
 /* Gaming Navbar */
 .gaming-navbar {
     position: fixed;
