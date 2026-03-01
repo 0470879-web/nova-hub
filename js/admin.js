@@ -664,25 +664,9 @@ function buildCardHTML(response, index, type, isFixed) {
     const encodedTitle = encodeURIComponent(title);
     const esc = s => String(s).replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-	const btnBase = `
-  padding: 1rem 2rem;
-  background: rgba(0, 255, 0, 0.1);
-  border: 2px solid var(--gaming-accent);
-  color: var(--gaming-accent);
-  border-radius: 8px;
-  font-weight: 600;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  margin-top: 10px;
-`;
-
 const actionBtn = isFixed
-  ? `<button class="fix-btn" style="${btnBase} background: rgba(239,68,68,0.1); border-color: #ef4444; color: #ef4444;" onclick="window.unmarkAsFixed(this)">↩️ Unmark Fixed</button>`
-  : `<button class="fix-btn" style="${btnBase}" onclick="window.markAsFixed(this)">✅ Mark as Fixed</button>`;
+  ? `<button class="fix-btn unmark" onclick="window.unmarkAsFixed(this)">↩️ Unmark Fixed</button>`
+  : `<button class="fix-btn" onclick="window.markAsFixed(this)">✅ Mark as Fixed</button>`;
 
     return `
         <div class="suggestion-item" data-index="${index}" data-type="${type}" data-title="${encodedTitle}">
