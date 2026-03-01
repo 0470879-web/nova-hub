@@ -378,9 +378,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Theme Selection Functionality
     const themeSelect = document.getElementById('themeSelect');
     if (themeSelect) {
-        // Load saved theme on page load
-        const savedTheme = localStorage.getItem('novahub.theme') || 'code';
-        themeSelect.value = savedTheme;
+        const body = document.body;
+let currentTheme = 'code'; // default
+if (body.classList.contains('ocean-theme')) currentTheme = 'ocean';
+else if (body.classList.contains('sunset-theme')) currentTheme = 'sunset';
+else if (body.classList.contains('purple-theme')) currentTheme = 'purple';
+themeSelect.value = currentTheme;
         
         // Apply theme when selection changes
         themeSelect.addEventListener('change', function() {
