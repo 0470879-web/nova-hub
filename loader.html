@@ -73,6 +73,10 @@
 							<span class="fullscreen-icon">⛶</span>
 							<span>Fullscreen</span>
 						</button>
+						<button id="reportbug" class="game-fullscreen-button" title="Report a bug if you find one!">
+							<span>🐛</span>
+							<span>Report a bug</span>
+						</button>
 					</div>
 				</div>
 			</div>
@@ -337,6 +341,10 @@
 					const sep = baseSrc.includes("?") ? "&" : "?";
 					gameFrame.src = baseSrc + sep + "_t=" + Date.now();
 				}
+			});
+
+			document.getElementById("reportbug").addEventListener("click", () => {
+				window.open("/suggest.html", "_blank");
 			});
 			
 			// Open in new tab button
