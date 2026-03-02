@@ -139,12 +139,9 @@ async function loadFixedItems() {
     }
 }
 
-window.markAsFixed = async function(button) {
+window.markAsFixed = async function(id, button) {
     button.disabled = true;
     button.textContent = 'Saving...';
-
-    const card = button.closest('.suggestion-item');
-    const id = card.getAttribute('data-id');
 
     try {
         await fetch(FIXED_ITEMS_URL, {
@@ -153,7 +150,7 @@ window.markAsFixed = async function(button) {
             body: JSON.stringify({ id: id, action: 'add' })
         });
 
-        loadFormsData(); // refresh UI
+        loadFormsData();
     } catch (error) {
         console.error(error);
         button.disabled = false;
@@ -161,12 +158,9 @@ window.markAsFixed = async function(button) {
     }
 };
 
-window.unmarkAsFixed = async function(button) {
+window.unmarkAsFixed = async function(id, button) {
     button.disabled = true;
     button.textContent = 'Saving...';
-
-    const card = button.closest('.suggestion-item');
-    const id = card.getAttribute('data-id');
 
     try {
         await fetch(FIXED_ITEMS_URL, {
@@ -670,8 +664,6 @@ const itemId = type + "_" + response.Timestamp;
 
     if (Array.isArray(email)) email = email.join(', ');
     email = String(email || '');
-
-    const encodedId = encodeURIComponent(itemId);
     const esc = s => String(s).replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 const actionBtn = isFixed
@@ -679,7 +671,7 @@ const actionBtn = isFixed
   : `<button class="fix-btn" onclick="window.markAsFixed('${itemId}', this)">✅ Mark as Fixed</button>`;
 
     return `
-        <div class="suggestion-item" data-index="${index}" data-type="${type}" data-id="${encodedId}">
+        <div class="suggestion-item" data-index="${index}" data-type="${type}" data-id="${itemId}">
             <div class="suggestion-header">
                 <span class="suggestion-type">${typeIcon} ${typeLabel}</span>
                 <span class="suggestion-date">${timestamp}</span>
@@ -707,9 +699,7 @@ const actionBtn = isFixed
     const fixed = [];
 
     sortedResponses.forEach(r => {
-        const ID = encodeURIComponent(
-            type + "_" + r.Timestamp;
-        );
+        const ID = type + "_" + r.Timestamp;
         fixedItems.includes(ID) ? fixed.push(r) : active.push(r);
     });
 
@@ -719,9 +709,7 @@ const actionBtn = isFixed
 
     if (fixedContainer) {
         fixed.forEach((r, i) => {
-            const encodedID = encodeURIComponent(
-                type + "_" + r.Timestamp;
-            );
+            const encodedID = type + "_" + r.Timestamp;
             if (!fixedContainer.querySelector(`[data-id="${encodedID}"]`)) {
                 if (fixedContainer.querySelector('p')) fixedContainer.innerHTML = '';
                 fixedContainer.insertAdjacentHTML('beforeend', buildCardHTML(r, i, type, true));
