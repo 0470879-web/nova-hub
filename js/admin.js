@@ -679,7 +679,7 @@ const actionBtn = isFixed
   : `<button class="fix-btn" onclick="window.markAsFixed('${itemId}', this)">✅ Mark as Fixed</button>`;
 
     return `
-        <div class="suggestion-item" data-index="${index}" data-type="${type}" data-title="${encodedTitle}">
+        <div class="suggestion-item" data-index="${index}" data-type="${type}" data-id="${encodedId}">
             <div class="suggestion-header">
                 <span class="suggestion-type">${typeIcon} ${typeLabel}</span>
                 <span class="suggestion-date">${timestamp}</span>
@@ -707,12 +707,10 @@ const actionBtn = isFixed
     const fixed = [];
 
     sortedResponses.forEach(r => {
-        const title = encodeURIComponent(
-            type === 'bug'
-                ? (r['what glitch is it'] || 'Bug Report')
-                : (r['What game would you like me to add? BE SPECIFIC'] || 'Game Request')
+        const ID = encodeURIComponent(
+            type + "_" + r.Timestamp;
         );
-        fixedItems.includes(title) ? fixed.push(r) : active.push(r);
+        fixedItems.includes(ID) ? fixed.push(r) : active.push(r);
     });
 
     container.innerHTML = active.length
@@ -721,12 +719,10 @@ const actionBtn = isFixed
 
     if (fixedContainer) {
         fixed.forEach((r, i) => {
-            const encodedTitle = encodeURIComponent(
-                type === 'bug'
-                    ? (r['what glitch is it'] || 'Bug Report')
-                    : (r['What game would you like me to add? BE SPECIFIC'] || 'Game Request')
+            const encodedID = encodeURIComponent(
+                type + "_" + r.Timestamp;
             );
-            if (!fixedContainer.querySelector(`[data-title="${encodedTitle}"]`)) {
+            if (!fixedContainer.querySelector(`[data-id="${encodedID}"]`)) {
                 if (fixedContainer.querySelector('p')) fixedContainer.innerHTML = '';
                 fixedContainer.insertAdjacentHTML('beforeend', buildCardHTML(r, i, type, true));
             }
