@@ -130,9 +130,11 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadFixedItems() {
     try {
         const res = await fetch(FIXED_ITEMS_URL);
+        if (!res.ok) return [];
         const data = await res.json();
-        return data.fixedItems || [];
-    } catch {
+        return Array.isArray(data.fixedItems) ? data.fixedItems : [];
+    } catch (err) {
+        console.error("Failed to load fixed items:", err);
         return [];
     }
 }
@@ -140,40 +142,46 @@ async function loadFixedItems() {
 window.markAsFixed = async function(button) {
     button.disabled = true;
     button.textContent = 'Saving...';
+
     const card = button.closest('.suggestion-item');
-    const title = card.getAttribute('data-title');
+    const id = card.getAttribute('data-id');
 
     try {
         await fetch(FIXED_ITEMS_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, action: 'add' })
+            body: JSON.stringify({ id: id, action: 'add' })
         });
-        loadFormsData();
+
+        loadFormsData(); // refresh UI
     } catch (error) {
+        console.error(error);
         button.disabled = false;
         button.textContent = '✅ Mark as Fixed';
     }
-}
+};
 
 window.unmarkAsFixed = async function(button) {
     button.disabled = true;
     button.textContent = 'Saving...';
+
     const card = button.closest('.suggestion-item');
-    const title = card.getAttribute('data-title');
+    const id = card.getAttribute('data-id');
 
     try {
         await fetch(FIXED_ITEMS_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, action: 'remove' })
+            body: JSON.stringify({ id: id, action: 'remove' })
         });
+
         loadFormsData();
     } catch (error) {
+        console.error(error);
         button.disabled = false;
         button.textContent = '↩️ Unmark Fixed';
     }
-}
+};
 
     // Initialize - check if already logged in
     async function init() {
@@ -625,6 +633,8 @@ window.unmarkAsFixed = async function(button) {
     }
 }
 function buildCardHTML(response, index, type, isFixed) {
+const itemId = type + "_" + response.Timestamp;
+	
 	const icons = {
   bug: '🐛',
   game: '🎮',
@@ -661,12 +671,12 @@ function buildCardHTML(response, index, type, isFixed) {
     if (Array.isArray(email)) email = email.join(', ');
     email = String(email || '');
 
-    const encodedTitle = encodeURIComponent(title);
+    const encodedId = encodeURIComponent(itemId);
     const esc = s => String(s).replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 const actionBtn = isFixed
-  ? `<button class="fix-btn unmark" onclick="window.unmarkAsFixed(this)">↩️ Unmark Fixed</button>`
-  : `<button class="fix-btn" onclick="window.markAsFixed(this)">✅ Mark as Fixed</button>`;
+  ? `<button class="fix-btn unmark" onclick="window.unmarkAsFixed('${itemId}', this)">↩️ Unmark Fixed</button>`
+  : `<button class="fix-btn" onclick="window.markAsFixed('${itemId}', this)">✅ Mark as Fixed</button>`;
 
     return `
         <div class="suggestion-item" data-index="${index}" data-type="${type}" data-title="${encodedTitle}">
