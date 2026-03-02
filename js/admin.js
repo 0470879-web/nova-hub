@@ -678,7 +678,7 @@ const actionBtn = isFixed
             ${description ? `<div class="suggestion-description">${esc(description)}</div>` : ''}
             ${steps ? `<div class="suggestion-steps"><strong>Steps to reproduce:</strong> ${esc(steps)}</div>` : ''}
             <div class="suggestion-meta">
-                <span class="suggestion-email">${email ? `Email: ${esc(email)}` : 'Email: Not provided'}</span>
+                <span class="suggestion-email">${email ? `<a href="mailto:${esc(email)}">Email: ${esc(email)}</a>` : 'Email: Not provided'}</span>
             </div>
             ${actionBtn}
         </div>
